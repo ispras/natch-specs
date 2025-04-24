@@ -1,0 +1,3 @@
+rpm http://mirror.yandex.ru altlinux/p10/branch/x86_64 classic
+rpm http://mirror.yandex.ru altlinux/p10/branch/noarch classic
+rpm http://mirror.yandex.ru altlinux/p10/branch/x86_64-i586 classic

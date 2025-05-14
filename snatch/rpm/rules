@@ -1,0 +1,1 @@
+tar: ./snatch name=@name@-@version@

@@ -1,0 +1,3 @@
+#!/bin/bash
+rm -rf /var/log/snatch.log /home/$USER/.local/share/virtualenvs/snatch/ /usr/bin/snatch/
+echo "SNatch has been uninstalled."

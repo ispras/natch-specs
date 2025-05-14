@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Detecting a logged in user
+# option 1
+if [ -n "$SUDO_USER" ]; then
+    USER="$SUDO_USER"
+else
+    USER="$(whoami)"
+fi
+echo "Stopping Snatch..."
+
+sudo -u $USER /usr/bin/snatch/snatch_stop.sh

@@ -1,0 +1,2 @@
+#!/bin/bash
+rm -rf /usr/bin/natch-bin/bin/natch_scripts/guest_system/

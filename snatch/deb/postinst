@@ -1,0 +1,167 @@
+#!/bin/bash
+
+# Detecting a logged in user
+# option 1
+if [ -n "$SUDO_USER" ]; then
+    USER="$SUDO_USER"
+else
+    USER="$(whoami)"
+fi
+echo "Logged in user: $USER"
+
+# # option 2
+# USER=$(logname 2>/dev/null)
+# if [ -z "$USER" ]; then
+#     USER="$(whoami)"
+# fi
+# echo "Logged in user (2nd): $USER"
+
+# # option 3
+# USER=$(who | awk -v tty=$(tty) '\''$0 ~ tty {print $1; exit}'\'')
+# if [ -z "$USER" ]; then
+#     USER="$(whoami)"
+# fi
+# echo "Logged in user (3rd): $USER"
+
+# # option 4
+# USER="${SUDO_USER:-$USER}"
+# if [ -z "$USER" ] || [ "$USER" = "root" ]; then
+#     USER="$(whoami)"
+# fi
+# echo "Logged in user (4th): $USER"
+
+# # option 5
+# USER=$(ls -llt /home | grep -v "root" | head -2 | tail -1 | awk '\''{print $9}'\'')
+# echo "Logged in user (5th, my old option): $USER"
+
+
+echo "Starting rabbitmq and memcached..."
+rabbitmq-server -detached
+systemctl start memcached
+
+echo "Creating Python virtual environment"
+mkdir -p /home/$USER/.local/share/virtualenvs/snatch/
+chmod 755 /home/$USER/.local/share/virtualenvs/snatch/
+chown $USER:$USER /home/$USER/.local/share/virtualenvs/snatch/
+
+if [ -d env ]; then
+	rm -rf env
+	echo "Removing the existing Python environment"
+fi
+
+echo "Activating Python virtual environment"
+cd /home/$USER/.local/share/virtualenvs/snatch/
+sudo -u $USER python3 -m venv env
+. env/bin/activate
+
+# Install the pip packages that are absent in the apt repo
+pip3 install '"$pipReq"' --upgrade
+cd - > /dev/null
+
+touch /var/log/snatch.log
+chmod 755 /var/log/snatch.log
+chown $USER:$USER /var/log/snatch.log
+
+if [ -d Snatch/migrations ]; then
+	rm -rf Snatch/migrations
+fi
+
+mkdir -p /home/$USER/snatch/media/
+chmod 755 /home/$USER/snatch/media/
+chown $USER:$USER /home/$USER/snatch/media/
+
+DB_NAME="snatch_db"
+DB_USER="snatch_user"
+DB_PASSWORD=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 16)
+
+systemctl enable postgresql
+
+# Check if PostgreSQL is running
+if ! systemctl is-active --quiet postgresql; then
+  echo "PostgreSQL is not running. Starting..."
+  systemctl start postgresql
+fi
+
+# Drop the existing database if it exists
+if sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -qw "$DB_NAME"; then
+  echo "Database $DB_NAME already exists. Dropping and recreating..."
+
+  # Terminate all connections to the database
+  sudo -u postgres psql -c "SELECT pg_terminate_backend(pg_stat_activity.pid) 
+    FROM pg_stat_activity 
+    WHERE pg_stat_activity.datname = '\''$DB_NAME'\'' AND pid <> pg_backend_pid();"
+
+  sudo -u postgres psql -c "DROP DATABASE $DB_NAME;"
+fi
+
+# Create a new database
+echo "Creating database $DB_NAME..."
+sudo -u postgres psql -c "CREATE DATABASE $DB_NAME;"
+
+# Create user if it does not exist
+echo "Creating user $DB_USER..."
+if sudo -u postgres psql -t -c "\du" | cut -d \| -f 1 | grep -qw $DB_USER; then
+  echo "User $DB_USER already exists, going to recreate it."
+  sudo -u postgres psql -c "DROP USER $DB_USER;"
+fi
+
+sudo -u postgres psql -c "CREATE USER $DB_USER WITH PASSWORD '\''$DB_PASSWORD'\'';"
+
+# Grant privileges to the user on the database
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE $DB_NAME TO $DB_USER;"
+sudo -u postgres psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
+
+sed -i "s/default_password/$DB_PASSWORD/g" /usr/bin/snatch/snatch/settings.py
+
+# echo "Activating Python virtual environment again"
+# cd /home/$USER/.local/share/virtualenvs/snatch/
+# sudo -u $USER python3 -m venv env
+# . env/bin/activate
+
+/usr/bin/snatch/manage.py makemigrations Snatch
+/usr/bin/snatch/manage.py migrate
+# cd - > /dev/null
+
+# Some created subdirs have the root permissions any way, so we will fix it once again for all subdirs
+chmod -R 755 /home/$USER/.local/share/virtualenvs/snatch/
+chown -R $USER:$USER /home/$USER/.local/share/virtualenvs/snatch/
+
+running=""
+attempt=1
+
+sudo -u $USER /usr/bin/snatch/snatch_start.sh no-autorun-browser
+echo "Waiting for SNatch to be started..."
+
+while [[ -z $running ]]
+do
+	running=$(grep "ready." /var/log/snatch.log)
+	sleep 1
+	echo "... "$attempt"s."
+	attempt=$((attempt+1))
+done
+echo "SNatch is up and running."
+
+
+echo -e "\n\e[0;33mRemember the PostgreSQL credentials:\e[0m"
+echo "==========================================="
+echo -e "\e[0;33m DB name: $DB_NAME\e[0m"
+echo -e "\e[0;33m Username: $DB_USER\e[0m"
+echo -e "\e[0;33m Password: $DB_PASSWORD\e[0m"
+echo "==========================================="
+
+echo -e "\e[1;32mSNatch '"$VERSION-$COMMIT"' has been installed.\e[0m"
+
+availSpace4calc=$(df -m /home/$USER/snatch/media/ --output=avail | tail -n1 | xargs)
+availSpace=$(bc <<< "scale=1; $availSpace4calc/1024")
+
+if [[ $availSpace4calc -lt 40960 ]]; then
+	echo "There is only "$availSpace"G available in /home/$USER/snatch/media/ where SNatch stores an unpacked data for analysis. It can be okay for very short scenarios, but for the longer scenarios the hundreds of GB could be required."
+elif [[ $availSpace4calc -lt 102400 ]]; then
+	echo "There is "$availSpace"G available in /home/$USER/snatch/media/ where SNatch stores an unpacked data for analysis. It can be okay for normal scenarios, but for the longer scenarios the hundreds of GB could be required."
+else
+	echo "Free space: OK"
+fi
+
+echo -e "\033[32mTo use ISP RAS SNatch open \e[0m\e[1;32mhttp://localhost:8000\e[0m\033[32m in your browser.\e[0m"
+
+echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"

@@ -1,0 +1,6 @@
+#!/bin/bash
+# Removing the symlink
+rm -f /usr/bin/natch
+# Removing the dir which does not remove automatically because of the pycache files created
+rm -rf /usr/bin/natch-bin
+echo "Natch has been uninstalled."

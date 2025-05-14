@@ -1,0 +1,9 @@
+Package: natch
+Version: '"$VERSION"'
+Provides: natch
+Maintainer: ISP RAS <natch@ispras.ru>
+Architecture: amd64
+Section: devel
+Depends: python3-pip, zstd
+Description: ISP RAS Natch.
+ ISP RAS Natch allows to identify attack surfaces for binary code.

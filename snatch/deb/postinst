@@ -56,7 +56,12 @@ sudo -u $USER python3 -m venv env
 
 # Install the pip packages that are absent in the apt repo
 pip3 install '"$pipReq"' --upgrade
-cd - > /dev/null
+
+# Uncomment for 3.4+ where we will have a separate vmi
+# # Register vmidb
+# pip3 install /usr/bin/snatch/vmi --upgrade
+# rm -rf /usr/bin/snatch/vmi
+# cd - > /dev/null
 
 touch /var/log/snatch.log
 chmod 755 /var/log/snatch.log
@@ -113,11 +118,6 @@ sudo -u postgres psql -c "ALTER DATABASE $DB_NAME OWNER TO $DB_USER;"
 
 sed -i "s/default_password/$DB_PASSWORD/g" /usr/bin/snatch/snatch/settings.py
 
-# echo "Activating Python virtual environment again"
-# cd /home/$USER/.local/share/virtualenvs/snatch/
-# sudo -u $USER python3 -m venv env
-# . env/bin/activate
-
 /usr/bin/snatch/manage.py makemigrations Snatch
 /usr/bin/snatch/manage.py migrate
 # cd - > /dev/null
@@ -129,17 +129,17 @@ chown -R $USER:$USER /home/$USER/.local/share/virtualenvs/snatch/
 running=""
 attempt=1
 
-sudo -u $USER /usr/bin/snatch/snatch_start.sh no-autorun-browser
-echo "Waiting for SNatch to be started..."
+sudo -u $USER /usr/bin/snatch/snatch_start.sh
+# echo "Waiting for SNatch to be started..."
 
-while [[ -z $running ]]
-do
-	running=$(grep "ready." /var/log/snatch.log)
-	sleep 1
-	echo "... "$attempt"s."
-	attempt=$((attempt+1))
-done
-echo "SNatch is up and running."
+# while [[ -z $running ]]
+# do
+# 	running=$(grep "ready." /var/log/snatch.log)
+# 	sleep 1
+# 	echo "... "$attempt"s."
+# 	attempt=$((attempt+1))
+# done
+# echo "SNatch is up and running."
 
 
 echo -e "\n\e[0;33mRemember the PostgreSQL credentials:\e[0m"
@@ -149,15 +149,15 @@ echo -e "\e[0;33m Username: $DB_USER\e[0m"
 echo -e "\e[0;33m Password: $DB_PASSWORD\e[0m"
 echo "==========================================="
 
-echo -e "\e[1;32mSNatch '"$VERSION-$COMMIT"' has been installed.\e[0m"
+echo -e "\e[1;32mSNatch '"$VersComm"' has been installed.\e[0m"
 
 availSpace4calc=$(df -m /home/$USER/snatch/media/ --output=avail | tail -n1 | xargs)
 availSpace=$(bc <<< "scale=1; $availSpace4calc/1024")
 
 if [[ $availSpace4calc -lt 40960 ]]; then
-	echo "There is only "$availSpace"G available in /home/$USER/snatch/media/ where SNatch stores an unpacked data for analysis. It can be okay for very short scenarios, but for the longer scenarios the hundreds of GB could be required."
+	echo "Only "$availSpace"G available in /home/$USER/snatch/media/ where SNatch will store unpacked data for analysis. It can be okay for very short scenarios, but for the longer scenarios the hundreds of GB could be required."
 elif [[ $availSpace4calc -lt 102400 ]]; then
-	echo "There is "$availSpace"G available in /home/$USER/snatch/media/ where SNatch stores an unpacked data for analysis. It can be okay for normal scenarios, but for the longer scenarios the hundreds of GB could be required."
+	echo $availSpace"G available in /home/$USER/snatch/media/ where SNatch will store unpacked data for analysis. It can be okay for normal scenarios, but for the longer scenarios the hundreds of GB could be required."
 else
 	echo "Free space: OK"
 fi

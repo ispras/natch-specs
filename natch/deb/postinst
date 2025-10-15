@@ -14,12 +14,6 @@ fi
 echo $osName 
 echo $osVer
 
-# The following is required for Astra Linux where zipping resets the file permissions
-if [ -d "/usr/bin/natch-bin/bin/" ]; then
-	chmod -R 755 /usr/bin/natch-bin/bin/
-#	chmod +x /usr/bin/natch-bin/bin/natch_scripts/setup_requirements.sh
-fi
-
 # Cleanup when upgrade from the old versions (3.0 and below)
 # This is to avoid conflict with the new natch symlink
 rm -rf /usr/bin/natch/
@@ -29,6 +23,11 @@ ln -sf /usr/bin/natch-bin/bin/natch_scripts/natch /usr/bin/natch
 
 # Install the pip packages that are absent in the apt repo
 pip3 install '"$pipReq"' '"$pipPostfix"' 
+
+# # For Astra 1.8 zstandard must be installed with sudo
+# if [[ $osName == "Astra"* ]] && [[ $osVer == "1.8"* ]]; then
+# 	sudo pip3 install zstandard '"$pipPostfix"' 
+# fi
 
 if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 
@@ -59,77 +58,12 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 	# debug output
 	echo "Located the argcomplete binaries $activateScriptName and $registerScriptName installed in ${argcompleteDir[0]}"
 
-	# Usual classic casePackage: natch
-Version: '"$VERSION"'
-Provides: natch
-Maintainer: ISP RAS <natch@ispras.ru>
-Architecture: amd64
-Section: devel
-Depends: python3-pip, zstd
-Description: ISP RAS Natch.
- ISP RAS Natch allows to identify attack surfaces for binary code.' > /tmp/natch/DEBIAN/control
-	fi
-
-	echo '#!/bin/bash
-cp -n /tmp/natch-libs/*  /usr/lib/x86_64-linux-gnu/
-
-# Get OS name and version
-osName=$(grep "^NAME" /etc/os-release | grep -o ".*" | sed "s/\"//g")
-
-if [[ $osName == "ALT"* ]]; then
-  osVer=$(grep "^VERSION" /etc/os-release | grep -o ".*" | sed "s/\"//g")
-elif [[ $osName == "Astra Linux" ]]; then
-  osVer=$(grep "^VERSION_ID" /etc/os-release | grep -o -P "(?<=\=).*(?=\_)")
-else
-  osVer=$(grep "^VERSION_ID" /etc/os-release | grep -o ".*" | sed "s/\"//g")
-fi
-echo $osName 
-echo $osVer
-
-# The following is required for Astra Linux where zipping resets the file permissions
-if [ -d "/usr/bin/natch-bin/bin/" ]; then
-	chmod -R 755 /usr/bin/natch-bin/bin/
-#	chmod +x /usr/bin/natch-bin/bin/natch_scripts/setup_requirements.sh
-fi
-
-# Cleanup when upgrade from the old versions (3.0 and below)
-# This is to avoid conflict with the new natch symlink
-rm -rf /usr/bin/natch/
-
-# Creating a symlink
-ln -sf /usr/bin/natch-bin/bin/natch_scripts/natch /usr/bin/natch
-
-# Install the pip packages that are absent in the apt repo
-pip3 install '"$pipReq"' '"$pipPostfix"' 
-
-if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
-
-	# paths2env=$(find /home/ /root/ -name ".zshenv" 2>/dev/null)
-
-	# If bash/zsh configs exists, we will re-create them to avoid issues
-	# if [[ ! -z $paths2env ]]; then
-	# 	paths2env=$(dirname $paths2env)
-	# 	echo "The existing argcomplete env settings were found inside $paths2env"
-
-	# 	for ((i = 0; i < ${#paths2env[@]}; i++))
-	# 	do
-	# 		cd "${paths2env[$i]}"
-	# 		rm -f ./.bash_completion
-	# 		cd - > /dev/null
-
-	# 		# debug output
-	# 		echo "They were cleaned up inside ${paths2env[$i]}. They will be recreated automatically to avoid issues."
-	# 	done
+	# # Workaround for Ubuntu 24: for some reason the internal script contains an underscore in the beginning
+	# if [ -e "/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/_python-argcomplete" ]; then
+	# 	mv /usr/lib/python3/dist-packages/argcomplete/bash_completion.d/_python-argcomplete /usr/lib/python3/dist-packages/argcomplete/bash_completion.d/python-argcomplete
+	# 	# debug output
+	# 	echo "Corrected the argcomplete script name"
 	# fi
-
-	path2activate=$(find /usr/bin/ /home/ -name "activate-global-python-argcomplete*" | head -n 1 2>/dev/null)
-	path2register=$(find /usr/bin/ /home/ -name "register-python-argcomplete*" | head -n 1 2>/dev/null)
-	argcompleteDir=$(dirname $path2activate | xargs)
-	activateScriptName=$(basename $path2activate)
-	registerScriptName=$(basename $path2register)
-	cd ${argcompleteDir[0]}
-	# debug output
-	echo "Located the argcomplete binaries $activateScriptName and $registerScriptName installed in ${argcompleteDir[0]}"
 
 	# Usual classic case
 	if [[ $argcompleteDir != *"/usr/bin"* ]]; then
@@ -138,17 +72,10 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 		# debug output
 		echo "Activated argcomplete for current user"
 
-		# Workaround for Ubuntu 24: for some reason the internal script contains an underscore in the beginning
-		if [ -e "/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/_python-argcomplete" ]; then
-			mv /usr/lib/python3/dist-packages/argcomplete/bash_completion.d/_python-argcomplete /usr/lib/python3/dist-packages/argcomplete/bash_completion.d/python-argcomplete
-			# debug output
-			echo "Corrected the argcomplete script name"
-		fi
-
-	# QEMP-822?focusedCommentId=50815
+	# https://jira.intra.ispras.ru/browse/QEMP-822?focusedCommentId=50815
 	else
 		# Detecting the last modified user. It will get the configs
-		username=$(ls -llt /home | head -2 | tail -1 | awk "{print $9}")
+		username=$(ls -llt /home | head -2 | tail -1 | awk '\''{print $9}'\'')
 		# debug output
 		echo "Current user is $username"
 
@@ -157,10 +84,11 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 			activationResults=$(./$activateScriptName --user --complete-arguments)		#  2>/dev/null
 
 		elif [[ $osName == *"Ubuntu"* ]] && [[ $osVer == *"24.04" ]] ; then
-			echo -e "yes\n" | activationResults=$(./$activateScriptName --user)			#  2>/dev/null
+			activationResults=$(yes | ./$activateScriptName --user)			#  2>/dev/null
 
 		else
 			activationResults=$(./$activateScriptName --user)							#  2>/dev/null
+			echo "Activation results: $activationResults"
 		fi
 		# debug output
 
@@ -180,73 +108,13 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 		# so we will create the bash/zsh configs by ourselves
 		if [ ! -s "/home/$username/.bash_completion" ]; then
 			echo "fpath=( /usr/lib/python3/dist-packages/argcomplete/bash_completion.d \"\${fpath[@]}\" )" > /home/$username/.zshenv
-			echo "source \"/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/python-argcomplete\"" > /home/$username/.bash_completion
-			# debug output
-			echo "Created the argcomplete configuration files"
-		fi
 
-		# Sometimes the script may have a .sh extension
-		if [ -e "/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/python-argcomplete.sh" ]; then
-			mv /usr/lib/python3/dist-packages/argcomplete/bash_completion.d/python-argcomplete.sh /usr/lib/python3/dist-packages/argcomplete/bash_completion.d/python-argcomplete
-			# debug output
-			echo "Corrected the argcomplete script name"
-		fi
+			if [ -e "/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/_python-argcomplete" ]; then
+				echo "source \"/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/_python-argcomplete\"" > /home/$username/.bash_completion
+			else
+				echo "source \"/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/python-argcomplete\"" > /home/$username/.bash_completion
+			fi
 
-		cd - > /dev/null
-	fi
-fi
-
-echo -e "\e[1;32mNatch '"$VERSION"' has been installed.\e[0m"
-
-if [[ $osName != *"Debian"* ]] && [[ $osName != *"Ubuntu"* ]] ; then
-	echo -e "\e[1;33mDo not forget to install the required components by executing \e[0m\e[1;32m/usr/bin/natch-bin/bin/natch_scripts/setup_requirements.sh\e[0m\e[1;33m after the installation!\e[0m"
-fi
-
-echo -e "\033[32mTo use ISP RAS Natch run \e[0m\e[1;32mnatch\e[0m\033[32m in command line.\e[0m"
-echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/natch/tree/release.\e[0m"
-		# Workaround for Ubuntu 24: for some reason the internal script contains an underscore in the beginning
-		if [ -e "/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/_python-argcomplete" ]; then
-			mv /usr/lib/python3/dist-packages/argcomplete/bash_completion.d/_python-argcomplete /usr/lib/python3/dist-packages/argcomplete/bash_completion.d/python-argcomplete
-			# debug output
-			echo "Corrected the argcomplete script name"
-		fi
-
-	# QEMP-822?focusedCommentId=50815
-	else
-		# Detecting the last modified user. It will get the configs
-		username=$(ls -llt /home | head -2 | tail -1 | awk "{print $9}")
-		# debug output
-		echo "Current user is $username"
-
-		echo "Activating argcomplete for $username..."
-		if [[ $osName == *"Ubuntu"* ]] && [[ $osVer == *"22.04" ]] ; then
-			activationResults=$(./$activateScriptName --user --complete-arguments)		#  2>/dev/null
-
-		elif [[ $osName == *"Ubuntu"* ]] && [[ $osVer == *"24.04" ]] ; then
-			echo -e "yes\n" | activationResults=$(./$activateScriptName --user)			#  2>/dev/null
-
-		else
-			activationResults=$(./$activateScriptName --user)							#  2>/dev/null
-		fi
-		# debug output
-
-		# If the results do not contain "Adding shellcode to /home/$username/...
-		if [[ $activationResults != *$username* ]]; then
-			# Activation with path and without --user key
-			./$activateScriptName
-			# debug output
-			echo "argcomplete activation finished."
-
-		else
-			# debug output
-			echo "Activation was successful"
-		fi
-
-		# "eval" does not work under root even with sudo -u $username
-		# so we will create the bash/zsh configs by ourselves
-		if [ ! -s "/home/$username/.bash_completion" ]; then
-			echo "fpath=( /usr/lib/python3/dist-packages/argcomplete/bash_completion.d \"\${fpath[@]}\" )" > /home/$username/.zshenv
-			echo "source \"/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/python-argcomplete\"" > /home/$username/.bash_completion
 			# debug output
 			echo "Created the argcomplete configuration files"
 		fi

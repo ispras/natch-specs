@@ -19,6 +19,7 @@ AutoProv: nopython3
 # AutoReq can't find these libs due to:
 # readelf: Error: no .dynamic section in the dynamic segment
 
+
 Requires: glib2
 Requires: guestfs-tools
 Requires: lcov
@@ -35,6 +36,7 @@ Requires: libpixman
 Requires: libpng16
 Requires: libSDL2
 Requires: libslirp
+Requires: libsqlite3-devel
 Requires: libusb
 Requires: libvirglrenderer
 Requires: libxkbcommon
@@ -53,7 +55,7 @@ Requires: python3-module-jinja2
 Requires: python3-module-launchpadlib
 Requires: python3-module-lxml
 Requires: python3-module-magic
-Requires: python3-module-progress
+#Requires: python3-module-progress
 Requires: python3-module-psutil
 Requires: python3-module-pycdlib
 Requires: python3-module-requests
@@ -66,6 +68,7 @@ Requires: python3-module-tenacity
 Requires: python3-module-termcolor
 Requires: python3-module-textual
 Requires: python3-module-zstandard
+Requires: python3-modules-sqlite3
 
 # use system dwarfdump
 # Requires: libdwarf-tools
@@ -107,8 +110,9 @@ mkdir -p %buildroot%_bindir/natch
 %_bindir/natch-bin/bin/isp_scripts
 %_bindir/natch-bin/bin/natch_scripts
 %attr(755,root,root) %_bindir/natch-bin/bin/natch-qemu-*
-%attr(755,root,root) %_bindir/natch-bin/bin/module_symbols
+# %attr(755,root,root) %_bindir/natch-bin/bin/module_symbols
 %attr(755,root,root) %_bindir/natch-bin/bin/storage
+%attr(755,root,root) %_bindir/natch-bin/bin/vmidb_symbols
 
 %_bindir/natch-bin/lib
 %_bindir/natch-bin/libexec
@@ -117,6 +121,7 @@ mkdir -p %buildroot%_bindir/natch
 
 
 %post
+
 # This is a workaround to remove a dir for the old Natch what is required to have the further symlink registration working
 rm -rf %_bindir/natch
 ln -sf %_bindir/natch-bin/bin/natch_scripts/natch %_bindir/natch

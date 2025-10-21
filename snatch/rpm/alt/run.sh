@@ -7,6 +7,13 @@ else
     USER="$(whoami)"
 fi
 
+# Killing the service preventing start of the rabbitmq
+sudo kill $(sudo lsof -t -i :25672)
+
+# Solving the issue ВАЖНО: пользователь "snatch_user" не прошёл проверку подлинности (по паролю)
+pids=$(pgrep -f celery)
+[ -n "$pids" ] && sudo kill -9 $pids > /dev/null 2>&1
+
 services="rabbitmq memcached"      # rabbitmq-server 
 for service in $services
 do
@@ -21,9 +28,6 @@ done
 
 running=""
 attempt=1
-
-# Solving the issue ВАЖНО: пользователь "snatch_user" не прошёл проверку подлинности (по паролю)
-sudo pkill -9 -f celery 2>/dev/null || true
 
 sudo -u $USER $SNATCH_PATH/snatch_start.sh
 

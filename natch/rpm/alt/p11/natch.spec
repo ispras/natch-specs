@@ -48,6 +48,7 @@ Requires: python3-module-alive-progress
 Requires: python3-module-argcomplete
 Requires: python3-module-beautifulsoup4
 Requires: python3-module-bsddb3
+Requires: python3-module-chardet
 Requires: python3-module-colorlog
 Requires: python3-module-cxxfilt
 Requires: python3-module-elftools

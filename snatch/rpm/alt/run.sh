@@ -7,8 +7,12 @@ else
     USER="$(whoami)"
 fi
 
+# Sometimes it's required to stop before start to avoid the processing issues
+sudo -u $USER $SNATCH_PATH/snatch_stop.sh
+
 # Killing the service preventing start of the rabbitmq
-sudo kill $(sudo lsof -t -i :25672)
+rabbitmqPID=$(sudo lsof -t -i :25672)
+[ ! -z $rabbitmqPID ] && sudo kill -9 $rabbitmqPID > /dev/null 2>&1
 
 # Solving the issue ВАЖНО: пользователь "snatch_user" не прошёл проверку подлинности (по паролю)
 pids=$(pgrep -f celery)

@@ -1,3 +1,75 @@
-#!/bin/bash
-rm -rf /var/log/snatch.log /home/$USER/.local/share/virtualenvs/snatch/ /usr/bin/snatch/
-echo "SNatch has been uninstalled."
+#!/bin/sh
+
+set -e
+
+case "$1" in
+    purge)
+
+        # Detecting a logged in user
+        if [ -n "$SUDO_USER" ]; then
+            USER="$SUDO_USER"
+        else
+            USER="$(whoami)"
+        fi
+
+        logFile="/var/log/snatch.log"
+        mediaDir="/home/$USER/snatch/media/"
+
+        if [ -f "$logFile" ]; then
+            # Interactive mode
+            if [ -t 0 ] && [ -t 1 ]; then
+                echo "Удалить файл лога ($logFile)? [y/N]"
+                read -r response
+                case "$response" in
+                    [yY][eE][sS]|[yY])
+                        rm -f "$logFile"
+                        echo "Файл лога удален."
+                        ;;
+                    *)
+                        echo "Файл лога сохранён."
+                        ;;
+                esac
+
+            # Non-interactive mode: removing
+            else
+                rm -f "$logFile"
+                echo "Файл лога удален"
+            fi
+        fi
+
+        if [ ! -z "$(ls -A $mediaDir)" ]; then
+#            mediaDir=$(dirname "$mediaDir")
+            # echo "DEBUG: Removing the $mediaDir"
+
+            # Interactive mode
+            if [ -t 0 ] && [ -t 1 ]; then
+                echo "Удалить существующие проекты? [y/N]"
+                read -r response
+                case "$response" in
+                    [yY][eE][sS]|[yY])
+                        rm -rf "$mediaDir"
+                        echo "Существующие проекты удалены."
+                        ;;
+                    *)
+                        echo "Существующие проекты сохранены."
+                        ;;
+                esac
+
+            # Non-interactive mode: removing
+            else
+                rm -rf "$mediaDir"
+                echo "Существующие проекты удалены."
+            fi
+        fi
+
+        ;;
+    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+        # Other cases
+        ;;
+esac
+
+rm -rf "/home/$USER/.local/share/virtualenvs/snatch/" "/usr/bin/snatch/"
+
+echo "SNatch удален."
+
+exit 0

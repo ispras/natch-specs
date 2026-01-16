@@ -44,9 +44,7 @@ mkdir -p %{buildroot}/usr/bin/snatch
 cp -r %{_builddir}/* %{buildroot}/usr/bin/snatch/
 
 %post
-
 # Detecting a logged in user
-# option 1
 if [ -n "$SUDO_USER" ]; then
     USER="$SUDO_USER"
 else
@@ -123,9 +121,62 @@ if [ $1 -eq 0 ]; then
 	fuser -k 11211/tcp &> /dev/null || :				# memcached
 	fuser -k 25672/tcp&> /dev/null || :					# rabbitmq-server
 
-	rm -f /var/log/snatch.log
+	# Detecting a logged in user
+	if [ -n "$SUDO_USER" ]; then
+		USER="$SUDO_USER"
+	else
+		USER="$(whoami)"
+	fi
 
-    echo "SNatch has been uninstalled."
+	logFile="/var/log/snatch.log"
+	mediaDir="/home/$USER/snatch/media/"
+
+	if [ -f "$logFile" ]; then
+		# Interactive mode
+		if [ -t 0 ] && [ -t 1 ]; then
+			echo "Удалить файл лога ($logFile)? [y/N]"
+			read -r response
+			case "$response" in
+				[yY][eE][sS]|[yY])
+					rm -f "$logFile"
+					echo "Файл лога удален."
+					;;
+				*)
+					echo "Файл лога сохранён."
+					;;
+			esac
+
+		# Non-interactive mode: removing
+		else
+			rm -f "$logFile"
+			echo "Файл лога удален"
+		fi
+	fi
+
+	if [ ! -z "$(ls -A $mediaDir)" ]; then
+#		mediaDir=$(dirname "$mediaDir")
+
+		# Interactive mode
+		if [ -t 0 ] && [ -t 1 ]; then
+			echo "Удалить существующие проекты? [y/N]"
+			read -r response
+			case "$response" in
+				[yY][eE][sS]|[yY])
+					rm -rf "$mediaDir"
+					echo "Существующие проекты удалены."
+					;;
+				*)
+					echo "Существующие проекты сохранены."
+					;;
+			esac
+
+		# Non-interactive mode: removing
+		else
+			rm -rf "$mediaDir"
+			echo "Существующие проекты удалены."
+		fi
+	fi
+	echo "SNatch удален."
 fi
 
 %files

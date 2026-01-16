@@ -1,9 +1,10 @@
 Package: snatch
-Version: '"$VERSION-$COMMIT"'
+Version: VERSIONPLACEHOLDER
 Provides: snatch
 Maintainer: ISP RAS <natch@ispras.ru>
 Architecture: amd64
 Section: devel
-Depends: '"$aptReq"'
+Depends: DEPENDENCIESPLACEHOLDER
 Description: ISP RAS SNatch.
  ISP RAS SNatch visualizes representation for Natch results.
+ 

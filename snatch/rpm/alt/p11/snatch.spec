@@ -122,7 +122,6 @@ cp -r * %buildroot%_bindir/snatch
 %post
 
 # Detecting a logged in user
-# option 1
 if [ -n "$SUDO_USER" ]; then
     USER="$SUDO_USER"
 else
@@ -206,7 +205,62 @@ echo -e "\033[32mTo finish SNatch setup run \e[0m\e[1;32m/usr/bin/snatch/configu
 echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"
 
 %postun
-echo "SNatch has been uninstalled."
+# Detecting a logged in user
+if [ -n "$SUDO_USER" ]; then
+	USER="$SUDO_USER"
+else
+	USER="$(whoami)"
+fi
+
+logFile="/var/log/snatch.log"
+mediaDir="/home/$USER/snatch/media/"
+
+if [ -f "$logFile" ]; then
+	# Interactive mode
+	if [ -t 0 ] && [ -t 1 ]; then
+		echo "Удалить файл лога ($logFile)? [y/N]"
+		read -r response
+		case "$response" in
+			[yY][eE][sS]|[yY])
+				rm -f "$logFile"
+				echo "Файл лога удален."
+				;;
+			*)
+				echo "Файл лога сохранён."
+				;;
+		esac
+
+	# Non-interactive mode: removing
+	else
+		rm -f "$logFile"
+		echo "Файл лога удален"
+	fi
+fi
+
+if [ ! -z "$(ls -A $mediaDir)" ]; then
+#	mediaDir=$(dirname "$mediaDir")
+
+	# Interactive mode
+	if [ -t 0 ] && [ -t 1 ]; then
+		echo "Удалить существующие проекты? [y/N]"
+		read -r response
+		case "$response" in
+			[yY][eE][sS]|[yY])
+				rm -rf "$mediaDir"
+				echo "Существующие проекты удалены."
+				;;
+			*)
+				echo "Существующие проекты сохранены."
+				;;
+		esac
+
+	# Non-interactive mode: removing
+	else
+		rm -rf "$mediaDir"
+		echo "Существующие проекты удалены."
+	fi
+fi
+echo "SNatch удален."
 
 %changelog
 * DATEPLACEHOLDER ISP RAS <natch@ispras.ru> VERSIONPLACEHOLDER

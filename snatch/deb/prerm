@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Detecting a logged in user
-# option 1
 if [ -n "$SUDO_USER" ]; then
     USER="$SUDO_USER"
 else

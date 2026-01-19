@@ -105,17 +105,27 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 
 		# "eval" does not work under root even with sudo -u $username
 		# so we will create the bash/zsh configs by ourselves
-		if [ ! -s "/home/$username/.bash_completion" ]; then
-			echo "fpath=( /usr/lib/python3/dist-packages/argcomplete/bash_completion.d \"\${fpath[@]}\" )" > /home/$username/.zshenv
+		currentConfig="/home/$username/.zshenv"
+		if [ ! -s "$currentConfig" ]; then
+			echo "fpath=( /usr/lib/python3/dist-packages/argcomplete/bash_completion.d \"\${fpath[@]}\" )" > "$currentConfig"
+			echo "Created $currentConfig"
+		elif ! grep -q "argcomplete" "$currentConfig"; then
+			echo "fpath=( /usr/lib/python3/dist-packages/argcomplete/bash_completion.d \"\${fpath[@]}\" )" >> "$currentConfig"
+			echo "$currentConfig existed but argcomplete was not mentioned, so added a required line."
+		fi
 
-			if [ -e "/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/_python-argcomplete" ]; then
-				echo "source \"/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/_python-argcomplete\"" > /home/$username/.bash_completion
-			else
-				echo "source \"/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/python-argcomplete\"" > /home/$username/.bash_completion
-			fi
-
-			# debug output
-			echo "Created the argcomplete configuration files"
+		currentConfig="/home/$username/.bash_completion"
+		if [ -e "/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/_python-argcomplete" ]; then
+			argcomplete="/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/_python-argcomplete"
+		else
+			argcomplete="/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/python-argcomplete"
+		fi
+		if [ ! -s "$currentConfig" ]; then
+			echo "source \"$argcomplete\"" > "$currentConfig"
+			echo "Created $currentConfig"
+		elif ! grep -q "argcomplete" "$currentConfig"; then
+			echo "source \"$argcomplete\"" >> "$currentConfig"
+			echo "$currentConfig existed but argcomplete was not mentioned, so added a required line."
 		fi
 
 		# # If the results do not contain "Adding shellcode to...

@@ -98,8 +98,9 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 
 		else
 			activationResults=$(./$activateScriptName --user)							#  2>/dev/null
-			echo "Activation results: $activationResults"
 		fi
+		echo "Activation results: $activationResults"
+
 		# debug output
 
 		# "eval" does not work under root even with sudo -u $username
@@ -121,7 +122,9 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 		if [[ $activationResults != *$username* ]]; then
 
 			# Activation with path and without --user key
-			./$activateScriptName
+			activationResults=$(./$activateScriptName)							#  2>/dev/null
+			echo "Activation results: $activationResults"
+			
 			# debug output
 			echo "argcomplete activation finished."
 

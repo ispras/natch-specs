@@ -87,19 +87,19 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 	else
 		# Detecting the last modified user. It will get the configs
 		username=$(ls -llt /home | head -2 | tail -1 | awk '{print $9}')
-		echo "Current user is $username"
 
 		echo "Activating argcomplete for $username..."
-		if [[ $osName == "Ubuntu" ]] && [[ $osVer == "22.04" ]] ; then
-			activationResults=$(./$activateScriptName --user --complete-arguments)		#  2>/dev/null
+# Temp disabled the autoactivation for debug purposes
+		# if [[ $osName == "Ubuntu" ]] && [[ $osVer == "22.04" ]] ; then
+		# 	activationResults=$(./$activateScriptName --user --complete-arguments)		#  2>/dev/null
 
-		elif [[ $osName == "Ubuntu" ]] && [[ $osVer == "24.04" ]] ; then
-			activationResults=$(yes | ./$activateScriptName --user)						#  2>/dev/null
+		# elif [[ $osName == "Ubuntu" ]] && [[ $osVer == "24.04" ]] ; then
+		# 	activationResults=$(yes | ./$activateScriptName --user)						#  2>/dev/null
 
-		else
-			activationResults=$(./$activateScriptName --user)							#  2>/dev/null
-		fi
-		echo "Activation results: $activationResults"
+		# else
+		# 	activationResults=$(./$activateScriptName --user)							#  2>/dev/null
+		# fi
+		# echo "Activation results: $activationResults"
 
 		# debug output
 

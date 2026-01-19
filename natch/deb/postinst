@@ -86,7 +86,7 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 	# QEMP-822?focusedCommentId=50815
 	else
 		# Detecting the last modified user. It will get the configs
-		username=$(ls -llt /home | head -2 | tail -1 | awk "{print $9}")
+		username=$(ls -llt /home | head -2 | tail -1 | awk '{print $9}')
 		echo "Current user is $username"
 
 		echo "Activating argcomplete for $username..."

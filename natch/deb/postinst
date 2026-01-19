@@ -90,11 +90,11 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 		echo "Current user is $username"
 
 		echo "Activating argcomplete for $username..."
-		if [[ $osName == *"Ubuntu"* ]] && [[ $osVer == *"22.04" ]] ; then
+		if [[ $osName == "Ubuntu" ]] && [[ $osVer == "22.04" ]] ; then
 			activationResults=$(./$activateScriptName --user --complete-arguments)		#  2>/dev/null
 
-		elif [[ $osName == *"Ubuntu"* ]] && [[ $osVer == *"24.04" ]] ; then
-			activationResults=$(yes | ./$activateScriptName --user)			#  2>/dev/null
+		elif [[ $osName == "Ubuntu" ]] && [[ $osVer == "24.04" ]] ; then
+			activationResults=$(yes | ./$activateScriptName --user)						#  2>/dev/null
 
 		else
 			activationResults=$(./$activateScriptName --user)							#  2>/dev/null
@@ -122,7 +122,7 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 		if [[ $activationResults != *"Adding shellcode to"* ]]; then
 
 			# Activation with path and without --user key
-			activationResults=$(./$activateScriptName)							#  2>/dev/null
+			activationResults=$(./$activateScriptName)									#  2>/dev/null
 			echo "Activation results: $activationResults"
 			
 			# debug output

@@ -118,8 +118,8 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 			echo "Created the argcomplete configuration files"
 		fi
 
-		# If the results do not contain "Adding shellcode to /home/$username/...
-		if [[ $activationResults != *$username* ]]; then
+		# If the results do not contain "Adding shellcode to...
+		if [[ $activationResults != *"Adding shellcode to"* ]]; then
 
 			# Activation with path and without --user key
 			activationResults=$(./$activateScriptName)							#  2>/dev/null

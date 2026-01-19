@@ -118,20 +118,20 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 			echo "Created the argcomplete configuration files"
 		fi
 
-		# If the results do not contain "Adding shellcode to...
-		if [[ $activationResults != *"Adding shellcode to"* ]]; then
+		# # If the results do not contain "Adding shellcode to...
+		# if [[ $activationResults != *"Adding shellcode to"* ]]; then
 
-			# Activation with path and without --user key
-			activationResults=$(./$activateScriptName)									#  2>/dev/null
-			echo "Activation results: $activationResults"
+		# 	# Activation with path and without --user key
+		# 	activationResults=$(./$activateScriptName)									#  2>/dev/null
+		# 	echo "Activation results: $activationResults"
 			
-			# debug output
-			echo "argcomplete activation finished."
+		# 	# debug output
+		# 	echo "argcomplete activation finished."
 
-		else
-			# debug output
-			echo "Activation was successful"
-		fi
+		# else
+		# 	# debug output
+		# 	echo "Activation was successful"
+		# fi
 
 		# Sometimes the script may have a .sh extension
 		if [ -e "/usr/lib/python3/dist-packages/argcomplete/bash_completion.d/python-argcomplete.sh" ]; then

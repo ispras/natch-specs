@@ -102,18 +102,6 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 		fi
 		# debug output
 
-		# If the results do not contain "Adding shellcode to /home/$username/...
-		if [[ $activationResults != *$username* ]]; then
-			# Activation with path and without --user key
-			./$activateScriptName
-			# debug output
-			echo "argcomplete activation finished."
-
-		else
-			# debug output
-			echo "Activation was successful"
-		fi
-
 		# "eval" does not work under root even with sudo -u $username
 		# so we will create the bash/zsh configs by ourselves
 		if [ ! -s "/home/$username/.bash_completion" ]; then
@@ -127,6 +115,19 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 
 			# debug output
 			echo "Created the argcomplete configuration files"
+		fi
+
+		# If the results do not contain "Adding shellcode to /home/$username/...
+		if [[ $activationResults != *$username* ]]; then
+
+			# Activation with path and without --user key
+			./$activateScriptName
+			# debug output
+			echo "argcomplete activation finished."
+
+		else
+			# debug output
+			echo "Activation was successful"
 		fi
 
 		# Sometimes the script may have a .sh extension

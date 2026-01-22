@@ -43,6 +43,7 @@ Requires: postgresql17-contrib
 # Required to build wheel for pylibmc
 Requires: gcc
 Requires: zlib-devel
+Requires: python3-dev
 
 # This is required to have an ability to build the wheels in venv below
 Requires: python3-module-pylibmc

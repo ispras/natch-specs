@@ -14,7 +14,7 @@ else
 fi
 
 # Sometimes it's required to stop before start to avoid the processing issues
-su -c "HOME='$HOME' USER='$USER' LOGNAME='/tmp/log.debug' PATH='$PATH' $SNATCH_PATH/snatch_stop.sh"
+su -c "HOME='$HOME' USER='$USER' PATH='$PATH' $SNATCH_PATH/snatch_stop.sh"
 
 # Killing the service preventing start of the rabbitmq
 rabbitmqPID=$(privilegedRun "lsof -t -i :25672")
@@ -39,7 +39,7 @@ done
 running=""
 attempt=1
 
-su -c "HOME='$HOME' USER='$USER' LOGNAME='/tmp/log.debug' PATH='$PATH' $SNATCH_PATH/snatch_start.sh"
+su -c "HOME='$HOME' USER='$USER' PATH='$PATH' $SNATCH_PATH/snatch_start.sh"
 
 echo "Waiting for SNatch to be started..."
 

@@ -147,26 +147,26 @@ fi
 
 echo "Activating Python virtual environment"
 cd /home/$USER/.local/share/virtualenvs/snatch/
-su -c "HOME='$HOME' USER='$USER' LOGNAME='/tmp/log.debug' PATH='$PATH' python3 -m venv env"
+su -c "HOME='$HOME' USER='$USER' PATH='$PATH' python3 -m venv env"
 . env/bin/activate
 
 # Install the pre-requirements
-su -c "HOME='$HOME' USER='$USER' LOGNAME='/tmp/log.debug' PATH='$PATH' pip3 install urllib3~=1.26 || :"
+su -c "HOME='$HOME' USER='$USER' PATH='$PATH' pip3 install urllib3~=1.26"
 
 # This is from the beginning of the requirements.txt
-su -c "HOME='$HOME' USER='$USER' LOGNAME='/tmp/log.debug' PATH='$PATH' pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5 || :"
+su -c "HOME='$HOME' USER='$USER' PATH='$PATH' pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5"
 
 # Grabbing the last requirements from the file
-su -c "HOME='$HOME' USER='$USER' LOGNAME='/tmp/log.debug' PATH='$PATH' pip3 install --upgrade REQUIREMENTSPLACEHOLDER --no-warn-script-location || :"
+su -c "HOME='$HOME' USER='$USER' PATH='$PATH' pip3 install --upgrade REQUIREMENTSPLACEHOLDER --no-warn-script-location"
 
 # Install the rest requirements (to avoid errors during the DB configuration part)
-su -c "HOME='$HOME' USER='$USER' LOGNAME='/tmp/log.debug' PATH='$PATH' pip3 install --upgrade chardet || :"
+su -c "HOME='$HOME' USER='$USER' PATH='$PATH' pip3 install --upgrade chardet"
 
 # Previously used (when we were using installation from p11)
-#pip3 install django-celery-results~=2.3.1 celery-progress~=0.1.2 django-celery~=3.1.17 pyvis~=0.2.1 django-widget-tweaks || :
+#pip3 install django-celery-results~=2.3.1 celery-progress~=0.1.2 django-celery~=3.1.17 pyvis~=0.2.1 django-widget-tweaks
 
 # Workaround for the case when sqlite3 cannot be found by IPython module 
-su -c "HOME='$HOME' USER='$USER' LOGNAME='/tmp/log.debug' PATH='$PATH' cp -r /home/$USER/.local/lib/python3/site-packages/django/db/backends/sqlite3 /home/$USER/.local/lib/python3/site-packages/ 2>/dev/null"
+su -c "HOME='$HOME' USER='$USER' PATH='$PATH' cp -r /home/$USER/.local/lib/python3/site-packages/django/db/backends/sqlite3 /home/$USER/.local/lib/python3/site-packages/ 2>/dev/null"
 
 # Uncomment when we will have a separate vmi
 #pip3 install /usr/bin/snatch/vmi

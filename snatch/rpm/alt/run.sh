@@ -14,7 +14,7 @@ else
 fi
 
 # Sometimes it's required to stop before start to avoid the processing issues
-su $USER -c "$SNATCH_PATH/snatch_stop.sh"
+su -p $USER -c "$SNATCH_PATH/snatch_stop.sh"
 
 # Killing the service preventing start of the rabbitmq
 rabbitmqPID=$(privilegedRun "lsof -t -i :25672")
@@ -39,7 +39,7 @@ done
 running=""
 attempt=1
 
-su $USER -c "$SNATCH_PATH/snatch_start.sh"
+su -p $USER -c "$SNATCH_PATH/snatch_start.sh"
 
 echo "Waiting for SNatch to be started..."
 

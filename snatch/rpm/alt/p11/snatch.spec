@@ -40,13 +40,17 @@ Requires: postgresql17
 Requires: postgresql17-server
 Requires: postgresql17-contrib
 
+# Required to build wheel for pylibmc
+Requires: gcc
+Requires: zlib-devel
+
 # This is required to have an ability to build the wheels in venv below
 Requires: python3-module-pylibmc
 
 # In the day of 3.4 release a CG generation was already broken due to a sudden update of one of the python packages in p11 which happened 2 days before that.
 # To have Snatch correctly working it's really important to have a specific combination of the tested compatible python packages.
 # So we will use an approach with installation from pypi (below)
-#Requires: python3-module-celery
+Requires: python3-module-celery
 #Requires: python3-module-cxxfilt
 #Requires: python3-module-django
 #Requires: python3-module-django-celery-beat

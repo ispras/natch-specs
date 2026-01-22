@@ -45,7 +45,7 @@ else
   echo "$DB_PASSWORD" > /tmp/dbpas
 
   # As per https://www.altlinux.org/PostgreSQL we must create system DBs
-  PGSETUP_INITDB_OPTIONS='--pgdata=/var/lib/pgsql/data --auth=trust --pwfile=/tmp/dbpas --no-instructions' su -p $USER -c "/etc/init.d/postgresql initdb"
+  PGSETUP_INITDB_OPTIONS='--pgdata=/var/lib/pgsql/data --auth=trust --pwfile=/tmp/dbpas --no-instructions' su -c "HOME='$HOME' USER='$USER' LOGNAME='/tmp/log.debug' PATH='$PATH' /etc/init.d/postgresql initdb"
   rm -f /tmp/dbpas
 
   echo "Starting PostgreSQL..."

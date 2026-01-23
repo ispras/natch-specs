@@ -150,6 +150,8 @@ cd /home/$USER/.local/share/virtualenvs/snatch/
 su -c "HOME='$HOME' USER='$USER' PATH='$PATH' python3 -m venv env"
 . env/bin/activate
 
+su -c "HOME='$HOME' USER='$USER' PATH='$PATH' pip3 install --upgrade pip"
+
 # Install the pre-requirements
 su -c "HOME='$HOME' USER='$USER' PATH='$PATH' pip3 install urllib3~=1.26"
 

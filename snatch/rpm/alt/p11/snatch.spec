@@ -157,7 +157,7 @@ su -c "HOME='$HOME' USER='$USER' PATH='$PATH' pip3 install urllib3~=1.26"
 su -c "HOME='$HOME' USER='$USER' PATH='$PATH' pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5"
 
 # Grabbing the last requirements from the file
-su -c "HOME='$HOME' USER='$USER' PATH='$PATH' pip3 install --upgrade REQUIREMENTSPLACEHOLDER"
+# REQUIREMENTSPLACEHOLDER
 
 # Install the rest requirements (to avoid errors during the DB configuration part)
 su -c "HOME='$HOME' USER='$USER' PATH='$PATH' pip3 install --upgrade chardet"

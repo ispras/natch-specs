@@ -52,7 +52,7 @@ Requires: python3-module-pylibmc
 # To have Snatch correctly working it's really important to have a specific combination of the tested compatible python packages.
 # So we will use an approach with installation from pypi (below)
 Requires: python3-module-celery
-Requires: python3-module-cxxfilt
+#Requires: python3-module-cxxfilt
 #Requires: python3-module-django
 #Requires: python3-module-django-celery-beat
 #Requires: python3-module-djangorestframework
@@ -162,7 +162,7 @@ su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrad
 # REQUIREMENTSPLACEHOLDER
 
 # Install the rest requirements (to avoid errors during the DB configuration part)
-su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade chardet"
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade chardet cxxfilt~=0.3.0"
 
 # Previously used (when we were using installation from p11)
 #pip3 install django-celery-results~=2.3.1 celery-progress~=0.1.2 django-celery~=3.1.17 pyvis~=0.2.1 django-widget-tweaks

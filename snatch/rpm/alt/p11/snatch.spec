@@ -147,6 +147,8 @@ fi
 
 #echo "Activating Python virtual environment"
 #cd /home/$USER/.local/share/virtualenvs/snatch/
+
+mkdir -p "/home/$USER/.local/share/virtualenvs/snatch"
 su -c "python3 -m venv env /home/$USER/.local/share/virtualenvs/snatch"
 . env/bin/activate
 

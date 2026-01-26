@@ -145,11 +145,9 @@ if [ -d env ]; then
 	echo "Removing the existing Python environment"
 fi
 
-#echo "Activating Python virtual environment"
-#cd /home/$USER/.local/share/virtualenvs/snatch/
-
-mkdir -p "/home/$USER/.local/share/virtualenvs/snatch"
-su -c "python3 -m venv env /home/$USER/.local/share/virtualenvs/snatch"
+echo "Activating Python virtual environment"
+cd /home/$USER/.local/share/virtualenvs/snatch/
+python3 -m venv env
 . env/bin/activate
 
 su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade pip"
@@ -170,7 +168,7 @@ su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrad
 #pip3 install django-celery-results~=2.3.1 celery-progress~=0.1.2 django-celery~=3.1.17 pyvis~=0.2.1 django-widget-tweaks
 
 # Workaround for the case when sqlite3 cannot be found by IPython module 
-su -c "cp -r /home/$USER/.local/lib/python3/site-packages/django/db/backends/sqlite3 /home/$USER/.local/lib/python3/site-packages/ 2>/dev/null"
+cp -r /home/$USER/.local/lib/python3/site-packages/django/db/backends/sqlite3 /home/$USER/.local/lib/python3/site-packages/ 2>/dev/null
 
 # Uncomment when we will have a separate vmi
 #pip3 install /usr/bin/snatch/vmi

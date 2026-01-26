@@ -52,7 +52,7 @@ Requires: python3-module-pylibmc
 # To have Snatch correctly working it's really important to have a specific combination of the tested compatible python packages.
 # So we will use an approach with installation from pypi (below)
 Requires: python3-module-celery
-#Requires: python3-module-cxxfilt
+Requires: python3-module-cxxfilt
 #Requires: python3-module-django
 #Requires: python3-module-django-celery-beat
 #Requires: python3-module-djangorestframework

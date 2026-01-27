@@ -28,7 +28,7 @@ if [ -d "$DATADIR" ] && [ -f "$DATADIR/PG_VERSION" ]; then
         echo "Database $DB_NAME does not exist, initializing it..."
 
         # Doing all the Postgres stuff
-        psql -U postgres \ 
+        psql -U postgres \
         -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$DB_NAME' AND pid <> pg_backend_pid();" \
         -c "DROP DATABASE IF EXISTS $DB_NAME;" \
         -c "DROP USER IF EXISTS $DB_USER;" \
@@ -55,7 +55,7 @@ else
   systemctl start postgresql
 
   # Doing all the Postgres stuff
-  psql -U postgres \ 
+  psql -U postgres \
   -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$DB_NAME' AND pid <> pg_backend_pid();" \
   -c "DROP DATABASE IF EXISTS $DB_NAME;" \
   -c "DROP USER IF EXISTS $DB_USER;" \

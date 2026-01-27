@@ -14,6 +14,7 @@ else
 	USER="$(whoami)"
 fi
 
+export DB_NAME DB_USER DB_PASSWORD
 su -c "$SNATCH_PATH/dbinit.sh $DB_NAME $DB_USER $DB_PASSWORD"
 
 rm -f /tmp/dbpas

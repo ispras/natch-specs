@@ -4,6 +4,11 @@ DB_NAME=$1
 DB_USER=$2
 DB_PASSWORD=$3
 
+#debug
+echo "DB_NAME=$DB_NAME"
+echo "DB_USER=$DB_USER"
+echo "DB_PASSWORD=$DB_PASSWORD"
+
 SNATCH_PATH="/usr/bin/snatch"
 DATADIR="/var/lib/pgsql/data"
 HBA_CONF="/var/lib/pgsql/data/pg_hba.conf"

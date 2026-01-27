@@ -4,15 +4,12 @@ DB_NAME=$1
 DB_USER=$2
 DB_PASSWORD=$3
 
-#debug
-echo "DB_NAME=$DB_NAME"
-echo "DB_USER=$DB_USER"
-echo "DB_PASSWORD=$DB_PASSWORD"
-
 SNATCH_PATH="/usr/bin/snatch"
 DATADIR="/var/lib/pgsql/data"
 HBA_CONF="/var/lib/pgsql/data/pg_hba.conf"
 
+read -s -p "Пароль суперпользователя postgres: " postgresPwd
+    
 # If the Postgres data dir does not exist
 if [ -d "$DATADIR" ] && [ -f "$DATADIR/PG_VERSION" ]; then
   echo "Database cluster already exists in $DATADIR"
@@ -22,13 +19,13 @@ if [ -d "$DATADIR" ] && [ -f "$DATADIR/PG_VERSION" ]; then
     echo "PostgreSQL is already running"
 
     # Check the DB existance
-    if psql -lqt | cut -d \| -f 1 | grep -qw "$DB_NAME"; then
+    if PGPASSWORD=$postgresPwd psql -U postgres -lqt | cut -d \| -f 1 | grep -qw "$DB_NAME"; then
         echo "Database $DB_NAME already exists, so skipping initialization"
     else
         echo "Database $DB_NAME does not exist, initializing it..."
 
         # Doing all the Postgres stuff
-        psql -U postgres \
+        PGPASSWORD=$postgresPwd psql -U postgres -h localhost \
         -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$DB_NAME' AND pid <> pg_backend_pid();" \
         -c "DROP DATABASE IF EXISTS $DB_NAME;" \
         -c "DROP USER IF EXISTS $DB_USER;" \
@@ -55,7 +52,7 @@ else
   systemctl start postgresql
 
   # Doing all the Postgres stuff
-  psql -U postgres \
+  PGPASSWORD=$postgresPwd psql -U postgres \
   -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '$DB_NAME' AND pid <> pg_backend_pid();" \
   -c "DROP DATABASE IF EXISTS $DB_NAME;" \
   -c "DROP USER IF EXISTS $DB_USER;" \

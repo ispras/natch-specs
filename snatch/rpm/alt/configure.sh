@@ -7,9 +7,6 @@ DB_USER="snatch_user"
 DB_PASSWORD=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 16)
 echo "$DB_PASSWORD" > /tmp/dbpas
 
-DATADIR="/var/lib/pgsql/data"
-HBA_CONF="/var/lib/pgsql/data/pg_hba.conf"
-
 # Detecting a logged in user
 if [ -n "$SUDO_USER" ]; then
 	USER="$SUDO_USER"
@@ -17,7 +14,9 @@ else
 	USER="$(whoami)"
 fi
 
-su -c "$SNATCH_PATH/dbinit.sh"
+su -c "$SNATCH_PATH/dbinit.sh $DB_NAME $DB_USER $DB_PASSWORD"
+
+rm -f /tmp/dbpas
 
 /home/"$USER"/.local/share/virtualenvs/snatch/env/bin/python3 $SNATCH_PATH/manage.py makemigrations Snatch
 /home/"$USER"/.local/share/virtualenvs/snatch/env/bin/python3 $SNATCH_PATH/manage.py migrate

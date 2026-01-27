@@ -1,5 +1,13 @@
 #!/bin/bash
 
+DB_NAME=$1
+DB_USER=$2
+DB_PASSWORD=$3
+
+SNATCH_PATH="/usr/bin/snatch"
+DATADIR="/var/lib/pgsql/data"
+HBA_CONF="/var/lib/pgsql/data/pg_hba.conf"
+
 # If the Postgres data dir does not exist
 if [ -d "$DATADIR" ] && [ -f "$DATADIR/PG_VERSION" ]; then
   echo "Database cluster already exists in $DATADIR"
@@ -33,11 +41,9 @@ if [ -d "$DATADIR" ] && [ -f "$DATADIR/PG_VERSION" ]; then
 
 else
   echo "Database cluster does not exist. Initializing it..."
-  echo "$DB_PASSWORD" > /tmp/dbpas
 
   # As per https://www.altlinux.org/PostgreSQL we must create system DBs
   PGSETUP_INITDB_OPTIONS='--pgdata=/var/lib/pgsql/data --auth=trust --pwfile=/tmp/dbpas --no-instructions' /etc/init.d/postgresql initdb
-  rm -f /tmp/dbpas
 
   echo "Starting PostgreSQL..."
   systemctl enable postgresql

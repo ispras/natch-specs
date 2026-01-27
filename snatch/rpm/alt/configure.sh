@@ -23,6 +23,8 @@ else
 	USER="$(whoami)"
 fi
 
+su -c "bash -s" << 'EOF'
+
 # If the Postgres data dir does not exist
 if privilegedRun "[ -d \"$DATADIR\" ] && [ -f \"$DATADIR/PG_VERSION\" ]"; then
   echo "Database cluster already exists in $DATADIR"
@@ -67,6 +69,7 @@ fi
 # Grabbing a currently set password and update it
 currentPassword=$(cat $SNATCH_PATH/snatch/settings.py | grep PASSWORD | grep -o -P "(?<=\: \').*(?=\'\,)")
 privilegedRun "sed -i \"s/$currentPassword/$DB_PASSWORD/g\" $SNATCH_PATH/snatch/settings.py"
+EOF
 
 /home/"$USER"/.local/share/virtualenvs/snatch/env/bin/python3 $SNATCH_PATH/manage.py makemigrations Snatch
 /home/"$USER"/.local/share/virtualenvs/snatch/env/bin/python3 $SNATCH_PATH/manage.py migrate

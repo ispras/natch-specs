@@ -74,7 +74,7 @@ else
 fi
 
 # Grabbing a currently set password and update it
-currentPassword=$(cat $SNATCH_PATH/snatch/settings.py | grep PASSWORD | grep -o -P \"(?<=\: \').*(?=\'\,)\")
+currentPassword=$(cat $SNATCH_PATH/snatch/settings.py | grep PASSWORD | grep -o -P "\""(?<=\: \').*(?=\'\,)"\"")
 sed -i \"s/$currentPassword/$DB_PASSWORD/g\" $SNATCH_PATH/snatch/settings.py
 "
 

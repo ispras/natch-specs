@@ -32,8 +32,8 @@ BuildRequires: libcairo-devel
 Requires: rabbitmq-server
 Requires: memcached
 
-# Still required for one of the used modules
-Requires: sqlite3
+## Still required for one of the used modules
+#Requires: sqlite3
 
 Requires: libmemcached-devel
 Requires: postgresql17
@@ -156,7 +156,7 @@ su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrad
 su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install urllib3~=1.26"
 
 # This is from the beginning of the requirements.txt
-su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5"
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5 sqlite3"
 
 # Grabbing the last requirements from the file
 # REQUIREMENTSPLACEHOLDER

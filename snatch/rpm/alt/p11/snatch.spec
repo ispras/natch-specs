@@ -40,13 +40,18 @@ Requires: postgresql17
 Requires: postgresql17-server
 Requires: postgresql17-contrib
 
+# Required to build wheel for pylibmc
+Requires: gcc
+Requires: zlib-devel
+Requires: python3-dev
+
 # This is required to have an ability to build the wheels in venv below
 Requires: python3-module-pylibmc
 
 # In the day of 3.4 release a CG generation was already broken due to a sudden update of one of the python packages in p11 which happened 2 days before that.
 # To have Snatch correctly working it's really important to have a specific combination of the tested compatible python packages.
 # So we will use an approach with installation from pypi (below)
-#Requires: python3-module-celery
+Requires: python3-module-celery
 #Requires: python3-module-cxxfilt
 #Requires: python3-module-django
 #Requires: python3-module-django-celery-beat
@@ -142,26 +147,28 @@ fi
 
 echo "Activating Python virtual environment"
 cd /home/$USER/.local/share/virtualenvs/snatch/
-sudo -u $USER python3 -m venv env
+python3 -m venv env
 . env/bin/activate
 
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade pip"
+
 # Install the pre-requirements
-sudo -u $USER pip3 install urllib3~=1.26 || :
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install urllib3~=1.26"
 
 # This is from the beginning of the requirements.txt
-sudo -u $USER pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5 || :
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5"
 
 # Grabbing the last requirements from the file
-sudo -u $USER pip3 install --upgrade REQUIREMENTSPLACEHOLDER --no-warn-script-location || :
+# REQUIREMENTSPLACEHOLDER
 
 # Install the rest requirements (to avoid errors during the DB configuration part)
-sudo -u $USER pip3 install --upgrade chardet || :
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade chardet cxxfilt~=0.3.0"
 
 # Previously used (when we were using installation from p11)
-#pip3 install django-celery-results~=2.3.1 celery-progress~=0.1.2 django-celery~=3.1.17 pyvis~=0.2.1 django-widget-tweaks || :
+#pip3 install django-celery-results~=2.3.1 celery-progress~=0.1.2 django-celery~=3.1.17 pyvis~=0.2.1 django-widget-tweaks
 
 # Workaround for the case when sqlite3 cannot be found by IPython module 
-sudo -u $USER cp -r /home/$USER/.local/lib/python3/site-packages/django/db/backends/sqlite3 /home/$USER/.local/lib/python3/site-packages/
+cp -r /home/$USER/.local/lib/python3/site-packages/django/db/backends/sqlite3 /home/$USER/.local/lib/python3/site-packages/ 2>/dev/null
 
 # Uncomment when we will have a separate vmi
 #pip3 install /usr/bin/snatch/vmi

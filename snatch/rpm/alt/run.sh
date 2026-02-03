@@ -1,22 +1,15 @@
 SNATCH_PATH="/usr/bin/snatch"
 
-# Detecting a logged in user
-if [ -n "$SUDO_USER" ]; then
-    USER="$SUDO_USER"
-else
-    USER="$(whoami)"
-fi
-
 # Sometimes it's required to stop before start to avoid the processing issues
-sudo -u $USER $SNATCH_PATH/snatch_stop.sh
+$SNATCH_PATH/snatch_stop.sh
 
 # Killing the service preventing start of the rabbitmq
-rabbitmqPID=$(sudo lsof -t -i :25672)
-[ ! -z $rabbitmqPID ] && sudo kill -9 $rabbitmqPID > /dev/null 2>&1
+rabbitmqPID=$(lsof -t -i :25672)
+[ ! -z $rabbitmqPID ] && kill -9 $rabbitmqPID > /dev/null 2>&1
 
 # Solving the issue ВАЖНО: пользователь "snatch_user" не прошёл проверку подлинности (по паролю)
 pids=$(pgrep -f celery)
-[ -n "$pids" ] && sudo kill -9 $pids > /dev/null 2>&1
+[ -n "$pids" ] && kill -9 $pids > /dev/null 2>&1
 
 services="rabbitmq memcached"      # rabbitmq-server 
 for service in $services
@@ -24,7 +17,7 @@ do
   checkService=$(systemctl status $service)
   if [[ $checkService != *"running"* ]]; then
     echo "$service is not started, starting it..."
-    sudo systemctl start $service
+    systemctl start $service
   else
     echo "$service is started"
   fi
@@ -33,7 +26,7 @@ done
 running=""
 attempt=1
 
-sudo -u $USER $SNATCH_PATH/snatch_start.sh
+$SNATCH_PATH/snatch_start.sh
 
 echo "Waiting for SNatch to be started..."
 

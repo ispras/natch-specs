@@ -163,9 +163,9 @@ sudo -u $USER pip3 install --upgrade chardet || :
 # Workaround for the case when sqlite3 cannot be found by IPython module 
 sudo -u $USER cp -r /home/$USER/.local/lib/python3/site-packages/django/db/backends/sqlite3 /home/$USER/.local/lib/python3/site-packages/
 
-# Uncomment when we will have a separate vmi
-#pip3 install /usr/bin/snatch/vmi
-#rm -rf /usr/bin/snatch/vmi
+# Register a separate vmidb
+pip3 install /usr/bin/snatch/vmi
+rm -rf /usr/bin/snatch/vmi
 
 echo "Starting rabbitmq and memcached..."
 /usr/sbin/rabbitmq-server -detached || :

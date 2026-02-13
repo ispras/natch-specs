@@ -126,9 +126,9 @@ pip3 install celery-progress~=0.1.2 django~=4.1.4 django-celery~=3.1.17 django-c
 # Workaround for non-working celery (actually it's working but only via python)
 sed -i -E "s/nohup celery/nohup python3 -m celery/" "/usr/bin/snatch/snatch_start.sh"
 
-# Uncomment for 3.4+ where we will have a separate vmi
-#pip3 install /usr/bin/snatch/vmi
-#rm -rf /usr/bin/snatch/vmi
+# Register a separate vmidb
+pip3 install /usr/bin/snatch/vmi
+rm -rf /usr/bin/snatch/vmi
 
 echo "Starting rabbitmq and memcached..."
 /usr/sbin/rabbitmq-server -detached || :

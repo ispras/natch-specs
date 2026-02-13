@@ -69,11 +69,11 @@ fi
 sudo -u $USER pip3 install wheel
 sudo -u $USER pip3 install -r /usr/bin/snatch/requirements.txt
 
-# Uncomment for 3.4+ where we will have a separate vmi
-#sudo chmod -R 755 /usr/bin/snatch/vmi
-#sudo chown -R $USER:$USER /usr/bin/snatch/vmi
-#sudo -u $USER pip3 install /usr/bin/snatch/vmi
-#sudo rm -rf /usr/bin/snatch/vmi
+# Register a separate vmidb
+sudo chmod -R 755 /usr/bin/snatch/vmi
+sudo chown -R $USER:$USER /usr/bin/snatch/vmi
+sudo -u $USER pip3 install /usr/bin/snatch/vmi
+sudo rm -rf /usr/bin/snatch/vmi
 
 echo "Starting rabbitmq and memcached..."
 sudo /usr/sbin/rabbitmq-server -detached

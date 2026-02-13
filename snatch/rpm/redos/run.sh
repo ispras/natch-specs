@@ -7,6 +7,9 @@ else
     USER="$(whoami)"
 fi
 
+# Sometimes it's required to stop an existing RabbitMQ process before to avoid issues
+sudo rabbitmqctl shutdown
+
 services="rabbitmq-server memcached"
 for service in $services
 do

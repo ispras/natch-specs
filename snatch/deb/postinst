@@ -32,7 +32,7 @@ pip3 install PIPDEPENDENCIESPLACEHOLDER --upgrade
 
 # Register a separate vmidb
 pip3 install /usr/bin/snatch/vmi --upgrade
-rm -rf /usr/bin/snatch/vmi
+#rm -rf /usr/bin/snatch/vmi
 
 deactivate 
 cd - > /dev/null

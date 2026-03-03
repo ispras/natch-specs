@@ -19,8 +19,13 @@ su -c "$SNATCH_PATH/dbinit.sh $DB_NAME $DB_USER $DB_PASSWORD"
 
 rm -f /tmp/dbpas
 
-/home/"$USER"/.local/share/virtualenvs/snatch/env/bin/python3 $SNATCH_PATH/manage.py makemigrations Snatch
-/home/"$USER"/.local/share/virtualenvs/snatch/env/bin/python3 $SNATCH_PATH/manage.py migrate
+echo "Activating Python virtual environment"
+cd /home/$USER/.local/share/virtualenvs/snatch/
+python3 -m venv env
+
+. env/bin/activate
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/python3 $SNATCH_PATH/manage.py makemigrations Snatch"
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/python3 $SNATCH_PATH/manage.py migrate"
 
 echo -e "\n\e[0;33mRemember the PostgreSQL credentials:\e[0m"
 echo "==========================================="
@@ -30,9 +35,9 @@ echo -e "\e[0;33m Password: $DB_PASSWORD\e[0m"
 echo "==========================================="
 
 # Creating user for CI support
-/home/$USER/.local/share/virtualenvs/snatch/env/bin/python3 $SNATCH_PATH/manage.py createsuperuser --username ci_bot --email ci@bot.com --noinput
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/python3 $SNATCH_PATH/manage.py createsuperuser --username ci_bot --email ci@bot.com --noinput"
 echo -e "Please, note that the this token is used to perform CI API requests (it is also saved to /usr/bin/snatch/ci_token.txt)."
-/home/$USER/.local/share/virtualenvs/snatch/env/bin/python3 $SNATCH_PATH/manage.py drf_create_token ci_bot | awk '{print $3}' | tee /usr/bin/snatch/ci_token.txt
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/python3 $SNATCH_PATH/manage.py drf_create_token ci_bot | awk '{print $3}' | tee /usr/bin/snatch/ci_token.txt"
 
 #echo -e "\033[32mTo use ISP RAS SNatch start \e[0m\e[1;32m$SNATCH_PATH/run.sh\e[0m\033[32m.\e[0m"
 

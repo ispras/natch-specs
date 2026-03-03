@@ -158,6 +158,9 @@ su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrad
 # This is from the beginning of the requirements.txt
 su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5"
 
+# requirements.txt contains an old version of Django which is incompatible with django-widget-tweaks and djangorestframework
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade Django"
+
 # Grabbing the last requirements from the file
 REQUIREMENTSPLACEHOLDER
 

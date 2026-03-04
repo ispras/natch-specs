@@ -37,21 +37,16 @@ Requires: postgresql17
 Requires: postgresql17-server
 Requires: postgresql17-contrib
 
-Requires: python3-module-celery
-Requires: python3-module-cxxfilt
-#Requires: python3-module-django
-#Requires: python3-module-django-celery-beat
-Requires: python3-module-djangorestframework
-Requires: python3-module-importlib-metadata
-Requires: python3-module-ipython
-Requires: python3-module-networkx
-#Requires: python3-module-psycopg2						# had to replace it by a lib installed via pip
-Requires: python3-module-Pygments
-Requires: python3-module-pylibmc
-#Requires: python3-module-pyzstd
-Requires: python3-module-requests
-#Requires: python3-module-scapy							# had to replace it by a lib installed via pip to avoid https://github.com/vnetman/pcap2csv/issues/4
-Requires: python3-module-wheel
+#Requires: python3-module-celery
+#Requires: python3-module-cxxfilt
+#Requires: python3-module-djangorestframework
+#Requires: python3-module-importlib-metadata
+#Requires: python3-module-ipython
+#Requires: python3-module-networkx
+#Requires: python3-module-Pygments
+#Requires: python3-module-pylibmc
+#Requires: python3-module-requests
+#Requires: python3-module-wheel
 
 #Requires: python3-module-wheel
 #Requires: python3-module-django                # 5.1.8-alt1    vs. ~=4.1.4
@@ -140,19 +135,16 @@ python3 -m venv env
 su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade pip"
 
 # Install the pre-requirements
-su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade urllib3~=2.6.3"
-
-# This is from the beginning of the requirements.txt
-su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5"
-
-# Grabbing the last requirements from the file
-REQUIREMENTSPLACEHOLDER
-
-# Install the rest requirements (to avoid errors during the DB configuration part)
-su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade chardet==5.2.0"
-
-# Was originally here
-#pip3 install celery-progress~=0.1.2 django~=4.1.4 django-celery~=3.1.17 django-celery-beat django-celery-results~=2.3.1 pyvis~=0.2.1 pyzstd~=0.15.3 psycopg2-binary~=2.9.3 scapy~=2.5.0 django-widget-tweaks || :
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade celery-progress~=0.1.2"
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade django~=4.1.4"
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade django-celery~=3.1.17"
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade django-celery-beat"
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade django-celery-results~=2.3.1"
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade pyvis~=0.2.1"
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade pyzstd~=0.15.3"
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade psycopg2-binary~=2.9.3"
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade scapy~=2.5.0"
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade django-widget-tweaks"
 
 # Separate vmi (v4.0)
 pip3 install /usr/bin/snatch/vmi

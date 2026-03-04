@@ -162,7 +162,7 @@ su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrad
 REQUIREMENTSPLACEHOLDER
 
 # Install the rest requirements (to avoid errors during the DB configuration part)
-su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade chardet~=6.0.0.post1"
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade chardet==5.2.0"
 
 # Previously used (when we were using installation from p11)
 #pip3 install django-celery-results~=2.3.1 celery-progress~=0.1.2 django-celery~=3.1.17 pyvis~=0.2.1 django-widget-tweaks

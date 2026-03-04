@@ -170,9 +170,9 @@ su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrad
 # Workaround for the case when sqlite3 cannot be found by IPython module 
 cp -r /home/$USER/.local/lib/python3/site-packages/django/db/backends/sqlite3 /home/$USER/.local/lib/python3/site-packages/ 2>/dev/null
 
-# Uncomment when we will have a separate vmi
-#pip3 install /usr/bin/snatch/vmi
-#rm -rf /usr/bin/snatch/vmi
+# Separate vmi (v4.0)
+pip3 install /usr/bin/snatch/vmi
+rm -rf /usr/bin/snatch/vmi
 
 echo "Starting rabbitmq and memcached..."
 /usr/sbin/rabbitmq-server -detached || :

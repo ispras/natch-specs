@@ -121,14 +121,42 @@ else
 fi
 #echo "Logged in user: $USER"
 
-pip3 install celery-progress~=0.1.2 django~=4.1.4 django-celery~=3.1.17 django-celery-beat django-celery-results~=2.3.1 pyvis~=0.2.1 pyzstd~=0.15.3 psycopg2-binary~=2.9.3 scapy~=2.5.0 django-widget-tweaks || :
 
-# Workaround for non-working celery (actually it's working but only via python)
-sed -i -E "s/nohup celery/nohup python3 -m celery/" "/usr/bin/snatch/snatch_start.sh"
+echo "Creating Python virtual environment"
+mkdir -p /home/$USER/.local/share/virtualenvs/snatch/
+chmod 755 /home/$USER/.local/share/virtualenvs/snatch/
+chown $USER:$USER /home/$USER/.local/share/virtualenvs/snatch/
 
-# Uncomment for 3.4+ where we will have a separate vmi
-#pip3 install /usr/bin/snatch/vmi
-#rm -rf /usr/bin/snatch/vmi
+if [ -d env ]; then
+	rm -rf env
+	echo "Removing the existing Python environment"
+fi
+
+echo "Activating Python virtual environment"
+cd /home/$USER/.local/share/virtualenvs/snatch/
+python3 -m venv env
+. env/bin/activate
+
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade pip"
+
+# Install the pre-requirements
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade urllib3~=2.6.3"
+
+# This is from the beginning of the requirements.txt
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5"
+
+# Grabbing the last requirements from the file
+REQUIREMENTSPLACEHOLDER
+
+# Install the rest requirements (to avoid errors during the DB configuration part)
+su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade chardet==5.2.0"
+
+# Was originally here
+#pip3 install celery-progress~=0.1.2 django~=4.1.4 django-celery~=3.1.17 django-celery-beat django-celery-results~=2.3.1 pyvis~=0.2.1 pyzstd~=0.15.3 psycopg2-binary~=2.9.3 scapy~=2.5.0 django-widget-tweaks || :
+
+# Separate vmi (v4.0)
+pip3 install /usr/bin/snatch/vmi
+rm -rf /usr/bin/snatch/vmi
 
 echo "Starting rabbitmq and memcached..."
 /usr/sbin/rabbitmq-server -detached || :

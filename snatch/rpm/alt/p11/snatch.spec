@@ -170,7 +170,11 @@ su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrad
 # Workaround for the case when sqlite3 cannot be found by IPython module 
 cp -r /home/$USER/.local/lib/python3/site-packages/django/db/backends/sqlite3 /home/$USER/.local/lib/python3/site-packages/ 2>/dev/null
 
+<<<<<<< HEAD
 # Register a separate vmidb
+=======
+# Separate vmi (v4.0)
+>>>>>>> 7c4328b (Enabled a separate vmi. Testing venv stuff from p11)
 pip3 install /usr/bin/snatch/vmi
 rm -rf /usr/bin/snatch/vmi
 

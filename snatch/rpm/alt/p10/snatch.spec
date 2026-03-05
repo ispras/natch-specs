@@ -16,8 +16,6 @@ AutoProv: nopython3
 
 BuildRequires: guestfs-tools
 
-# python3-venv
-
 # AutoReq can't find these libs due to:
 # readelf: Error: no .dynamic section in the dynamic segment
 BuildRequires: pip
@@ -37,34 +35,10 @@ Requires: postgresql17
 Requires: postgresql17-server
 Requires: postgresql17-contrib
 
-#Requires: python3-module-celery
-#Requires: python3-module-cxxfilt
-#Requires: python3-module-djangorestframework
-#Requires: python3-module-importlib-metadata
-#Requires: python3-module-ipython
-#Requires: python3-module-networkx
-#Requires: python3-module-Pygments
-#Requires: python3-module-pylibmc
-#Requires: python3-module-requests
-#Requires: python3-module-wheel
-
-#Requires: python3-module-wheel
-#Requires: python3-module-django                # 5.1.8-alt1    vs. ~=4.1.4
-#Requires: python3-module-cxxfilt               # 0.3.0-alt1    ==  ~=0.3.0
-#Requires: python3-module-networkx              # 3.4.2-alt1    vs. ~=2.8
-#Requires: python3-module-pyvista               # 0.42.3-alt1   vs. ~=0.2.1 (pyvis) --- incorrect
-#Requires: python3-module-pyzstd                # 0.16.2-alt1   vs. ~=0.15.3 --- only in p11
-#Requires: python3-module-requests              # 2.32.3-alt1   vs. ~=2.28.1
-#Requires: python3-module-scapy                 # 2.6.1-alt1    vs. ~=2.5.0
-#Requires: python3-module-ipython               # 9.1.0-alt1    vs. ==8.3.0
-#Requires: python3-module-importlib-metadata    # 8.6.1-alt1    vs. ==4.13.0
-#Requires: python3-module-Pygments              # 2.19.1-alt1   vs. ~=2.18.0
-#Requires: python3-module-pylibmc               # 1.6.3-alt1    ==  ~=1.6.3
-#Requires: python3-module-psycopg2              # 2.9.10-alt1   vs. ~=2.9.3
-#Requires: python3-module-celery                # 5.3.6-alt2    vs. ~=5.2.6 (old Pythons require an old version)
-
-# define _libexecdir as /usr/libexec
-#%global _libexecdir /usr/libexec
+# In the day of 3.4 release a CG generation was already broken due to a sudden update of one of the python packages in p11 which happened 2 days before that (QEMP-1011).
+# To have Snatch correctly working it's really important to have a specific combination of the tested compatible python packages.
+# So to prevent such situation we must never add any more python3-module-* packages into this section.
+# We have to use an approach with installation from pypi (below).
 
 # disable findreq and verify-elf for snatch
 %add_findreq_skiplist %_datadir/snatch/*
@@ -94,17 +68,6 @@ cp -r * %buildroot%_bindir/snatch
 
 %files
 %attr(755,root,root) %_bindir/*
-#%_bindir/natch-run
-#%_target_libdir_noarch/natch
-#%_datadir/natch
-#%dir %prefix/libexec/natch/
-#%attr(755,root,root) %prefix/libexec/natch/module_symbols
-#%attr(755,root,root) %prefix/libexec/natch/storage
-#%attr(755,root,root) %prefix/libexec/natch/vhost-user-gpu
-#%attr(755,root,root) %prefix/libexec/natch/natch-qemu-bridge-helper
-#%prefix/libexec/natch/qemu
-#%_desktopdir/natch.desktop
-#%_iconsdir/hicolor/*/apps/natch.*
 
 %post
 
@@ -114,7 +77,6 @@ if [ -n "$SUDO_USER" ]; then
 else
     USER="$(whoami)"
 fi
-#echo "Logged in user: $USER"
 
 
 echo "Creating Python virtual environment"
@@ -134,20 +96,11 @@ python3 -m venv env
 
 su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade pip"
 
-# Install the pre-requirements
-#su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade urllib3~=2.6.3"
-
 # This is from the beginning of the requirements.txt
 su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.2.6"
 
 # Grabbing the last requirements from the file
 REQUIREMENTSPLACEHOLDER
-
-# Install the rest requirements (to avoid errors during the DB configuration part)
-#su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade chardet==5.2.0"
-
-# Was originally here
-#pip3 install celery-progress~=0.1.2 django~=4.1.4 django-celery~=3.1.17 django-celery-beat django-celery-results~=2.3.1 pyvis~=0.2.1 pyzstd~=0.15.3 psycopg2-binary~=2.9.3 scapy~=2.5.0 django-widget-tweaks || :
 
 # Separate vmi (v4.0)
 pip3 install /usr/bin/snatch/vmi

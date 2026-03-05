@@ -4,6 +4,10 @@ SNATCH_PATH="/usr/bin/snatch"
 $SNATCH_PATH/snatch_stop.sh
 
 # Killing the service preventing start of the rabbitmq
+pids=$(pgrep -f rabbit)
+[ -n "$pids" ] && su -c "kill -9 $pids" # > /dev/null 2>&1"
+
+# Sometimes a port may be busy and it will also prevent a correct start of the service
 rabbitmqPID=$(lsof -t -i :25672)
 [ ! -z $rabbitmqPID ] && su -c "kill -9 $rabbitmqPID" # > /dev/null 2>&1"
 

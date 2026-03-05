@@ -3,17 +3,17 @@ SNATCH_PATH="/usr/bin/snatch"
 # Sometimes it's required to stop before start to avoid the processing issues
 $SNATCH_PATH/snatch_stop.sh
 
-# Killing the service preventing start of the rabbitmq
+# Some processes and ports may prevent a correct start of the rabbitmq
 pids=$(pgrep -f rabbit)
-[ -n "$pids" ] && su -c "kill -9 $pids" # > /dev/null 2>&1"
-
-# Sometimes a port may be busy and it will also prevent a correct start of the service
-rabbitmqPID=$(lsof -t -i :25672)
-[ ! -z $rabbitmqPID ] && su -c "kill -9 $rabbitmqPID" # > /dev/null 2>&1"
+pids+=" "$(lsof -t -i :25672)
 
 # Solving the issue ВАЖНО: пользователь "snatch_user" не прошёл проверку подлинности (по паролю)
-pids=$(pgrep -f celery)
-[ -n "$pids" ] && su -c "kill -9 $pids" # > /dev/null 2>&1"
+pids+=" "$(pgrep -f celery)
+
+# Kill 'em all
+if [ -n "$pids" ]; then
+  su -c "kill -9 $pids" # > /dev/null 2>&1"
+fi 
 
 services="rabbitmq memcached"      # rabbitmq-server 
 for service in $services

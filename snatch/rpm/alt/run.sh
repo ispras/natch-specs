@@ -1,7 +1,11 @@
 SNATCH_PATH="/usr/bin/snatch"
 
+# To avoid the multiple password prompts (due to "su" specifics) we are going to create a temporary script 
+#   that will be executed from this script with the required privileges and that will run snatch_start.sh
+echo "#!/bin/bash" > /tmp/post_run.sh
+
 # Sometimes it's required to stop Snatch before start to avoid some processing issues
-su -c "$SNATCH_PATH/snatch_stop.sh"
+echo "$SNATCH_PATH/snatch_stop.sh" >> /tmp/post_run.sh
 
 # Some processes and ports may prevent a correct start of the rabbitmq
 pids=$(pgrep -f rabbit)
@@ -12,7 +16,7 @@ pids+=" "$(pgrep -f celery)
 
 # Kill 'em all
 if [ -n "$pids" ]; then
-  su -c "kill -9 $pids" # > /dev/null 2>&1"
+  echo "kill -9 $pids # > /dev/null 2>&1" >> /tmp/post_run.sh
 fi
 
 services="rabbitmq memcached"      # rabbitmq-server 
@@ -29,13 +33,16 @@ done
 
 if [[ ! -z $services2start ]]; then
   echo "Starting $services2start..."
-  su -c "systemctl start $services2start"
+  echo "systemctl start $services2start" >> /tmp/post_run.sh
 fi
 
 running=""
 attempt=1
 
-su -c "$SNATCH_PATH/snatch_start.sh"
+echo "$SNATCH_PATH/snatch_start.sh" >> /tmp/post_run.sh
+
+chmod +x /tmp/post_run.sh
+su -c "/tmp/post_run.sh"
 
 echo "Waiting for SNatch to be started..."
 

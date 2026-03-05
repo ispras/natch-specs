@@ -31,12 +31,12 @@ fi
 services="rabbitmq memcached"      # rabbitmq-server 
 for service in $services
 do
-  if systemctl is-active --quiet "$service"; then
-    echo "$service is not started"
+  # if systemctl is-active --quiet "$service"; then
+  #   echo "$service is not started"
     echo "systemctl start $service" >> /tmp/post_run.sh
-  else
-    echo "$service is already started"
-  fi
+  # else
+  #   echo "$service is already started"
+  # fi
 done
 
 running=""

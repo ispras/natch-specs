@@ -10,11 +10,19 @@ echo "$SNATCH_PATH/snatch_stop.sh" >> /tmp/post_run.sh
 pids=()
 
 # Some processes and ports may prevent a correct start of the rabbitmq
-pids="($(pgrep -f rabbit))"
-pids+="($(lsof -t -i :25672))"
+while read -r pid; do
+    pids+=("$pid")
+done < <(pgrep -f rabbit)
+
+while read -r pid; do
+    pids+=("$pid")
+done < <(lsof -t -i :25672)
 
 # To prevent the error: ВАЖНО: пользователь "snatch_user" не прошёл проверку подлинности (по паролю)
-pids+="($(pgrep -f celery))"
+while read -r pid; do
+    pids+=("$pid")
+done < <(pgrep -f celery)
+
 
 # Kill 'em all
 if [ ${#pids[@]} -gt 0 ]; then

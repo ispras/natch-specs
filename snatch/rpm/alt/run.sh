@@ -5,11 +5,11 @@ $SNATCH_PATH/snatch_stop.sh
 
 # Killing the service preventing start of the rabbitmq
 rabbitmqPID=$(lsof -t -i :25672)
-[ ! -z $rabbitmqPID ] && kill -9 $rabbitmqPID > /dev/null 2>&1
+[ ! -z $rabbitmqPID ] && su -c "kill -9 $rabbitmqPID > /dev/null 2>&1"
 
 # Solving the issue ВАЖНО: пользователь "snatch_user" не прошёл проверку подлинности (по паролю)
 pids=$(pgrep -f celery)
-[ -n "$pids" ] && kill -9 $pids > /dev/null 2>&1
+[ -n "$pids" ] && su -c "kill -9 $pids > /dev/null 2>&1"
 
 services="rabbitmq memcached"      # rabbitmq-server 
 for service in $services
@@ -17,7 +17,7 @@ do
   checkService=$(systemctl status $service)
   if [[ $checkService != *"running"* ]]; then
     echo "$service is not started, starting it..."
-    systemctl start $service
+    su -c "systemctl start $service"
   else
     echo "$service is started"
   fi

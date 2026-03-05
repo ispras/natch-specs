@@ -23,28 +23,21 @@ while read -r pid; do
     pids+=("$pid")
 done < <(pgrep -f celery)
 
-
 # Kill 'em all
 if [ ${#pids[@]} -gt 0 ]; then
   echo "kill -9 "${pids[@]}" > /dev/null 2>&1" >> /tmp/post_run.sh
 fi
 
 services="rabbitmq memcached"      # rabbitmq-server 
-services2start=""
 for service in $services
 do
   if systemctl is-active --quiet "$service"; then
     echo "$service is not started"
-    services2start+=$service" "
+    echo "systemctl start $service" >> /tmp/post_run.sh
   else
     echo "$service is already started"
   fi
 done
-
-if [[ ! -z $services2start ]]; then
-  echo "Starting $services2start..."
-  echo "systemctl start $services2start" >> /tmp/post_run.sh
-fi
 
 running=""
 attempt=1

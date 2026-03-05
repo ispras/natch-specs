@@ -1,31 +1,36 @@
 SNATCH_PATH="/usr/bin/snatch"
 
-# # Sometimes it's required to stop Snatch before start to avoid some processing issues
-# su -c "$SNATCH_PATH/snatch_stop.sh"
+# Sometimes it's required to stop Snatch before start to avoid some processing issues
+su -c "$SNATCH_PATH/snatch_stop.sh"
 
-# # Some processes and ports may prevent a correct start of the rabbitmq
-# pids=$(pgrep -f rabbit)
-# pids+=" "$(lsof -t -i :25672)
+# Some processes and ports may prevent a correct start of the rabbitmq
+pids=$(pgrep -f rabbit)
+pids+=" "$(lsof -t -i :25672)
 
-# # To prevent the error: ВАЖНО: пользователь "snatch_user" не прошёл проверку подлинности (по паролю)
-# pids+=" "$(pgrep -f celery)
+# To prevent the error: ВАЖНО: пользователь "snatch_user" не прошёл проверку подлинности (по паролю)
+pids+=" "$(pgrep -f celery)
 
-# # Kill 'em all
-# if [ -n "$pids" ]; then
-#   su -c "kill -9 $pids" # > /dev/null 2>&1"
-# fi
+# Kill 'em all
+if [ -n "$pids" ]; then
+  su -c "kill -9 $pids" # > /dev/null 2>&1"
+fi
 
-# services="rabbitmq memcached"      # rabbitmq-server 
-# for service in $services
-# do
-#   checkService=$(systemctl status $service)
-#   if [[ $checkService != *"running"* ]]; then
-#     echo "$service is not started, starting it..."
-#     su -c "systemctl start $service"
-#   else
-#     echo "$service is started"
-#   fi
-# done
+services="rabbitmq memcached"      # rabbitmq-server 
+services2start=""
+for service in $services
+do
+  if systemctl is-active --quiet "$service"; then
+    echo "$service is not started"
+    services2start+=$service" "
+  else
+    echo "$service is already started"
+  fi
+done
+
+if [[ ! -z $services2start ]]; then
+  echo "Starting $services2start..."
+  su -c "systemctl start $services2start"
+fi
 
 running=""
 attempt=1

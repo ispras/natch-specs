@@ -167,12 +167,12 @@ echo -e "\033[32mTo finish SNatch setup run \e[0m\e[1;32m/usr/bin/snatch/configu
 echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"
 
 %postun
-# Detecting a logged in user
-if [ -n "$SUDO_USER" ]; then
-	USER="$SUDO_USER"
-else
-	USER="$(whoami)"
-fi
+## Detecting a logged in user
+#if [ -n "$SUDO_USER" ]; then
+#	USER="$SUDO_USER"
+#else
+#	USER="$(whoami)"
+#fi
 
 logFile="/var/log/snatch.log"
 mediaDir="/home/$USER/snatch/media/"
@@ -208,7 +208,7 @@ if [ ! -z "$(ls -A $mediaDir)" ]; then
 		read -r response
 		case "$response" in
 			[yY][eE][sS]|[yY])
-				rm -rf "$mediaDir"
+				rm -rf "$mediaDir" 2> /dev/null
 				echo "Существующие проекты удалены."
 				;;
 			*)
@@ -218,7 +218,7 @@ if [ ! -z "$(ls -A $mediaDir)" ]; then
 
 	# Non-interactive mode: removing
 	else
-		rm -rf "$mediaDir"
+		rm -rf "$mediaDir" 2> /dev/null
 		echo "Существующие проекты удалены."
 	fi
 fi

@@ -48,7 +48,9 @@ Requires: python3-module-pylibmc
 # To have Snatch correctly working it's really important to have a specific combination of the tested compatible python packages.
 # So to prevent such situation we must never add any more python3-module-* packages into this section.
 # We have to use an approach with installation from pypi (below).
-Requires: python3-module-celery
+#Requires: python3-module-celery
+
+%{?python_disable_dependency_generator}
 
 # disable findreq and verify-elf for snatch
 %add_findreq_skiplist %_datadir/snatch/*

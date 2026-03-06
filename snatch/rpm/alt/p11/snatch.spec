@@ -81,6 +81,9 @@ cp -r * %buildroot%_bindir/snatch
 %files
 %attr(755,root,root) %_bindir/*
 
+%pre
+echo "$SUDO_USER" > /tmp/currUsername 2>/dev/null || :
+
 %post
 
 ## Detecting a logged in user
@@ -89,6 +92,17 @@ cp -r * %buildroot%_bindir/snatch
 #else
 #    USER="$(whoami)"
 #fi
+
+if [ -f /tmp/currUsername ]; then
+    REAL_USER=$(cat /tmp/currUsername)
+	echo "Current user: $REAL_USER"
+    rm -f /tmp/currUsername
+    
+    # Проверяем, что пользователь не пустой и существует
+    if [ -n "$REAL_USER" ] && getent passwd "$REAL_USER" >/dev/null; then
+        USER=$REAL_USER
+    fi
+fi
 
 
 echo "Creating Python virtual environment"
@@ -165,12 +179,12 @@ echo -e "\033[32mTo finish SNatch setup run \e[0m\e[1;32m/usr/bin/snatch/configu
 echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"
 
 %postun
-## Detecting a logged in user
-#if [ -n "$SUDO_USER" ]; then
-#	USER="$SUDO_USER"
-#else
-#	USER="$(whoami)"
-#fi
+# Detecting a logged in user
+if [ -n "$SUDO_USER" ]; then
+	USER="$SUDO_USER"
+else
+	USER="$(whoami)"
+fi
 
 logFile="/var/log/snatch.log"
 mediaDir="/home/$USER/snatch/media/"

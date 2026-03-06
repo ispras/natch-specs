@@ -50,6 +50,8 @@ Requires: python3-module-pylibmc
 # We have to use an approach with installation from pypi (below).
 Requires: python3-module-celery
 
+# disable findreq and verify-elf for snatch
+%add_findreq_skiplist %_datadir/snatch/*
 %add_verify_elf_skiplist %_datadir/snatch/*
 
 %filter_from_requires /^python3(Snatch.models)/d
@@ -79,12 +81,12 @@ cp -r * %buildroot%_bindir/snatch
 
 %post
 
-# Detecting a logged in user
-if [ -n "$SUDO_USER" ]; then
-    USER="$SUDO_USER"
-else
-    USER="$(whoami)"
-fi
+## Detecting a logged in user
+#if [ -n "$SUDO_USER" ]; then
+#    USER="$SUDO_USER"
+#else
+#    USER="$(whoami)"
+#fi
 
 
 echo "Creating Python virtual environment"

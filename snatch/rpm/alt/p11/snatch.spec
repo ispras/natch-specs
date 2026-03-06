@@ -12,9 +12,7 @@ Source:         %name-%version.tar
 BuildRequires(pre): rpm-build-python3
 
 AutoReq: 0
-
-# natch is not a python3 library
-AutoProv: nopython3
+AutoProv: 0
 
 # AutoReq can't find these libs due to:
 # readelf: Error: no .dynamic section in the dynamic segment

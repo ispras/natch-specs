@@ -11,6 +11,8 @@ Source:         %name-%version.tar
 
 BuildRequires(pre): rpm-build-python3
 
+AutoReq: 0
+
 # natch is not a python3 library
 AutoProv: nopython3
 

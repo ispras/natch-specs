@@ -81,8 +81,8 @@ cp -r * %buildroot%_bindir/snatch
 %files
 %attr(755,root,root) %_bindir/*
 
-%pre
-echo "$SUDO_USER" > /tmp/currUsername 2>/dev/null || :
+#%pre
+#echo "$SUDO_USER" > /tmp/currUsername 2>/dev/null || :
 
 %post
 
@@ -93,22 +93,25 @@ echo "$SUDO_USER" > /tmp/currUsername 2>/dev/null || :
 #    USER="$(whoami)"
 #fi
 
-if [ -f /tmp/currUsername ]; then
-    REAL_USER=$(cat /tmp/currUsername)
-	echo "Current user: $REAL_USER"
-    rm -f /tmp/currUsername
-    
-    # Проверяем, что пользователь не пустой и существует
-    if [ -n "$REAL_USER" ] && getent passwd "$REAL_USER" >/dev/null; then
-        USER=$REAL_USER
-    fi
-fi
+#if [ -f /tmp/currUsername ]; then
+#    REAL_USER=$(cat /tmp/currUsername)
+#	echo "Current user: $REAL_USER"
+#    rm -f /tmp/currUsername
+#    
+#    # Проверяем, что пользователь не пустой и существует
+#    if [ -n "$REAL_USER" ] && getent passwd "$REAL_USER" >/dev/null; then
+#        USER=$REAL_USER
+#    fi
+#fi
 
+echo "Home directory: "%homedir
+USER=$(echo %homedir | tr '/' ' ' | awk '{print $2}')
+echo "User: "$USER
 
 echo "Creating Python virtual environment"
-mkdir -p /home/$USER/.local/share/virtualenvs/snatch/
-chmod 755 /home/$USER/.local/share/virtualenvs/snatch/
-chown $USER:$USER /home/$USER/.local/share/virtualenvs/snatch/
+mkdir -p %homedir/.local/share/virtualenvs/snatch/
+chmod 755 %homedir/.local/share/virtualenvs/snatch/
+chown $USER:$USER %homedir/.local/share/virtualenvs/snatch/
 
 if [ -d env ]; then
 	rm -rf env
@@ -116,26 +119,26 @@ if [ -d env ]; then
 fi
 
 echo "Activating Python virtual environment"
-cd /home/$USER/.local/share/virtualenvs/snatch/
+cd %homedir/.local/share/virtualenvs/snatch/
 su -c "python3 -m venv env"
 su -c ". env/bin/activate"
 
-su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade pip"
+su -c "%homedir/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade pip"
 
 # Install the pre-requirements
-su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade urllib3~=2.6.3"
+su -c "%homedir/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade urllib3~=2.6.3"
 
 # This is from the beginning of the requirements.txt
-su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5"
+su -c "%homedir/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5"
 
 # Grabbing the last requirements from the file
 REQUIREMENTSPLACEHOLDER
 
 # Install the rest requirements (to avoid errors during the DB configuration part)
-su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade chardet==5.2.0"
+su -c "%homedir/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade chardet==5.2.0"
 
 # Workaround for the case when sqlite3 cannot be found by IPython module 
-cp -r /home/$USER/.local/lib/python3/site-packages/django/db/backends/sqlite3 /home/$USER/.local/lib/python3/site-packages/ 2>/dev/null
+cp -r %homedir/.local/lib/python3/site-packages/django/db/backends/sqlite3 %homedir/.local/lib/python3/site-packages/ 2>/dev/null
 
 # Separate vmi (v4.0)
 pip3 install /usr/bin/snatch/vmi
@@ -153,9 +156,9 @@ if [ -d Snatch/migrations ]; then
 	rm -rf Snatch/migrations & > /dev/null || :
 fi
 
-mkdir -p /home/$USER/snatch/media/  || :
-chmod 755 /home/$USER/snatch/media/  || :
-chown $USER:$USER /home/$USER/snatch/media/  || :
+mkdir -p %homedir/snatch/media/  || :
+chmod 755 %homedir/snatch/media/  || :
+chown $USER:$USER %homedir/snatch/media/  || :
 
 # To let manage.py create the migration scripts
 chmod -R 755 /usr/bin/snatch  || :
@@ -163,13 +166,13 @@ chown -R $USER:$USER /usr/bin/snatch || :
 
 echo -e "\e[1;32mSNatch VERSIONPLACEHOLDER has been installed.\e[0m"
 
-availSpace4calc=$(df -m /home/$USER/snatch/media/ --output=avail | tail -n1 | xargs)
+availSpace4calc=$(df -m %homedir/snatch/media/ --output=avail | tail -n1 | xargs)
 availSpace=$(bc <<< "scale=1; $availSpace4calc/1024")
 
 if [[ $availSpace4calc -lt 40960 ]]; then
-	echo "Only "$availSpace"G available in /home/$USER/snatch/media/ where SNatch stores an unpacked data for analysis. It can be okay for very short scenarios, but for the longer scenarios the hundreds of GB could be required."
+	echo "Only "$availSpace"G available in %homedir/snatch/media/ where SNatch stores an unpacked data for analysis. It can be okay for very short scenarios, but for the longer scenarios the hundreds of GB could be required."
 elif [[ $availSpace4calc -lt 102400 ]]; then
-	echo $availSpace"G available in /home/$USER/snatch/media/ where SNatch stores an unpacked data for analysis. It can be okay for normal scenarios, but for the longer scenarios the hundreds of GB could be required."
+	echo $availSpace"G available in %homedir/snatch/media/ where SNatch stores an unpacked data for analysis. It can be okay for normal scenarios, but for the longer scenarios the hundreds of GB could be required."
 else
 	echo "Free space: OK"
 fi
@@ -187,7 +190,7 @@ else
 fi
 
 logFile="/var/log/snatch.log"
-mediaDir="/home/$USER/snatch/media/"
+mediaDir="%homedir/snatch/media/"
 
 if [ -f "$logFile" ]; then
 	# Interactive mode

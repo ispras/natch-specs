@@ -104,14 +104,10 @@ cp -r * %buildroot%_bindir/snatch
 #    fi
 #fi
 
-echo "Home directory: "%homedir
-USER=$(echo %homedir | tr '/' ' ' | awk '{print $2}')
-echo "User: "$USER
-
 echo "Creating Python virtual environment"
-mkdir -p %homedir/.local/share/virtualenvs/snatch/
-chmod 755 %homedir/.local/share/virtualenvs/snatch/
-chown $USER:$USER %homedir/.local/share/virtualenvs/snatch/
+mkdir -p /opt/snatch/venv/
+chmod 755 /opt/snatch/venv/
+#chown $USER:$USER /opt/snatch/venv/
 
 if [ -d env ]; then
 	rm -rf env
@@ -119,23 +115,23 @@ if [ -d env ]; then
 fi
 
 echo "Activating Python virtual environment"
-cd %homedir/.local/share/virtualenvs/snatch/
+cd /opt/snatch/venv/
 su -c "python3 -m venv env"
 su -c ". env/bin/activate"
 
-su -c "%homedir/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade pip"
+su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade pip"
 
 # Install the pre-requirements
-su -c "%homedir/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade urllib3~=2.6.3"
+su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade urllib3~=2.6.3"
 
 # This is from the beginning of the requirements.txt
-su -c "%homedir/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5"
+su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5"
 
 # Grabbing the last requirements from the file
 REQUIREMENTSPLACEHOLDER
 
 # Install the rest requirements (to avoid errors during the DB configuration part)
-su -c "%homedir/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade chardet==5.2.0"
+su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade chardet==5.2.0"
 
 # Workaround for the case when sqlite3 cannot be found by IPython module 
 cp -r %homedir/.local/lib/python3/site-packages/django/db/backends/sqlite3 %homedir/.local/lib/python3/site-packages/ 2>/dev/null

@@ -134,14 +134,11 @@ REQUIREMENTSPLACEHOLDER
 su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade chardet==5.2.0"
 
 # Workaround for the case when sqlite3 cannot be found by IPython module 
-cp -r %homedir/.local/lib/python3/site-packages/django/db/backends/sqlite3 %homedir/.local/lib/python3/site-packages/ 2>/dev/null
+cp -r /opt/snatch/venv/env/lib/python3/site-packages/django/db/backends/sqlite3 /opt/snatch/venv/env/lib/python3/site-packages/ 2>/dev/null
 
-<<<<<<< HEAD
-# Register a separate vmidb
-=======
 # Separate vmi (v4.0)
->>>>>>> 7c4328b (Enabled a separate vmi. Testing venv stuff from p11)
 pip3 install /usr/bin/snatch/vmi
+su -c "/opt/snatch/venv/env/bin/pip3 install /usr/bin/snatch/vmi"
 rm -rf /usr/bin/snatch/vmi
 
 echo "Starting rabbitmq and memcached..."

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# DB initialization
+
 DB_NAME=$1
 DB_USER=$2
 DB_PASSWORD=$3

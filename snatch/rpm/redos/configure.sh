@@ -9,7 +9,7 @@ DB_PASSWORD=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 16)
 DATADIR="/var/lib/pgsql/data"
 
 # As per "journalctl -xeu postgresql.service" we must create system DBs
-if sudo [ ! -d "$DATADIR" ] && sudo [ -f "$DATADIR/PG_VERSION" ]; then
+if sudo [ ! -d "$DATADIR" ]; then # && sudo [ -f "$DATADIR/PG_VERSION" ]; then
   echo "DB was already initialized"
 else
   PGSETUP_INITDB_OPTIONS='-D /var/lib/pgsql/data --auth=trust' sudo -E /usr/bin/postgresql-setup --initdb

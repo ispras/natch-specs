@@ -40,6 +40,8 @@ Requires: postgresql17-contrib
 # So to prevent such situation we must never add any more python3-module-* packages into this section.
 # We have to use an approach with installation from pypi (below).
 
+%{?python_disable_dependency_generator}
+
 # disable findreq and verify-elf for snatch
 %add_findreq_skiplist %_datadir/snatch/*
 %add_verify_elf_skiplist %_datadir/snatch/*
@@ -71,18 +73,9 @@ cp -r * %buildroot%_bindir/snatch
 
 %post
 
-# Detecting a logged in user
-if [ -n "$SUDO_USER" ]; then
-    USER="$SUDO_USER"
-else
-    USER="$(whoami)"
-fi
-
-
 echo "Creating Python virtual environment"
-mkdir -p /home/$USER/.local/share/virtualenvs/snatch/
-chmod 755 /home/$USER/.local/share/virtualenvs/snatch/
-chown $USER:$USER /home/$USER/.local/share/virtualenvs/snatch/
+mkdir -p /opt/snatch/venv/
+chmod 755 /opt/snatch/venv/
 
 if [ -d env ]; then
 	rm -rf env
@@ -90,20 +83,20 @@ if [ -d env ]; then
 fi
 
 echo "Activating Python virtual environment"
-cd /home/$USER/.local/share/virtualenvs/snatch/
-python3 -m venv env
-. env/bin/activate
+cd /opt/snatch/venv/
+su -c "python3 -m venv env"
+su -c ". env/bin/activate"
 
-su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade pip"
+su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade pip"
 
 # This is from the beginning of the requirements.txt
-su -c "/home/$USER/.local/share/virtualenvs/snatch/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.2.6"
+su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.2.6"
 
 # Grabbing the last requirements from the file
 REQUIREMENTSPLACEHOLDER
 
 # Separate vmi (v4.0)
-pip3 install /usr/bin/snatch/vmi
+su -c "/opt/snatch/venv/env/bin/pip3 install /usr/bin/snatch/vmi"
 rm -rf /usr/bin/snatch/vmi
 # Workaround for non-working celery (actually it's working but only via python)
 sed -i -E "s/nohup celery/nohup python3 -m celery/" "/usr/bin/snatch/snatch_start.sh"
@@ -118,29 +111,26 @@ systemctl start memcached || :
 
 touch /var/log/snatch.log || :
 chmod 755 /var/log/snatch.log || :
-chown $USER:$USER /var/log/snatch.log || :
 
 if [ -d Snatch/migrations ]; then
 	rm -rf Snatch/migrations & > /dev/null || :
 fi
 
-mkdir -p /home/$USER/snatch/media/  || :
-chmod 755 /home/$USER/snatch/media/  || :
-chown $USER:$USER /home/$USER/snatch/media/  || :
+mkdir -p %homedir/snatch/media/  || :
+chmod 755 %homedir/snatch/media/  || :
 
 # To let manage.py create the migration scripts
 chmod -R 755 /usr/bin/snatch  || :
-chown -R $USER:$USER /usr/bin/snatch || :
 
 echo -e "\e[1;32mSNatch VERSIONPLACEHOLDER has been installed.\e[0m"
 
-availSpace4calc=$(df -m /home/$USER/snatch/media/ --output=avail | tail -n1 | xargs)
+availSpace4calc=$(df -m %homedir/snatch/media/ --output=avail | tail -n1 | xargs)
 availSpace=$(bc <<< "scale=1; $availSpace4calc/1024")
 
 if [[ $availSpace4calc -lt 40960 ]]; then
-	echo "Only "$availSpace"G available in /home/$USER/snatch/media/ where SNatch stores an unpacked data for analysis. It can be okay for very short scenarios, but for the longer scenarios the hundreds of GB could be required."
+	echo "Only "$availSpace"G available in %homedir/snatch/media/ where SNatch stores an unpacked data for analysis. It can be okay for very short scenarios, but for the longer scenarios the hundreds of GB could be required."
 elif [[ $availSpace4calc -lt 102400 ]]; then
-	echo $availSpace"G available in /home/$USER/snatch/media/ where SNatch stores an unpacked data for analysis. It can be okay for normal scenarios, but for the longer scenarios the hundreds of GB could be required."
+	echo $availSpace"G available in %homedir/snatch/media/ where SNatch stores an unpacked data for analysis. It can be okay for normal scenarios, but for the longer scenarios the hundreds of GB could be required."
 else
 	echo "Free space: OK"
 fi
@@ -150,15 +140,9 @@ echo -e "\033[32mTo finish SNatch setup run \e[0m\e[1;32m/usr/bin/snatch/configu
 echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"
 
 %postun
-# Detecting a logged in user
-if [ -n "$SUDO_USER" ]; then
-	USER="$SUDO_USER"
-else
-	USER="$(whoami)"
-fi
 
 logFile="/var/log/snatch.log"
-mediaDir="/home/$USER/snatch/media/"
+mediaDir="%homedir/snatch/media/"
 
 if [ -f "$logFile" ]; then
 	# Interactive mode

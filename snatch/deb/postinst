@@ -30,9 +30,9 @@ sudo -u $USER python3 -m venv env
 # Install the pip packages that are absent in the apt repo
 pip3 install PIPDEPENDENCIESPLACEHOLDER --upgrade
 
-# Register a separate vmidb
+# Separate vmi (v4.0)
 pip3 install /usr/bin/snatch/vmi --upgrade
-#rm -rf /usr/bin/snatch/vmi
+rm -rf /usr/bin/snatch/vmi
 
 deactivate 
 cd - > /dev/null

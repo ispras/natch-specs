@@ -1,4 +1,5 @@
 %define _unpackaged_files_terminate_build 1
+%global __requires_exclude_from ^/opt/snatch/venv/env/bin/activate$
 Name:           snatch
 Version:        VERSIONPLACEHOLDER
 Release:        alt1%{?dist}

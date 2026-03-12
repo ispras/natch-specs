@@ -76,7 +76,7 @@ cp -r * %buildroot%_bindir/snatch
 
 %files
 %attr(755,root,root) %_bindir/*
-/opt/snatch/venv/env/bin/activate
+
 
 # Hiding the warnings during the package removal
 %config(missingok) %_bindir/snatch/vmi
@@ -86,8 +86,11 @@ cp -r * %buildroot%_bindir/snatch
 %post
 
 echo "Creating Python virtual environment"
-mkdir -p /opt/snatch/venv/
+mkdir -p /opt/snatch/venv/venv/env/bin
 chmod 755 /opt/snatch/venv/
+
+# Workaround for missed dependency
+touch /opt/myproduct/venv/env/bin/activate
 
 if [ -d env ]; then
 	rm -rf env

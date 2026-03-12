@@ -66,7 +66,7 @@ ISP RAS SNatch visualizes representation for Natch results.
 
 %build
 # Create a virtual environment
-virtualenv /opt/snatch/venv/env
+python3 -m virtualenv /opt/snatch/venv/env
 
 
 %install

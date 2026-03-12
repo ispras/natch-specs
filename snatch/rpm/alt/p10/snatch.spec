@@ -89,9 +89,7 @@ if [ -d env ]; then
 fi
 
 echo "Activating Python virtual environment"
-cd /opt/snatch/venv/
-su -c "python3 -m venv env"
-su -c ". env/bin/activate"
+su -c "source /opt/snatch/venv/env/bin/activate"
 
 su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade pip"
 

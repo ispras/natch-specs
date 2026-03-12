@@ -81,6 +81,10 @@ cp -r * %buildroot%_bindir/snatch
 %files
 %attr(755,root,root) %_bindir/*
 
+# Hiding the warnings during the package removal
+%config(missingok) %_bindir/vmi
+%config(missingok) %_bindir/vmi/*
+
 %post
 
 echo "Creating Python virtual environment"

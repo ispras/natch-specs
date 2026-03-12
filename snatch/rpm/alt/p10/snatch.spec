@@ -1,5 +1,4 @@
 %define _unpackaged_files_terminate_build 1
-%global __requires_exclude_from ^/opt/snatch/venv/env/bin/activate$
 Name:           snatch
 Version:        VERSIONPLACEHOLDER
 Release:        alt1%{?dist}
@@ -21,6 +20,7 @@ BuildRequires: guestfs-tools
 # readelf: Error: no .dynamic section in the dynamic segment
 BuildRequires: pip
 BuildRequires: python3-dev
+BuildRequires: python3-module-virtualenv
 BuildRequires: libcups-devel
 BuildRequires: libgirepository1.0-devel
 BuildRequires: libsystemd-devel
@@ -59,11 +59,15 @@ Requires: postgresql17-contrib
 %description
 ISP RAS SNatch visualizes representation for Natch results.
 
+
 %prep
 %setup
 
+
 %build
-# empty
+# Create a virtual environment
+virtualenv /opt/snatch/venv/env
+
 
 %install
 install -p -d -m 0755 %buildroot%_bindir/snatch

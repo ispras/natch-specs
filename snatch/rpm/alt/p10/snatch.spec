@@ -56,6 +56,8 @@ Requires: postgresql17-contrib
 %filter_from_requires /^python3(vmi.Script)/d
 %filter_from_requires /^python3(vmi.Trace)/d
 
+%global __requires_exclude_from ^/opt/snatch/venv/.*$
+
 %description
 ISP RAS SNatch visualizes representation for Natch results.
 
@@ -65,8 +67,7 @@ ISP RAS SNatch visualizes representation for Natch results.
 
 
 %build
-# Create a virtual environment
-python3 -m virtualenv /opt/snatch/venv/env
+# blank
 
 
 %install
@@ -94,7 +95,9 @@ if [ -d env ]; then
 fi
 
 echo "Activating Python virtual environment"
-su -c "source /opt/snatch/venv/env/bin/activate"
+cd /opt/snatch/venv/
+su -c "python3 -m venv env"
+su -c ". env/bin/activate"
 
 su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade pip"
 

@@ -70,6 +70,12 @@ cp -r * %buildroot%_bindir/snatch
 
 %files
 %attr(755,root,root) %_bindir/*
+/opt/snatch/venv/env/bin/activate
+
+# Hiding the warnings during the package removal
+%config(missingok) %_bindir/snatch/vmi
+%config(missingok) %_bindir/snatch/vmi/*
+
 
 %post
 

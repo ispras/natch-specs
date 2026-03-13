@@ -9,6 +9,11 @@ Group:          Development/Other
 
 Source:         %name-%version.tar
 
+# Ignore checking dependencies for python's activate
+%global __requires_exclude_from ^/opt/myproduct/venv/.*$
+%global __requires_exclude ^/opt/myproduct/venv/.*$
+%global _requires_exceptions /opt/myproduct/venv/env/bin/activate
+
 BuildRequires(pre): rpm-build-python3
 
 # natch is not a python3 library
@@ -56,7 +61,6 @@ Requires: postgresql17-contrib
 %filter_from_requires /^python3(vmi.Script)/d
 %filter_from_requires /^python3(vmi.Trace)/d
 
-%global __requires_exclude_from ^/opt/snatch/venv/.*$
 
 %description
 ISP RAS SNatch visualizes representation for Natch results.
@@ -86,11 +90,9 @@ cp -r * %buildroot%_bindir/snatch
 %post
 
 echo "Creating Python virtual environment"
-mkdir -p /opt/snatch/venv/venv/env/bin
+mkdir -p /opt/snatch/venv/
 chmod 755 /opt/snatch/venv/
 
-# Workaround for missed dependency
-touch /opt/myproduct/venv/env/bin/activate
 
 if [ -d env ]; then
 	rm -rf env

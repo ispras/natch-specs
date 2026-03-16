@@ -1,8 +1,10 @@
-%define _unpackaged_files_terminate_build 1
 Name:           snatch
 Version:        VERSIONPLACEHOLDER
 Release:        alt1%{?dist}
 Summary:        ISP RAS SNatch
+
+%define _unpackaged_files_terminate_build 0
+%define _use_internal_dependency_generator 0
 
 # Ignore checking dependencies for python's activate
 %global __requires_exclude_from ^/opt/snatch/venv/.*$

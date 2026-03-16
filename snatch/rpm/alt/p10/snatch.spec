@@ -4,15 +4,6 @@ Release:        alt1%{?dist}
 Summary:        ISP RAS SNatch
 
 %define _unpackaged_files_terminate_build 0
-%define _use_internal_dependency_generator 0
-
-%filter_from_requires /^\\/opt\\/snatch\\/venv\\/env\\/bin\\/activate$/d
-%filter_setup
-
-# Ignore checking dependencies for python's activate
-%global __requires_exclude_from ^/opt/snatch/venv/.*$
-%global __requires_exclude ^/opt/snatch/venv/.*$
-%global _requires_exceptions /opt/snatch/venv/env/bin/activate
 
 License:        GPLv3 and Proprietary
 Group:          Development/Other

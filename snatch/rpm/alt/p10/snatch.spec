@@ -82,14 +82,23 @@ cp -r * %buildroot%_bindir/snatch
 %post
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1816d0b (Moving some changes back)
 echo "Creating Python virtual environment"
 mkdir -p /opt/snatch/venv/
 chmod 755 /opt/snatch/venv/
 
+<<<<<<< HEAD
 
 if [ -d env ]; then
 	rm -rf env
 	echo "Removing the existing Python environment"
+=======
+if [ -d env ]; then
+	echo "Removing the existing Python environment"
+	rm -rf env
+>>>>>>> 1816d0b (Moving some changes back)
 fi
 
 echo "Activating Python virtual environment"
@@ -108,6 +117,7 @@ REQUIREMENTSPLACEHOLDER
 # Separate vmi (v4.0)
 su -c "/opt/snatch/venv/env/bin/pip3 install /usr/bin/snatch/vmi"
 rm -rf /usr/bin/snatch/vmi
+<<<<<<< HEAD
 # Workaround for non-working celery (actually it's working but only via python)
 sed -i -E "s/nohup celery/nohup python3 -m celery/" "/usr/bin/snatch/snatch_start.sh"
 
@@ -118,6 +128,8 @@ rm -rf /usr/bin/snatch/vmi
 # Creating venv
 /usr/bin/snatch/venv.sh
 >>>>>>> 308d332 (a separate file for venv creation (alt10))
+=======
+>>>>>>> 1816d0b (Moving some changes back)
 
 echo "Starting rabbitmq and memcached..."
 /usr/sbin/rabbitmq-server -detached || :

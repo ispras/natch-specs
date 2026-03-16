@@ -33,6 +33,14 @@ Requires: postgresql17
 Requires: postgresql17-server
 Requires: postgresql17-contrib
 
+# Required to build a wheel for pylibmc
+Requires: gcc
+Requires: zlib-devel
+Requires: python3-dev
+
+# This is required to have an ability to build the wheels in venv below
+Requires: python3-module-pylibmc
+
 # In the day of 3.4 release a CG generation was already broken due to a sudden update of one of the python packages in p11 which happened 2 days before that (QEMP-1011).
 # To have Snatch correctly working it's really important to have a specific combination of the tested compatible python packages.
 # So to prevent such situation we must never add any more python3-module-* packages into this section.
@@ -104,15 +112,12 @@ su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade celery-progress~=0.1.2 ce
 REQUIREMENTSPLACEHOLDER
 
 # Separate vmi (v4.0)
+pip3 install /usr/bin/snatch/vmi
 su -c "/opt/snatch/venv/env/bin/pip3 install /usr/bin/snatch/vmi"
 rm -rf /usr/bin/snatch/vmi
 
 # Workaround for non-working celery (actually it's working but only via python)
 sed -i -E "s/nohup celery/nohup python3 -m celery/" "/usr/bin/snatch/snatch_start.sh"
-
-# Register a separate vmidb
-pip3 install /usr/bin/snatch/vmi
-rm -rf /usr/bin/snatch/vmi
 
 echo "Starting rabbitmq and memcached..."
 /usr/sbin/rabbitmq-server -detached || :

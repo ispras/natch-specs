@@ -48,7 +48,6 @@ Requires: python3-module-pylibmc
 # To have Snatch correctly working it's really important to have a specific combination of the tested compatible python packages.
 # So to prevent such situation we must never add any more python3-module-* packages into this section.
 # We have to use an approach with installation from pypi (below).
-#Requires: python3-module-celery
 
 %{?python_disable_dependency_generator}
 
@@ -65,14 +64,18 @@ Requires: python3-module-pylibmc
 %filter_from_requires /^python3(vmi.Script)/d
 %filter_from_requires /^python3(vmi.Trace)/d
 
+
 %description
 ISP RAS SNatch visualizes representation for Natch results.
+
 
 %prep
 %setup
 
+
 %build
-# empty
+# blank
+
 
 %install
 install -p -d -m 0755 %buildroot%_bindir/snatch
@@ -81,9 +84,11 @@ cp -r * %buildroot%_bindir/snatch
 %files
 %attr(755,root,root) %_bindir/*
 
+
 # Hiding the warnings during the package removal
 %config(missingok) %_bindir/snatch/vmi
 %config(missingok) %_bindir/snatch/vmi/*
+
 
 %post
 
@@ -92,8 +97,8 @@ mkdir -p /opt/snatch/venv/
 chmod 755 /opt/snatch/venv/
 
 if [ -d env ]; then
-	rm -rf env
 	echo "Removing the existing Python environment"
+	rm -rf env
 fi
 
 echo "Activating Python virtual environment"
@@ -158,6 +163,7 @@ echo -e "\033[32mTo finish SNatch setup run \e[0m\e[1;32m/usr/bin/snatch/configu
 echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"
 
 %postun
+
 logFile="/var/log/snatch.log"
 mediaDir="%homedir/snatch/media/"
 
@@ -192,7 +198,7 @@ if [ ! -z "$(ls -A $mediaDir)" ]; then
 		read -r response
 		case "$response" in
 			[yY][eE][sS]|[yY])
-				rm -rf "$mediaDir" 2> /dev/null
+				rm -rf "$mediaDir"
 				echo "Существующие проекты удалены."
 				;;
 			*)
@@ -202,7 +208,7 @@ if [ ! -z "$(ls -A $mediaDir)" ]; then
 
 	# Non-interactive mode: removing
 	else
-		rm -rf "$mediaDir" 2> /dev/null
+		rm -rf "$mediaDir"
 		echo "Существующие проекты удалены."
 	fi
 fi

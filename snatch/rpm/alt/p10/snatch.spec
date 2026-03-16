@@ -4,15 +4,16 @@ Version:        VERSIONPLACEHOLDER
 Release:        alt1%{?dist}
 Summary:        ISP RAS SNatch
 
+# Ignore checking dependencies for python's activate
+%global __requires_exclude_from ^/opt/snatch/venv/.*$
+%global __requires_exclude ^/opt/snatch/venv/.*$
+%global _requires_exceptions /opt/snatch/venv/env/bin/activate
+
 License:        GPLv3 and Proprietary
 Group:          Development/Other
 
 Source:         %name-%version.tar
 
-# Ignore checking dependencies for python's activate
-%global __requires_exclude_from ^/opt/snatch/venv/.*$
-%global __requires_exclude ^/opt/snatch/venv/.*$
-%global _requires_exceptions /opt/snatch/venv/env/bin/activate
 
 BuildRequires(pre): rpm-build-python3
 

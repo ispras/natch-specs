@@ -1,18 +1,29 @@
 #!/bin/bash
 
-# Virtual environment actions
+# Virtual environment creation
 
-SNATCH_PATH="/usr/bin/snatch"
+echo "Creating Python virtual environment"
+mkdir -p /opt/snatch/venv/
+chmod 755 /opt/snatch/venv/
+
+if [ -d env ]; then
+	echo "Removing the existing Python environment"
+	rm -rf env
+fi
 
 echo "Activating Python virtual environment"
 cd /opt/snatch/venv/
+su -c "python3 -m venv env"
+su -c ". env/bin/activate"
 
-. env/bin/activate
-python3 $SNATCH_PATH/manage.py makemigrations Snatch
-python3 $SNATCH_PATH/manage.py migrate
+su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade pip"
 
-# Creating user for CI support
-python3 $SNATCH_PATH/manage.py createsuperuser --username ci_bot --email ci@bot.com --noinput
+# This is from the beginning of the requirements.txt
+su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.2.6"
 
-echo -e "Please, note that the this token is used to perform CI API requests (it is also saved to /usr/bin/snatch/ci_token.txt)."
-python3 $SNATCH_PATH/manage.py drf_create_token ci_bot | awk '{print $3}' | tee /usr/bin/snatch/ci_token.txt
+# Grabbing the last requirements from the file
+REQUIREMENTSPLACEHOLDER
+
+# Separate vmi (v4.0)
+su -c "/opt/snatch/venv/env/bin/pip3 install /usr/bin/snatch/vmi"
+rm -rf /usr/bin/snatch/vmi

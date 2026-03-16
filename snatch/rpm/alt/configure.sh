@@ -20,7 +20,7 @@ su -c "$SNATCH_PATH/dbinit.sh $DB_NAME $DB_USER $DB_PASSWORD"
 rm -f /tmp/dbpas
 
 echo -e "\n\e[0;33mВнимание!\e[0m Далее postgres пароли больше не требуются. Сейчас снова потребуется su пароль для настройки веб-сервисов."
-su -c "$SNATCH_PATH/venv.sh"
+su -c "$SNATCH_PATH/django.sh"
 
 echo -e "\n\e[0;33mRemember the PostgreSQL credentials:\e[0m"
 echo "==========================================="

@@ -95,6 +95,7 @@ cp -r * %buildroot%_bindir/snatch
 
 %post
 
+<<<<<<< HEAD
 echo "Creating Python virtual environment"
 mkdir -p /opt/snatch/venv/
 chmod 755 /opt/snatch/venv/
@@ -127,6 +128,10 @@ sed -i -E "s/nohup celery/nohup python3 -m celery/" "/usr/bin/snatch/snatch_star
 # Register a separate vmidb
 pip3 install /usr/bin/snatch/vmi
 rm -rf /usr/bin/snatch/vmi
+=======
+# Creating venv
+/usr/bin/snatch/venv.sh
+>>>>>>> 308d332 (a separate file for venv creation (alt10))
 
 echo "Starting rabbitmq and memcached..."
 /usr/sbin/rabbitmq-server -detached || :

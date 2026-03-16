@@ -10,9 +10,9 @@ Group:          Development/Other
 Source:         %name-%version.tar
 
 # Ignore checking dependencies for python's activate
-%global __requires_exclude_from ^/opt/myproduct/venv/.*$
-%global __requires_exclude ^/opt/myproduct/venv/.*$
-%global _requires_exceptions /opt/myproduct/venv/env/bin/activate
+%global __requires_exclude_from ^/opt/snatch/venv/.*$
+%global __requires_exclude ^/opt/snatch/venv/.*$
+%global _requires_exceptions /opt/snatch/venv/env/bin/activate
 
 BuildRequires(pre): rpm-build-python3
 

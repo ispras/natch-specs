@@ -1,28 +1,23 @@
+%define _unpackaged_files_terminate_build 1
 Name:           snatch
 Version:        VERSIONPLACEHOLDER
 Release:        alt1%{?dist}
 Summary:        ISP RAS SNatch
-
-%define _unpackaged_files_terminate_build 0
 
 License:        GPLv3 and Proprietary
 Group:          Development/Other
 
 Source:         %name-%version.tar
 
-
 BuildRequires(pre): rpm-build-python3
 
-# natch is not a python3 library
-AutoProv: nopython3
-
-BuildRequires: guestfs-tools
+AutoReq: 0
+AutoProv: 0
 
 # AutoReq can't find these libs due to:
 # readelf: Error: no .dynamic section in the dynamic segment
 BuildRequires: pip
 BuildRequires: python3-dev
-BuildRequires: python3-module-virtualenv
 BuildRequires: libcups-devel
 BuildRequires: libgirepository1.0-devel
 BuildRequires: libsystemd-devel

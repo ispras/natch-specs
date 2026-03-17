@@ -122,6 +122,8 @@ rm -rf /usr/bin/snatch/vmi
 # Workaround for non-working celery (actually it's working but only via python)
 sed -i -E "s/nohup celery/nohup python3 -m celery/" "/usr/bin/snatch/snatch_start.sh"
 
+chmod -R 755 /opt/snatch/venv/
+
 echo "Starting rabbitmq and memcached..."
 /usr/sbin/rabbitmq-server -detached || :
 systemctl start memcached || :

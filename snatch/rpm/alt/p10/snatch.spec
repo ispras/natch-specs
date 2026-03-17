@@ -28,6 +28,9 @@ BuildRequires: libcairo-devel
 Requires: rabbitmq-server
 Requires: memcached
 
+# Still required for one of the used modules
+Requires: sqlite3
+
 Requires: libmemcached-devel
 Requires: postgresql17
 Requires: postgresql17-server
@@ -37,7 +40,6 @@ Requires: postgresql17-contrib
 Requires: gcc
 Requires: zlib-devel
 Requires: python3-dev
-Requires: python3-module-virtualenv
 
 # This is required to have an ability to build the wheels in venv below
 Requires: python3-module-pylibmc
@@ -101,7 +103,7 @@ fi
 
 echo "Activating Python virtual environment"
 cd /opt/snatch/venv/
-python3 -m virtualenv env
+python3 -m venv env
 . env/bin/activate
 
 su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade pip"

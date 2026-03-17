@@ -37,6 +37,7 @@ Requires: postgresql17-contrib
 Requires: gcc
 Requires: zlib-devel
 Requires: python3-dev
+Requires: python3-module-virtualenv
 
 # This is required to have an ability to build the wheels in venv below
 Requires: python3-module-pylibmc
@@ -100,7 +101,7 @@ fi
 
 echo "Activating Python virtual environment"
 cd /opt/snatch/venv/
-su -c "python3 -m venv env"
+su -c "python3 -m virtualenv env"
 su -c ". env/bin/activate"
 
 su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade pip"

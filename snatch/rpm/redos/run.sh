@@ -14,6 +14,9 @@ echo "#!/bin/bash" > /tmp/post_run.sh
 # Sometimes it's required to stop Snatch before start to avoid some processing issues
 echo "$SNATCH_PATH/snatch_stop.sh" >> /tmp/post_run.sh
 
+# Sometimes it's required to stop an existing RabbitMQ process before to avoid issues
+sudo rabbitmqctl shutdown >> /tmp/post_run.sh
+
 pids=()
 
 # Some processes and ports may prevent a correct start of the rabbitmq
@@ -35,7 +38,8 @@ if [ ${#pids[@]} -gt 0 ]; then
   echo "kill -9 "${pids[@]}" > /dev/null 2>&1" >> /tmp/post_run.sh
 fi
 
-services="rabbitmq memcached"      # rabbitmq-server 
+services="rabbitmq-server memcached"
+
 for service in $services
 do
   # if systemctl is-active --quiet "$service"; then

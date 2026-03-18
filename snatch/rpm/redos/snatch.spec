@@ -183,6 +183,11 @@ fi
 %dir /usr/bin/snatch/
 /usr/bin/snatch/*
 
+# Hiding the warnings during the package removal
+%config(missingok) /usr/bin/snatch/vmi
+%config(missingok) /usr/bin/snatch/vmi/*
+
+
 %changelog
 * DATEPLACEHOLDER ISP RAS <natch@ispras.ru> VERSIONPLACEHOLDER
 - CHANGESPLACEHOLDER

@@ -15,7 +15,7 @@ echo "#!/bin/bash" > /tmp/post_run.sh
 echo "$SNATCH_PATH/snatch_stop.sh" >> /tmp/post_run.sh
 
 # Sometimes it's required to stop an existing RabbitMQ process before to avoid issues
-sudo rabbitmqctl shutdown >> /tmp/post_run.sh
+echo "sudo rabbitmqctl shutdown" >> /tmp/post_run.sh
 
 pids=()
 

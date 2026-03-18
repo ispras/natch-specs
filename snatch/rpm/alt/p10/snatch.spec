@@ -29,7 +29,7 @@ Requires: rabbitmq-server
 Requires: memcached
 
 # Still required for one of the used modules
-Requires: sqlite3
+Requires: python3-modules-sqlite3
 
 Requires: libmemcached-devel
 Requires: postgresql17

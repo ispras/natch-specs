@@ -4,7 +4,7 @@ Provides: snatch
 Maintainer: ISP RAS <natch@ispras.ru>
 Architecture: amd64
 Section: devel
-Depends: DEPENDENCIESPLACEHOLDER
+DEPENDENCIESPLACEHOLDER
 Description: ISP RAS SNatch.
  ISP RAS SNatch visualizes representation for Natch results.
  

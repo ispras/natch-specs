@@ -32,12 +32,6 @@ else
 fi
 
 # Install the pip packages that are absent in the apt repo
-
-# Workaround for the issue "fs 2.4.16 requires platformdirs~=4.3.6, but you have platformdirs 4.9.4 which is incompatible" on Debian 13
-if [[ $osName == *"Debian"* ]] || [[ $osVer == "13" ]] ; then
-	pip3 install platformdirs~=4.3.6 $pipPostfix
-fi
-
 # PIPDEPENDENCIESPLACEHOLDER value comes from the script. It varies depending on OS.
 pip3 install PIPDEPENDENCIESPLACEHOLDER $pipPostfix
 

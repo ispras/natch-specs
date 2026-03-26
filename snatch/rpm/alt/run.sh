@@ -1,3 +1,5 @@
+#!/bin/bash
+
 SNATCH_PATH="/usr/bin/snatch"
 
 # To avoid the multiple password prompts (due to "su" specifics) we are going to create a temporary script 

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 SNATCH_PATH="/usr/bin/snatch"
 
 # Detecting a logged in user

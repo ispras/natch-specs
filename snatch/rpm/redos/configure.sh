@@ -1,3 +1,5 @@
+#!/bin/bash
+
 SNATCH_PATH="/usr/bin/snatch"
 
 DB_NAME="snatch_db"

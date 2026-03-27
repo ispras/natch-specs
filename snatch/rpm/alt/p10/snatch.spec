@@ -160,53 +160,41 @@ echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/n
 
 %postun
 
-logFile="/var/log/snatch.log"
-mediaDir="%homedir/snatch/media/"
+# Only for full removal
+#  purge cannot be used in RPM
+if [ $1 -eq 0 ]; then
+	logFile="/var/log/snatch.log"
+	mediaDir="%homedir/snatch/media/"
 
-if [ -f "$logFile" ]; then
-	# Interactive mode
-	if [ -t 0 ] && [ -t 1 ]; then
-		echo "Удалить файл лога ($logFile)? [y/N]"
-		read -r response
-		case "$response" in
-			[yY][eE][sS]|[yY])
-				rm -f "$logFile"
-				echo "Файл лога удален."
-				;;
-			*)
-				echo "Файл лога сохранён."
-				;;
-		esac
+	if [ -f "$logFile" ]; then
+		# Interactive mode
+		if [ -t 0 ] && [ -t 1 ]; then
+			echo "Удалить файл лога ($logFile)? [y/N]"
+			read -r response
+			case "$response" in
+				[yY][eE][sS]|[yY])
+					rm -f "$logFile"
+					echo "Файл лога удален."
+					;;
+				*)
+					echo "Файл лога сохранён."
+					;;
+			esac
 
-	# Non-interactive mode: removing
-	else
-		rm -f "$logFile"
-		echo "Файл лога удален"
+		# Non-interactive mode: removing
+		else
+			rm -f "$logFile"
+			echo "Файл лога удален"
+		fi
 	fi
-fi
 
-if [ ! -z "$(ls -A $mediaDir)" ]; then
-#	mediaDir=$(dirname "$mediaDir")
-
-	# Interactive mode
-	if [ -t 0 ] && [ -t 1 ]; then
-		echo "Удалить существующие проекты? [y/N]"
-		read -r response
-		case "$response" in
-			[yY][eE][sS]|[yY])
-				rm -rf "$mediaDir"
-				echo "Существующие проекты удалены."
-				;;
-			*)
-				echo "Существующие проекты сохранены."
-				;;
-		esac
-
-	# Non-interactive mode: removing
-	else
-		rm -rf "$mediaDir"
-		echo "Существующие проекты удалены."
-	fi
+	for userDir in /home/*
+	do
+        if [ -d "$userDir/snatch/media/" ]; then
+            rm -rf "$userDir/snatch"
+            echo "Данные в $userDir/snatch удалены"
+        fi
+    done
 fi
 echo "SNatch удален."
 

@@ -50,7 +50,10 @@ else
 fi
 echo "Текущий пользователь: $USER"
 
-currentPath=$($(grep "^MEDIA_ROOT =" "$settingsFile" | cut -d'=' -f2) | xargs)
+currentPath=$(grep "^MEDIA_ROOT =" "$settingsFile" | cut -d'=' -f2) | xargs
+if [[ $currentPath == "os.path"* ]]; then
+    currentPath=$(python -c "import os; print($currentPath)")
+fi
 echo "Текущий путь для хранения данных проектов: $currentPath"
 
 if [ ! -z "$(ls -A $currentPath)" ]; then

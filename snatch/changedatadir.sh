@@ -48,9 +48,9 @@ if [ -n "$SUDO_USER" ]; then
 else
     USER="$(whoami)"
 fi
-echo "Logged in user: $USER"
+echo "Текущий пользователь: $USER"
 
-currentPath=$(grep "^MEDIA_ROOT=" "$settingsFile" | cut -d'=' -f2)
+currentPath=$($(grep "^MEDIA_ROOT =" "$settingsFile" | cut -d'=' -f2) | xargs)
 echo "Текущий путь для хранения данных проектов: $currentPath"
 
 if [ ! -z "$(ls -A $currentPath)" ]; then

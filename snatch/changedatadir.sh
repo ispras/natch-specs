@@ -31,6 +31,9 @@ updatePath() {
     echo "Конфиг обновлен: $settingsFile"
     echo "Архивная копия настроек: $settingsFile.bak"
 
+    # Removing the old path
+    rm -rf $currentPath
+
     echo "Перезапуск Snatch ..."
     /usr/bin/snatch/snatch_stop.sh    
     /usr/bin/snatch/snatch_start.sh    
@@ -49,6 +52,11 @@ echo "Logged in user: $USER"
 
 currentPath=$(grep "^MEDIA_ROOT=" "$settingsFile" | cut -d'=' -f2)
 echo "Текущий путь для хранения данных проектов: $currentPath"
+
+if [ ! -z "$(ls -A $currentPath)" ]; then
+   echo "Каталог не пуст. Существующие проекты будут удалены в случае продолжения."
+fi
+
 read -p "Введите новый путь (или оставьте пустым для отмены): " newPath
 
 if [ -n "$newPath" ]; then

@@ -48,11 +48,13 @@ if [ -n "$SUDO_USER" ]; then
 else
     USER="$(whoami)"
 fi
-echo "Текущий пользователь: $USER"
+#echo "Текущий пользователь: $USER"
 
 currentPath=$(grep "^MEDIA_ROOT = " "$settingsFile" | cut -d'=' -f2)
 if [[ $currentPath == *"os.path"* ]]; then
     currentPath=$(/usr/bin/python3 -c "import os; print($currentPath)")
+else
+    currentPath=$(echo $currentPath | sed "s/'//g")
 fi
 echo "Текущий путь для хранения данных проектов: $currentPath"
 

@@ -162,57 +162,49 @@ echo -e "\033[32mTo finish SNatch setup run \e[0m\e[1;32m/usr/bin/snatch/configu
 
 echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"
 
-%postun
+%preun
+# Only for full removal
+#  purge cannot be used in RPM
+if [ $1 -eq 0 ]; then
+	logFile="/var/log/snatch.log"
+	settingsFile="/usr/bin/snatch/snatch/settings.py"
 
-logFile="/var/log/snatch.log"
-mediaDir="%homedir/snatch/media/"
-
-if [ -f "$logFile" ]; then
-	# Interactive mode
-	if [ -t 0 ] && [ -t 1 ]; then
-		echo "Удалить файл лога ($logFile)? [y/N]"
-		read -r response
-		case "$response" in
-			[yY][eE][sS]|[yY])
-				rm -f "$logFile"
-				echo "Файл лога удален."
-				;;
-			*)
-				echo "Файл лога сохранён."
-				;;
-		esac
-
-	# Non-interactive mode: removing
+	mediaDir=$(grep "^MEDIA_ROOT = " "$settingsFile" | cut -d'=' -f2)
+	if [[ $mediaDir == *"os.path"* ]]; then
+		mediaDir=$(/usr/bin/python3 -c "import os; print($mediaDir)")
+		rm -rf "$mediaDir/snatch"
 	else
-		rm -f "$logFile"
-		echo "Файл лога удален"
-	fi
-fi
-
-if [ ! -z "$(ls -A $mediaDir)" ]; then
-#	mediaDir=$(dirname "$mediaDir")
-
-	# Interactive mode
-	if [ -t 0 ] && [ -t 1 ]; then
-		echo "Удалить существующие проекты? [y/N]"
-		read -r response
-		case "$response" in
-			[yY][eE][sS]|[yY])
-				rm -rf "$mediaDir"
-				echo "Существующие проекты удалены."
-				;;
-			*)
-				echo "Существующие проекты сохранены."
-				;;
-		esac
-
-	# Non-interactive mode: removing
-	else
+		mediaDir=$(echo $mediaDir | sed "s/'//g")
 		rm -rf "$mediaDir"
-		echo "Существующие проекты удалены."
+	fi
+	echo "Проекты удалены"
+
+	if [ -f "$logFile" ]; then
+		# Interactive mode
+		if [ -t 0 ] && [ -t 1 ]; then
+			echo "Удалить файл лога ($logFile)? [y/N]"
+			read -r response
+			case "$response" in
+				[yY][eE][sS]|[yY])
+					rm -f "$logFile"
+					echo "Файл лога удален."
+					;;
+				*)
+					echo "Файл лога сохранён."
+					;;
+			esac
+
+		# Non-interactive mode: removing
+		else
+			rm -f "$logFile"
+			echo "Файл лога удален"
+		fi
 	fi
 fi
+
+%postun
 echo "SNatch удален."
+
 
 %changelog
 * DATEPLACEHOLDER ISP RAS <natch@ispras.ru> VERSIONPLACEHOLDER

@@ -158,13 +158,22 @@ echo -e "\033[32mTo finish SNatch setup run \e[0m\e[1;32m/usr/bin/snatch/configu
 
 echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"
 
-%postun
-
+%preun
 # Only for full removal
 #  purge cannot be used in RPM
 if [ $1 -eq 0 ]; then
 	logFile="/var/log/snatch.log"
-	mediaDir="%homedir/snatch/media/"
+	settingsFile="/usr/bin/snatch/snatch/settings.py"
+
+	mediaDir=$(grep "^MEDIA_ROOT = " "$settingsFile" | cut -d'=' -f2)
+	if [[ $mediaDir == *"os.path"* ]]; then
+		mediaDir=$(/usr/bin/python3 -c "import os; print($mediaDir)")
+		rm -rf "$mediaDir/snatch"
+	else
+		mediaDir=$(echo $mediaDir | sed "s/'//g")
+		rm -rf "$mediaDir"
+	fi
+	echo "Проекты удалены"
 
 	if [ -f "$logFile" ]; then
 		# Interactive mode
@@ -187,15 +196,9 @@ if [ $1 -eq 0 ]; then
 			echo "Файл лога удален"
 		fi
 	fi
-
-	for userDir in /home/*
-	do
-        if [ -d "$userDir/snatch/media/" ]; then
-            rm -rf "$userDir/snatch"
-            echo "Данные в $userDir/snatch удалены"
-        fi
-    done
 fi
+
+%postun
 echo "SNatch удален."
 
 %changelog

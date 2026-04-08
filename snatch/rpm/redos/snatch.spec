@@ -112,7 +112,9 @@ echo -e "\033[32mTo finish SNatch setup run \e[0m\e[1;32m/usr/bin/snatch/configu
 
 echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"
 
-%postun
+%preun
+# Only for full removal
+#  purge cannot be used in RPM
 if [ $1 -eq 0 ]; then
 	echo "Stopping rabbitmq and memcached services..."
 	systemctl stop memcached || :
@@ -121,15 +123,18 @@ if [ $1 -eq 0 ]; then
 	fuser -k 11211/tcp &> /dev/null || :				# memcached
 	fuser -k 25672/tcp&> /dev/null || :					# rabbitmq-server
 
-	# Detecting a logged in user
-	if [ -n "$SUDO_USER" ]; then
-		USER="$SUDO_USER"
-	else
-		USER="$(whoami)"
-	fi
-
 	logFile="/var/log/snatch.log"
-	mediaDir="/home/$USER/snatch/media/"
+	settingsFile="/usr/bin/snatch/snatch/settings.py"
+
+	mediaDir=$(grep "^MEDIA_ROOT = " "$settingsFile" | cut -d'=' -f2)
+	if [[ $mediaDir == *"os.path"* ]]; then
+		mediaDir=$(/usr/bin/python3 -c "import os; print($mediaDir)")
+		rm -rf "$mediaDir/snatch"
+	else
+		mediaDir=$(echo $mediaDir | sed "s/'//g")
+		rm -rf "$mediaDir"
+	fi
+	echo "Проекты удалены"
 
 	if [ -f "$logFile" ]; then
 		# Interactive mode
@@ -152,32 +157,11 @@ if [ $1 -eq 0 ]; then
 			echo "Файл лога удален"
 		fi
 	fi
-
-	if [ ! -z "$(ls -A $mediaDir)" ]; then
-#		mediaDir=$(dirname "$mediaDir")
-
-		# Interactive mode
-		if [ -t 0 ] && [ -t 1 ]; then
-			echo "Удалить существующие проекты? [y/N]"
-			read -r response
-			case "$response" in
-				[yY][eE][sS]|[yY])
-					rm -rf "$mediaDir"
-					echo "Существующие проекты удалены."
-					;;
-				*)
-					echo "Существующие проекты сохранены."
-					;;
-			esac
-
-		# Non-interactive mode: removing
-		else
-			rm -rf "$mediaDir"
-			echo "Существующие проекты удалены."
-		fi
-	fi
-	echo "SNatch удален."
 fi
+
+%postun
+echo "SNatch удален."
+
 
 %files
 %dir /usr/bin/snatch/

@@ -58,15 +58,16 @@ else
 fi
 echo "Текущий путь для хранения данных проектов: $currentPath"
 
-if [ -d $currentPath ]; then 
-    if [ ! -z "$(ls -A $currentPath)" ]; then
-        echo "Каталог не пуст. Существующие проекты будут удалены в случае продолжения."
-    else
-        echo "В указанном каталоге нет проектов."
-    fi
-else
-    echo "Каталога $currentPath не существует."
-fi
+# Removing the dir makes the already created projects unavailable, so this was not a good idea
+# if [ -d $currentPath ]; then 
+#     if [ ! -z "$(ls -A $currentPath)" ]; then
+#         echo "Каталог не пуст. Существующие проекты будут удалены в случае продолжения."
+#     else
+#         echo "В указанном каталоге нет проектов."
+#     fi
+# else
+#     echo "Каталога $currentPath не существует."
+# fi
 
 read -p "Введите новый путь (или оставьте пустым для отмены): " newPath
 

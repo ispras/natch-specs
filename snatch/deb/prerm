@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Detecting a logged in user
 if [ -n "$SUDO_USER" ]; then
     USER="$SUDO_USER"
@@ -9,3 +11,69 @@ fi
 echo "Stopping Snatch..."
 
 sudo -u $USER /usr/bin/snatch/snatch_stop.sh
+
+case "$1" in
+    purge)
+
+        logFile="/var/log/snatch.log"
+        settingsFile="/usr/bin/snatch/snatch/settings.py"
+
+        mediaDir=$(grep "^MEDIA_ROOT = " "$settingsFile" | cut -d'=' -f2)
+        if [[ $mediaDir == *"os.path"* ]]; then
+            mediaDir=$(/usr/bin/python3 -c "import os; print($mediaDir)")
+        else
+            mediaDir=$(echo $mediaDir | sed "s/'//g")
+        fi
+
+        if [ -f "$logFile" ]; then
+            # Interactive mode
+            if [ -t 0 ] && [ -t 1 ]; then
+                echo "Удалить файл лога ($logFile)? [y/N]"
+                read -r response
+                case "$response" in
+                    [yY][eE][sS]|[yY])
+                        rm -f "$logFile"
+                        echo "Файл лога удален."
+                        ;;
+                    *)
+                        echo "Файл лога сохранён."
+                        ;;
+                esac
+
+            # Non-interactive mode: removing
+            else
+                rm -f "$logFile"
+                echo "Файл лога удален"
+            fi
+        fi
+
+        if [ ! -z "$(ls -A $mediaDir)" ]; then
+#            mediaDir=$(dirname "$mediaDir")
+            # echo "DEBUG: Removing the $mediaDir"
+
+            # Interactive mode
+            if [ -t 0 ] && [ -t 1 ]; then
+                echo "Удалить существующие проекты? [y/N]"
+                read -r response
+                case "$response" in
+                    [yY][eE][sS]|[yY])
+                        rm -rf "$mediaDir"
+                        echo "Существующие проекты удалены."
+                        ;;
+                    *)
+                        echo "Существующие проекты сохранены."
+                        ;;
+                esac
+
+            # Non-interactive mode: removing
+            else
+                rm -rf "$mediaDir"
+                echo "Существующие проекты удалены."
+            fi
+        fi
+
+        ;;
+    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+        # Other cases
+        ;;
+esac

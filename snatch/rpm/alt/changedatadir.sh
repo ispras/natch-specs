@@ -22,10 +22,10 @@ updatePath() {
     chmod 750 "$newPath"
     
     # Create backup for the settings file
-    sudo cp "$settingsFile" "$settingsFile.bak"
+    su -c "cp $settingsFile $settingsFile.bak"
     
     # Update path
-    sudo sed -i "s|^MEDIA_ROOT = .*|MEDIA_ROOT = '$newPath'|" "$settingsFile"
+    su -c "sed -i \"s|^MEDIA_ROOT = .*|MEDIA_ROOT = '$newPath'|\" $settingsFile"
     
     echo "Путь для данных проектов изменен на $newPath"
     echo "Конфиг обновлен: $settingsFile"
@@ -57,17 +57,6 @@ else
     currentPath=$(echo $currentPath | sed "s/'//g")
 fi
 echo "Текущий путь для хранения данных проектов: $currentPath"
-
-# Removing the dir makes the already created projects unavailable, so this was not a good idea
-# if [ -d $currentPath ]; then 
-#     if [ ! -z "$(ls -A $currentPath)" ]; then
-#         echo "Каталог не пуст. Существующие проекты будут удалены в случае продолжения."
-#     else
-#         echo "В указанном каталоге нет проектов."
-#     fi
-# else
-#     echo "Каталога $currentPath не существует."
-# fi
 
 read -p "Введите новый путь (или оставьте пустым для отмены): " newPath
 

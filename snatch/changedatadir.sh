@@ -22,12 +22,12 @@ updatePath() {
     chmod 750 "$newPath"
     
     # Create backup for the settings file
-    cp "$settingsFile" "$settingsFile.bak"
+    sudo cp "$settingsFile" "$settingsFile.bak"
     
     # Update path
-    sed -i "s|^MEDIA_ROOT=.*|MEDIA_ROOT=$newPath|" "$settingsFile"
+    sudo sed -i "s|^MEDIA_ROOT = .*|MEDIA_ROOT = $newPath|" "$settingsFile"
     
-    echo "Путь для данных проектов изменен на: $newPath"
+    echo "Путь для данных проектов изменен на $newPath"
     echo "Конфиг обновлен: $settingsFile"
     echo "Архивная копия настроек: $settingsFile.bak"
 
@@ -35,8 +35,8 @@ updatePath() {
     rm -rf $currentPath
 
     echo "Перезапуск Snatch ..."
-    /usr/bin/snatch/snatch_stop.sh    
-    /usr/bin/snatch/snatch_start.sh    
+    /usr/bin/snatch/snatch_stop.sh
+    /usr/bin/snatch/snatch_start.sh
     
     return 0
 }
@@ -50,14 +50,20 @@ else
 fi
 echo "Текущий пользователь: $USER"
 
-currentPath=$(grep "^MEDIA_ROOT =" "$settingsFile" | cut -d'=' -f2) | xargs
-if [[ $currentPath == "os.path"* ]]; then
-    currentPath=$(python -c "import os; print($currentPath)")
+currentPath=$(grep "^MEDIA_ROOT = " "$settingsFile" | cut -d'=' -f2)
+if [[ $currentPath == *"os.path"* ]]; then
+    currentPath=$(/usr/bin/python3 -c "import os; print($currentPath)")
 fi
 echo "Текущий путь для хранения данных проектов: $currentPath"
 
-if [ ! -z "$(ls -A $currentPath)" ]; then
-   echo "Каталог не пуст. Существующие проекты будут удалены в случае продолжения."
+if [ -d $currentPath ]; then 
+    if [ ! -z "$(ls -A $currentPath)" ]; then
+        echo "Каталог не пуст. Существующие проекты будут удалены в случае продолжения."
+    else
+        echo "В указанном каталоге нет проектов."
+    fi
+else
+    echo "Каталога $currentPath не существует."
 fi
 
 read -p "Введите новый путь (или оставьте пустым для отмены): " newPath

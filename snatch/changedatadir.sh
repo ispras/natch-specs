@@ -25,7 +25,7 @@ updatePath() {
     sudo cp "$settingsFile" "$settingsFile.bak"
     
     # Update path
-    sudo sed -i "s|^MEDIA_ROOT = .*|MEDIA_ROOT = $newPath|" "$settingsFile"
+    sudo sed -i "s|^MEDIA_ROOT = .*|MEDIA_ROOT = '$newPath'|" "$settingsFile"
     
     echo "Путь для данных проектов изменен на $newPath"
     echo "Конфиг обновлен: $settingsFile"

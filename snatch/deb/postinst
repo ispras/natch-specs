@@ -31,8 +31,8 @@ sudo -u $USER python3 -m venv env
 pip3 install PIPDEPENDENCIESPLACEHOLDER --upgrade
 
 # Separate vmi (v4.0)
-pip3 install /usr/bin/snatch/vmi --upgrade
-rm -rf /usr/bin/snatch/vmi
+#pip3 install /usr/bin/snatch/vmi --upgrade
+#rm -rf /usr/bin/snatch/vmi
 
 deactivate 
 cd - > /dev/null

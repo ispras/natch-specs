@@ -25,11 +25,14 @@ fi
 
 echo "Activating Python virtual environment"
 cd $vEnvPath
-python3 -m venv env --system-site-packages
+python3 -m venv env
 . env/bin/activate
 
 # Install the pip packages that are absent in the apt repo
 pip3 install PIPDEPENDENCIESPLACEHOLDER --upgrade
+
+pythonVersion=$(/opt/snatch/venv/env/bin/python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+ln -s "/usr/lib/python3/dist-packages/vmi/" "/opt/snatch/venv/env/lib/python$pythonVersion/site-packages/"
 
 # Separate vmi (v4.0)
 #pip3 install /usr/bin/snatch/vmi --upgrade

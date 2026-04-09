@@ -8,14 +8,15 @@ else
 fi
 echo "Logged in user: $USER"
 
+vEnvPath="/opt/snatch/venv/"
+
 echo "Starting rabbitmq and memcached..."
 rabbitmq-server -detached
 systemctl start memcached
 
 echo "Creating Python virtual environment"
-mkdir -p /home/$USER/.local/share/virtualenvs/snatch/
-chmod 755 /home/$USER/.local/share/virtualenvs/snatch/
-chown $USER:$USER /home/$USER/.local/share/virtualenvs/snatch/
+mkdir -p $vEnvPath
+chmod 755 $vEnvPath
 
 if [ -d env ]; then
 	rm -rf env
@@ -23,7 +24,7 @@ if [ -d env ]; then
 fi
 
 echo "Activating Python virtual environment"
-cd /home/$USER/.local/share/virtualenvs/snatch/
+cd $vEnvPath
 sudo -u $USER python3 -m venv env
 . env/bin/activate
 
@@ -100,8 +101,7 @@ source env/bin/activate
 /usr/bin/snatch/manage.py migrate
 
 # Some created subdirs have the root permissions any way, so we will fix it once again for all subdirs
-chmod -R 755 /home/$USER/.local/share/virtualenvs/snatch/
-chown -R $USER:$USER /home/$USER/.local/share/virtualenvs/snatch/
+chmod -R 755 $vEnvPath
 
 running=""
 attempt=1

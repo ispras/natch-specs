@@ -1,6 +1,6 @@
 #!/bin/sh
 
-rm -rf "/home/$USER/.local/share/virtualenvs/snatch/" "/usr/bin/snatch/"
+rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
 
 echo "SNatch удален."
 

@@ -25,7 +25,7 @@ fi
 
 echo "Activating Python virtual environment"
 cd $vEnvPath
-python3 -m venv env
+python3 -m venv env --system-site-packages
 . env/bin/activate
 
 # Install the pip packages that are absent in the apt repo

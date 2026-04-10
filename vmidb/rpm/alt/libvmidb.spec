@@ -51,7 +51,9 @@ chmod -R 740 %buildroot%{_libdir}/*
 %attr(740,root,root) /usr/bin/scandir
 %attr(740,root,root) /usr/bin/storage
 %attr(740,root,root) /usr/bin/vmidb_symbols
-
+%attr(740,root,root) /usr/lib64/python3/site-packages/vmi/
+%attr(740,root,root) /usr/lib64/x86_64-linux-gnu/libvmidb.a
+%attr(740,root,root) /usr/lib64/x86_64-linux-gnu/libvmidb.so
 
 
 %post

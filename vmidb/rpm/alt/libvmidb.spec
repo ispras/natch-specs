@@ -1,6 +1,6 @@
 %define _unpackaged_files_terminate_build 1
 Name:           libvmidb
-Version:        1.0
+Version:        VERSIONPLACEHOLDER
 Release:        alt1%{?dist}
 Summary:        vmidb lib for ISP RAS Natch and SNatch
 
@@ -63,5 +63,5 @@ chmod -R 740 %buildroot%{_libdir}/*
 %postun
 
 %changelog
-* DATEPLACEHOLDER ISP RAS <natch@ispras.ru> 1.0
+* DATEPLACEHOLDER ISP RAS <natch@ispras.ru> VERSIONPLACEHOLDER
 - CHANGESPLACEHOLDER

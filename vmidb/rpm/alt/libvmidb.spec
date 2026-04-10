@@ -35,11 +35,17 @@ vmidb lib for ISP RAS Natch and SNatch
 
 
 %install
-install -p -d -m 0755 %buildroot/usr/lib/python3/site-packages/vmi/
-cp -r * %buildroot%/usr/lib/python3/site-packages/vmi/
+install -p -d -m 0755 %buildroot/usr/
+cp -r * %buildroot%/usr/
 
 %files
-%attr(755,root,root) /usr/lib/python3/site-packages/vmi/*
+%attr(740,root,root) /usr/bin/parse_exec
+%attr(740,root,root) /usr/bin/scandir
+%attr(740,root,root) /usr/bin/storage
+%attr(740,root,root) /usr/bin/vmidb_symbols
+%attr(740,root,root) /usr/lib/python3/site-packages/vmi/
+%attr(740,root,root) /usr/lib/x86_64-linux-gnu/libvmidb.a
+%attr(740,root,root) /usr/lib/x86_64-linux-gnu/libvmidb.so
 
 
 %post

@@ -37,7 +37,7 @@ vmidb lib for ISP RAS Natch and SNatch
 %install
 install -p -d -m 0755 %buildroot/usr
 echo "DEBUG"
-tree -L 4 .
+ls -l .
 cp -r * %buildroot%/usr
 
 %files

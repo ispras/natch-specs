@@ -19,6 +19,10 @@ AutoProv: 0
 BuildRequires: pip
 BuildRequires: python3-dev
 
+# disable findreq and verify-elf
+%add_findreq_skiplist %{_libdir}/*
+%add_verify_elf_skiplist %{_bindir}/*
+
 %{?python_disable_dependency_generator}
 
 

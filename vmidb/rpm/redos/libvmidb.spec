@@ -12,8 +12,6 @@ BuildArch:      x86_64
 
 Source:         %name-%version.tar
 
-BuildRequires(pre): rpm-build-python3
-
 AutoReq: 0
 AutoProv: 0
 

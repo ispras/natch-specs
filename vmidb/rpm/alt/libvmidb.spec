@@ -31,7 +31,7 @@ vmidb lib for ISP RAS Natch and SNatch
 
 
 %prep
-%setup
+%setup -q
 
 
 %build
@@ -42,13 +42,12 @@ vmidb lib for ISP RAS Natch and SNatch
 mkdir -p %buildroot%{_bindir}
 mkdir -p %buildroot%{_libdir}
 cp -r usr/bin/* %buildroot%{_bindir}
-cp -r usr/lib/* %buildroot%{_libdir}
+cp -r usr/lib64/* %buildroot%{_libdir}
 chmod -R 740 %buildroot%{_bindir}/*
 chmod -R 740 %buildroot%{_libdir}/*
 
 %files
 %attr(740,root,root) /usr/bin/parse_exec
-%attr(740,root,root) /usr/bin/scandir
 %attr(740,root,root) /usr/bin/storage
 %attr(740,root,root) /usr/bin/vmidb_symbols
 %attr(740,root,root) /usr/lib64/python3/site-packages/vmi/

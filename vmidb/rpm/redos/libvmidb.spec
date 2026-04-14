@@ -17,8 +17,8 @@ AutoProv: 0
 
 # AutoReq can't find these libs due to:
 # readelf: Error: no .dynamic section in the dynamic segment
-BuildRequires: pip
-BuildRequires: python3-dev
+BuildRequires: python3-pip
+BuildRequires: python3-devel
 
 %description
 vmidb lib for ISP RAS Natch and SNatch

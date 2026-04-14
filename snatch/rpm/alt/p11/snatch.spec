@@ -58,11 +58,11 @@ Requires: python3-module-pylibmc
 %filter_from_requires /^python3(Snatch.models)/d
 %filter_from_requires /^python3(Snatch.parsers.module_parser)/d
 %filter_from_requires /^python3(Snatch.utils)/d
-%filter_from_requires /^python3(Snatch.vmidb_helper)/d
-%filter_from_requires /^python3(vmi.Callstack)/d
-%filter_from_requires /^python3(vmi.Process)/d
-%filter_from_requires /^python3(vmi.Script)/d
-%filter_from_requires /^python3(vmi.Trace)/d
+#%filter_from_requires /^python3(Snatch.vmidb_helper)/d
+#%filter_from_requires /^python3(vmi.Callstack)/d
+#%filter_from_requires /^python3(vmi.Process)/d
+#%filter_from_requires /^python3(vmi.Script)/d
+#%filter_from_requires /^python3(vmi.Trace)/d
 
 
 %description
@@ -86,8 +86,8 @@ cp -r * %buildroot%_bindir/snatch
 
 
 # Hiding the warnings during the package removal
-%config(missingok) %_bindir/snatch/vmi
-%config(missingok) %_bindir/snatch/vmi/*
+#%config(missingok) %_bindir/snatch/vmi
+#%config(missingok) %_bindir/snatch/vmi/*
 
 
 %post
@@ -124,9 +124,9 @@ su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade chardet==5.2.0"
 cp -r /opt/snatch/venv/env/lib/python3/site-packages/django/db/backends/sqlite3 /opt/snatch/venv/env/lib/python3/site-packages/ 2>/dev/null
 
 # Separate vmi (v4.0)
-pip3 install /usr/bin/snatch/vmi
-su -c "/opt/snatch/venv/env/bin/pip3 install /usr/bin/snatch/vmi"
-rm -rf /usr/bin/snatch/vmi
+#pip3 install /usr/bin/snatch/vmi
+#su -c "/opt/snatch/venv/env/bin/pip3 install /usr/bin/snatch/vmi"
+#rm -rf /usr/bin/snatch/vmi
 
 echo "Starting rabbitmq and memcached..."
 /usr/sbin/rabbitmq-server -detached || :

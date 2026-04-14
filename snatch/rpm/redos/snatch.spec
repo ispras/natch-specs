@@ -70,10 +70,10 @@ sudo -u $USER pip3 install wheel
 sudo -u $USER pip3 install -r /usr/bin/snatch/requirements.txt
 
 # Separate vmi (v4.0)
-sudo chmod -R 755 /usr/bin/snatch/vmi
-sudo chown -R $USER:$USER /usr/bin/snatch/vmi
-pip3 install /usr/bin/snatch/vmi
-rm -rf /usr/bin/snatch/vmi
+#sudo chmod -R 755 /usr/bin/snatch/vmi
+#sudo chown -R $USER:$USER /usr/bin/snatch/vmi
+#pip3 install /usr/bin/snatch/vmi
+#rm -rf /usr/bin/snatch/vmi
 
 echo "Starting rabbitmq and memcached..."
 sudo /usr/sbin/rabbitmq-server -detached
@@ -168,8 +168,8 @@ echo "SNatch удален."
 /usr/bin/snatch/*
 
 # Hiding the warnings during the package removal
-%config(missingok) /usr/bin/snatch/vmi
-%config(missingok) /usr/bin/snatch/vmi/*
+#%config(missingok) /usr/bin/snatch/vmi
+#%config(missingok) /usr/bin/snatch/vmi/*
 
 
 %changelog

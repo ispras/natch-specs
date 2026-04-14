@@ -1,0 +1,8 @@
+Package: libvmidb
+Version: VERSIONPLACEHOLDER
+Provides: libvmidb
+Maintainer: ISP RAS <natch@ispras.ru>
+Architecture: amd64
+Section: devel
+Depends: libc6, libglib2.0-0, libzstd1, zlib1g
+Description: Additional packet for ISP RAS Natch and SNatch.

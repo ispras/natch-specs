@@ -16,7 +16,6 @@ AutoProv: 0
 
 # AutoReq can't find these libs due to:
 # readelf: Error: no .dynamic section in the dynamic segment
-BuildRequires: pip
 BuildRequires: python3-dev
 BuildRequires: libcups-devel
 BuildRequires: libgirepository1.0-devel
@@ -39,8 +38,8 @@ Requires: postgresql17-contrib
 # Required to build a wheel for pylibmc
 Requires: gcc
 Requires: zlib-devel
+Requires: pip
 Requires: python3-dev
-Requires: python3-pip
 
 # This is required to have an ability to build the wheels in venv below
 Requires: python3-module-pylibmc

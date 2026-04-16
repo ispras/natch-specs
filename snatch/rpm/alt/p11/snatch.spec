@@ -94,11 +94,28 @@ cp -r * %buildroot%_bindir/snatch
 
 # Detecting a logged in user
 if [ -n "$SUDO_USER" ]; then
-    USER="$SUDO_USER"
+	REAL_USER="$SUDO_USER"
+elif [ -n "$LOGNAME" ] && [ "$LOGNAME" != "root" ]; then
+	REAL_USER="$LOGNAME"
+elif [ -n "$USER" ] && [ "$USER" != "root" ]; then
+	REAL_USER="$USER"
 else
-    USER="$(whoami)"
+	# Try to find via "who -m" or "logname"
+	REAL_USER="$(who -m 2>/dev/null | awk '{print $1}')"
+	if [ -z "$REAL_USER" ]; then
+		REAL_USER="$(logname 2>/dev/null)"
+	fi
+	# If it's still "root" - use owner for /proc/self/uid_map
+	if [ -z "$REAL_USER" ] || [ "$REAL_USER" = "root" ]; then
+		REAL_USER="$(ps -o user= -p $(ps -o ppid= -p $$) 2>/dev/null | head -1)"
+	fi
 fi
-echo "Current user: $USER"
+
+echo "DEBUG ----"
+echo "USER: $USER"
+echo "LOGNAME: $LOGNAME"
+echo "WhoAmI: $(whoami)
+echo "----------"
 
 echo "Creating Python virtual environment"
 mkdir -p /opt/snatch/venv/

@@ -60,6 +60,7 @@ Requires: python3-module-pylibmc
 %filter_from_requires /^python3(Snatch.models)/d
 %filter_from_requires /^python3(Snatch.parsers.module_parser)/d
 %filter_from_requires /^python3(Snatch.utils)/d
+%filter_from_requires /.*pip3.*/d
 #%filter_from_requires /^python3(Snatch.vmidb_helper)/d
 #%filter_from_requires /^python3(vmi.Callstack)/d
 #%filter_from_requires /^python3(vmi.Process)/d

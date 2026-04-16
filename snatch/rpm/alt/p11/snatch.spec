@@ -115,12 +115,13 @@ echo "DEBUG ----"
 echo "USER: $USER"
 echo "LOGNAME: $LOGNAME"
 echo "WhoAmI: $(whoami)
+echo "REAL_USER: $REAL_USER"
 echo "----------"
 
 echo "Creating Python virtual environment"
 mkdir -p /opt/snatch/venv/
 chmod 755 /opt/snatch/venv/
-chown $USER:$USER /opt/snatch/venv/
+chown $REAL_USER:$REAL_USER /opt/snatch/venv/
 
 if [ -d env ]; then
 	echo "Removing the existing Python environment"
@@ -160,7 +161,7 @@ systemctl start memcached || :
 
 touch /var/log/snatch.log || :
 chmod 755 /var/log/snatch.log || :
-chown $USER:$USER /var/log/snatch.log || :
+chown $REAL_USER:$REAL_USER /var/log/snatch.log || :
 
 if [ -d Snatch/migrations ]; then
 	rm -rf Snatch/migrations & > /dev/null || :
@@ -168,11 +169,11 @@ fi
 
 mkdir -p %homedir/snatch/media/  || :
 chmod 755 %homedir/snatch/media/  || :
-chown $USER:$USER %homedir/snatch/media/  || :
+chown $REAL_USER:$REAL_USER %homedir/snatch/media/  || :
 
 # To let manage.py create the migration scripts
 chmod -R 755 /usr/bin/snatch  || :
-chown -R $USER:$USER /usr/bin/snatch || :
+chown -R $REAL_USER:$REAL_USER /usr/bin/snatch || :
 
 echo -e "\e[1;32mSNatch VERSIONPLACEHOLDER has been installed.\e[0m"
 

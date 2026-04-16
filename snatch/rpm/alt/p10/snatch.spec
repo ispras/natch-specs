@@ -135,15 +135,11 @@ python3 -m venv env
 # Grabbing the last requirements from the file
 REQUIREMENTSPLACEHOLDER
 
-# Separate vmi (v4.0)
-#pip3 install /usr/bin/snatch/vmi
-#su -c "/opt/snatch/venv/env/bin/pip3 install /usr/bin/snatch/vmi"
-#rm -rf /usr/bin/snatch/vmi
+vmidbLocation=$(su -c "rpm -ql libvmidb" | grep 'packages/vmi' | grep -v '.so')
+ln -s "$vmidbLocation" "/opt/snatch/venv/env/lib/python3/site-packages/"
 
 # Workaround for non-working celery (actually it's working but only via python)
 sed -i -E "s/nohup celery/nohup python3 -m celery/" "/usr/bin/snatch/snatch_start.sh"
-
-ln -s "/usr/lib/python3/site-packages/vmi/" "/opt/snatch/venv/env/lib/python3/site-packages/"
 
 echo "Starting rabbitmq and memcached..."
 /usr/sbin/rabbitmq-server -detached || :
@@ -223,6 +219,7 @@ if [ $1 -eq 0 ]; then
 fi
 
 %postun
+rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
 echo "SNatch удален."
 
 %changelog

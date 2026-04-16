@@ -153,13 +153,8 @@ REQUIREMENTSPLACEHOLDER
 # Workaround for the case when sqlite3 cannot be found by IPython module 
 cp -r /opt/snatch/venv/env/lib/python3/site-packages/django/db/backends/sqlite3 /opt/snatch/venv/env/lib/python3/site-packages/ 2>/dev/null
 
-#pythonVersion=$(/bin/sh -c '/opt/snatch/venv/env/bin/python -c "import sys; print(f\"{sys.version_info.major}.{sys.version_info.minor}\")"')
-ln -s "/usr/lib/python3/site-packages/vmi/" "/opt/snatch/venv/env/lib/python3/site-packages/"
-
-# Separate vmi (v4.0)
-#pip3 install /usr/bin/snatch/vmi
-#su -c "/opt/snatch/venv/env/bin/pip3 install /usr/bin/snatch/vmi"
-#rm -rf /usr/bin/snatch/vmi
+vmidbLocation=$(su -c "rpm -ql libvmidb" | grep 'packages/vmi' | grep -v '.so')
+ln -s "$vmidbLocation" "/opt/snatch/venv/env/lib/python3/site-packages/"
 
 echo "Starting rabbitmq and memcached..."
 /usr/sbin/rabbitmq-server -detached || :
@@ -239,6 +234,7 @@ if [ $1 -eq 0 ]; then
 fi
 
 %postun
+rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
 echo "SNatch удален."
 
 

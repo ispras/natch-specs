@@ -16,6 +16,7 @@ AutoProv: 0
 
 # AutoReq can't find these libs due to:
 # readelf: Error: no .dynamic section in the dynamic segment
+BuildRequires: pip
 BuildRequires: python3-dev
 BuildRequires: libcups-devel
 BuildRequires: libgirepository1.0-devel
@@ -38,7 +39,6 @@ Requires: postgresql17-contrib
 # Required to build a wheel for pylibmc
 Requires: gcc
 Requires: zlib-devel
-Requires: pip
 Requires: python3-dev
 
 # This is required to have an ability to build the wheels in venv below
@@ -53,6 +53,7 @@ Requires: python3-module-pylibmc
 
 # disable findreq and verify-elf for snatch
 %add_findreq_skiplist %_datadir/snatch/*
+%add_findreq_skiplist /opt/snatch/
 %add_verify_elf_skiplist %_datadir/snatch/*
 
 %filter_from_requires /^python3(Snatch.models)/d

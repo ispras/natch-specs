@@ -16,7 +16,7 @@ AutoProv: 0
 
 # AutoReq can't find these libs due to:
 # readelf: Error: no .dynamic section in the dynamic segment
-BuildRequires: pip
+#BuildRequires: pip
 BuildRequires: python3-dev
 BuildRequires: libcups-devel
 BuildRequires: libgirepository1.0-devel
@@ -91,13 +91,26 @@ cp -r * %buildroot%_bindir/snatch
 
 
 %post
+#!/bin/bash
+
 # Detecting a logged in user
 if [ -n "$SUDO_USER" ]; then
-    USER="$SUDO_USER"
+	REAL_USER="$SUDO_USER"
+elif [ -n "$LOGNAME" ] && [ "$LOGNAME" != "root" ]; then
+	REAL_USER="$LOGNAME"
+elif [ -n "$USER" ] && [ "$USER" != "root" ]; then
+	REAL_USER="$USER"
 else
-    USER="$(whoami)"
+	# Try to find via "who -m" or "logname"
+	REAL_USER="$(who -m 2>/dev/null | awk '{print $1}')"
+	if [ -z "$REAL_USER" ]; then
+		REAL_USER="$(logname 2>/dev/null)"
+	fi
+	# If it's still "root" - use owner for /proc/self/uid_map
+	if [ -z "$REAL_USER" ] || [ "$REAL_USER" = "root" ]; then
+		REAL_USER="$(ps -o user= -p $(ps -o ppid= -p $$) 2>/dev/null | head -1)"
+	fi
 fi
-echo "Current user: $USER"
 
 echo "Creating Python virtual environment"
 mkdir -p /opt/snatch/venv/
@@ -112,12 +125,12 @@ fi
 echo "Activating Python virtual environment"
 cd /opt/snatch/venv/
 python3 -m venv env
-. env/bin/activate
+/bin/sh -c '. env/bin/activate'
 
-su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade pip"
+/bin/sh -c "/opt/snatch/venv/env/bin/pip3 install --upgrade pip"
 
 # This is from the beginning of the requirements.txt
-su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.2.6"
+/bin/sh -c "/opt/snatch/venv/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.2.6"
 
 # Grabbing the last requirements from the file
 REQUIREMENTSPLACEHOLDER
@@ -130,7 +143,7 @@ REQUIREMENTSPLACEHOLDER
 # Workaround for non-working celery (actually it's working but only via python)
 sed -i -E "s/nohup celery/nohup python3 -m celery/" "/usr/bin/snatch/snatch_start.sh"
 
-#chmod -R 755 /opt/snatch/venv/
+ln -s "/usr/lib/python3/site-packages/vmi/" "/opt/snatch/venv/env/lib/python3/site-packages/"
 
 echo "Starting rabbitmq and memcached..."
 /usr/sbin/rabbitmq-server -detached || :

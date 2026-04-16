@@ -114,12 +114,12 @@ else
 	fi
 fi
 
-echo "DEBUG ----"
-echo "USER: $USER"
-echo "LOGNAME: $LOGNAME"
-echo "WhoAmI: $(whoami)"
-echo "REAL_USER: $REAL_USER"
-echo "----------"
+#echo "DEBUG ----"
+#echo "USER: $USER"
+#echo "LOGNAME: $LOGNAME"
+#echo "WhoAmI: $(whoami)"
+#cho "REAL_USER: $REAL_USER"
+#echo "----------"
 
 echo "Creating Python virtual environment"
 mkdir -p /opt/snatch/venv/
@@ -153,8 +153,8 @@ REQUIREMENTSPLACEHOLDER
 # Workaround for the case when sqlite3 cannot be found by IPython module 
 cp -r /opt/snatch/venv/env/lib/python3/site-packages/django/db/backends/sqlite3 /opt/snatch/venv/env/lib/python3/site-packages/ 2>/dev/null
 
-pythonVersion=$(/bin/sh -c '/opt/snatch/venv/env/bin/python -c "import sys; print(f\"{sys.version_info.major}.{sys.version_info.minor}\")"')
-ln -s "/usr/lib/python3/site-packages/vmi/" "/opt/snatch/venv/env/lib/python$pythonVersion/site-packages/"
+#pythonVersion=$(/bin/sh -c '/opt/snatch/venv/env/bin/python -c "import sys; print(f\"{sys.version_info.major}.{sys.version_info.minor}\")"')
+ln -s "/usr/lib/python3/site-packages/vmi/" "/opt/snatch/venv/env/lib/python3/site-packages/"
 
 # Separate vmi (v4.0)
 #pip3 install /usr/bin/snatch/vmi

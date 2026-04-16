@@ -131,22 +131,22 @@ fi
 
 echo "Activating Python virtual environment"
 cd /opt/snatch/venv/
-su -c "python3 -m venv env"
-su -c ". env/bin/activate"
+python3 -m venv env
+. env/bin/activate
 
-su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade pip"
+/opt/snatch/venv/env/bin/pip3 install --upgrade pip
 
 # Install the pre-requirements
-su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade urllib3~=2.6.3"
+/opt/snatch/venv/env/bin/pip3 install --upgrade urllib3~=2.6.3
 
 # This is from the beginning of the requirements.txt
-su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5"
+/opt/snatch/venv/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5
 
 # Grabbing the last requirements from the file
 REQUIREMENTSPLACEHOLDER
 
 # Install the rest requirements (to avoid errors during the DB configuration part)
-su -c "/opt/snatch/venv/env/bin/pip3 install --upgrade chardet==5.2.0"
+/opt/snatch/venv/env/bin/pip3 install --upgrade chardet==5.2.0
 
 # Workaround for the case when sqlite3 cannot be found by IPython module 
 cp -r /opt/snatch/venv/env/lib/python3/site-packages/django/db/backends/sqlite3 /opt/snatch/venv/env/lib/python3/site-packages/ 2>/dev/null

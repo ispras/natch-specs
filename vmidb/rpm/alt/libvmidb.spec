@@ -35,7 +35,7 @@ vmidb lib for ISP RAS Natch and SNatch
 
 
 %build
-# blank
+export LDFLAGS="-Wl,-rpath,/usr/lib64/x86_64-linux-gnu/ $LDFLAGS"
 
 
 %install
@@ -46,10 +46,6 @@ cp -r usr/lib64/* %buildroot%{_libdir}
 chmod -R 740 %buildroot%{_bindir}/*
 chmod -R 740 %buildroot%{_libdir}/*
 
-cd %buildroot%{_libdir}
-for f in *.cpython-312.so; do
-    ln -s "$f" "$(basename "$f" .cpython-312.so).so"
-done
 
 %files
 %attr(740,root,root) /usr/bin/parse_exec

@@ -35,13 +35,14 @@ vmidb lib for ISP RAS Natch and SNatch
 
 
 %build
-export LDFLAGS="-Wl,-rpath,/usr/lib64/x86_64-linux-gnu/ $LDFLAGS"
-export LD_LIBRARY_PATH=/usr/lib64/x86_64-linux-gnu/:$LD_LIBRARY_PATH
+#blank
 
 %install
 mkdir -p %buildroot%{_bindir}
 mkdir -p %buildroot%{_libdir}
 cp -r usr/bin/* %buildroot%{_bindir}
+cp -r usr/lib64/x86_64-linux-gnu/* %buildroot%{_libdir}
+rm -f usr/lib64/x86_64-linux-gnu/*
 cp -r usr/lib64/* %buildroot%{_libdir}
 chmod -R 740 %buildroot%{_bindir}/*
 chmod -R 740 %buildroot%{_libdir}/*

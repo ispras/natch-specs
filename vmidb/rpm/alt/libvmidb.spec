@@ -20,7 +20,7 @@ BuildRequires: pip
 BuildRequires: python3-dev
 
 # disable findreq and verify-elf
-%add_findreq_skiplist %{_libdir}/*
+%add_findreq_skiplist %{_libexecdir }/*
 %add_verify_elf_skiplist %{_bindir}/*
 
 %{?python_disable_dependency_generator}
@@ -40,19 +40,19 @@ vmidb lib for ISP RAS Natch and SNatch
 
 %install
 mkdir -p %buildroot%{_bindir}
-mkdir -p %buildroot%{_libdir}
+mkdir -p %buildroot%{_libexecdir }
 cp -r usr/bin/* %buildroot%{_bindir}
-cp -r usr/lib64/* %buildroot%{_libdir}
+cp -r usr/lib64/* %buildroot%{_libexecdir }
 chmod -R 740 %buildroot%{_bindir}/*
-chmod -R 740 %buildroot%{_libdir}/*
+chmod -R 740 %buildroot%{_libexecdir }/*
 
 %files
 %attr(740,root,root) /usr/bin/parse_exec
 %attr(740,root,root) /usr/bin/storage
 %attr(740,root,root) /usr/bin/vmidb_symbols
-%attr(740,root,root) /usr/lib64/python3/site-packages/vmi/
-%attr(740,root,root) /usr/lib64/x86_64-linux-gnu/libvmidb.a
-%attr(740,root,root) /usr/lib64/x86_64-linux-gnu/libvmidb.so
+%attr(740,root,root) /usr/lib/python3/site-packages/vmi/
+%attr(740,root,root) /usr/lib/x86_64-linux-gnu/libvmidb.a
+%attr(740,root,root) /usr/lib/x86_64-linux-gnu/libvmidb.so
 
 
 %post

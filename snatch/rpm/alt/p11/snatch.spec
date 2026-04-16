@@ -133,7 +133,7 @@ fi
 
 echo "Activating Python virtual environment"
 cd /opt/snatch/venv/
-python3 -m venv env
+/bin/sh -c 'python3 -m venv env'
 /bin/sh -c '. env/bin/activate'
 
 /bin/sh -c '/opt/snatch/venv/env/bin/pip3 install --upgrade pip'

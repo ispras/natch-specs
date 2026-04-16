@@ -53,7 +53,7 @@ Requires: python3-module-pylibmc
 
 # disable findreq and verify-elf for snatch
 %add_findreq_skiplist %_datadir/snatch/*
-%add_findreq_skiplist /opt/snatch/
+%add_findreq_skiplist /opt/snatch/*
 %add_verify_elf_skiplist %_datadir/snatch/*
 
 %filter_from_requires /^python3(Snatch.models)/d

@@ -1,4 +1,6 @@
 %define _unpackaged_files_terminate_build 1
+%global __requires_exclude ^/opt/snatch/venv/env/bin/pip3$
+
 Name:           snatch
 Version:        VERSIONPLACEHOLDER
 Release:        alt1%{?dist}
@@ -16,7 +18,7 @@ AutoProv: 0
 
 # AutoReq can't find these libs due to:
 # readelf: Error: no .dynamic section in the dynamic segment
-BuildRequires: pip
+#BuildRequires: pip
 BuildRequires: python3-dev
 BuildRequires: libcups-devel
 BuildRequires: libgirepository1.0-devel
@@ -53,7 +55,6 @@ Requires: python3-module-pylibmc
 
 # disable findreq and verify-elf for snatch
 %add_findreq_skiplist %_datadir/snatch/*
-%add_findreq_skiplist /opt/snatch/*
 %add_verify_elf_skiplist %_datadir/snatch/*
 
 %filter_from_requires /^python3(Snatch.models)/d

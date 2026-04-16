@@ -115,7 +115,7 @@ fi
 echo "DEBUG ----"
 echo "USER: $USER"
 echo "LOGNAME: $LOGNAME"
-echo "WhoAmI: $(whoami)
+echo "WhoAmI: $(whoami)"
 echo "REAL_USER: $REAL_USER"
 echo "----------"
 

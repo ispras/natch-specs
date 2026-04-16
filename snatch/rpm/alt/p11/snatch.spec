@@ -153,6 +153,9 @@ REQUIREMENTSPLACEHOLDER
 # Workaround for the case when sqlite3 cannot be found by IPython module 
 cp -r /opt/snatch/venv/env/lib/python3/site-packages/django/db/backends/sqlite3 /opt/snatch/venv/env/lib/python3/site-packages/ 2>/dev/null
 
+pythonVersion=$(/opt/snatch/venv/env/bin/python -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+ln -s "/usr/lib/python3/site-packages/vmi/" "/opt/snatch/venv/env/lib/python$pythonVersion/site-packages/"
+
 # Separate vmi (v4.0)
 #pip3 install /usr/bin/snatch/vmi
 #su -c "/opt/snatch/venv/env/bin/pip3 install /usr/bin/snatch/vmi"

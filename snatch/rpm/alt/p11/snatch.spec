@@ -91,6 +91,7 @@ cp -r * %buildroot%_bindir/snatch
 
 
 %post
+#!/bin/bash
 
 # Detecting a logged in user
 if [ -n "$SUDO_USER" ]; then

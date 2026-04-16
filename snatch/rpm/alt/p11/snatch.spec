@@ -40,6 +40,7 @@ Requires: postgresql17-contrib
 Requires: gcc
 Requires: zlib-devel
 Requires: python3-dev
+Requires: python3-pip
 
 # This is required to have an ability to build the wheels in venv below
 Requires: python3-module-pylibmc

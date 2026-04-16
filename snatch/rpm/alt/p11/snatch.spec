@@ -60,7 +60,6 @@ Requires: python3-module-pylibmc
 %filter_from_requires /^python3(Snatch.models)/d
 %filter_from_requires /^python3(Snatch.parsers.module_parser)/d
 %filter_from_requires /^python3(Snatch.utils)/d
-%filter_from_requires /.*pip3.*/d
 #%filter_from_requires /^python3(Snatch.vmidb_helper)/d
 #%filter_from_requires /^python3(vmi.Callstack)/d
 #%filter_from_requires /^python3(vmi.Process)/d
@@ -135,21 +134,21 @@ fi
 echo "Activating Python virtual environment"
 cd /opt/snatch/venv/
 python3 -m venv env
-. env/bin/activate
+/bin/sh -c '. env/bin/activate'
 
-/opt/snatch/venv/env/bin/pip3 install --upgrade pip
+/bin/sh -c '/opt/snatch/venv/env/bin/pip3 install --upgrade pip'
 
 # Install the pre-requirements
-/opt/snatch/venv/env/bin/pip3 install --upgrade urllib3~=2.6.3
+/bin/sh -c '/opt/snatch/venv/env/bin/pip3 install --upgrade urllib3~=2.6.3'
 
 # This is from the beginning of the requirements.txt
-/opt/snatch/venv/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5
+/bin/sh -c '/opt/snatch/venv/env/bin/pip3 install --upgrade celery-progress~=0.1.2 celery~=5.3.5'
 
 # Grabbing the last requirements from the file
 REQUIREMENTSPLACEHOLDER
 
 # Install the rest requirements (to avoid errors during the DB configuration part)
-/opt/snatch/venv/env/bin/pip3 install --upgrade chardet==5.2.0
+/bin/sh -c '/opt/snatch/venv/env/bin/pip3 install --upgrade chardet==5.2.0'
 
 # Workaround for the case when sqlite3 cannot be found by IPython module 
 cp -r /opt/snatch/venv/env/lib/python3/site-packages/django/db/backends/sqlite3 /opt/snatch/venv/env/lib/python3/site-packages/ 2>/dev/null

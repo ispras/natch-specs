@@ -137,7 +137,6 @@ REQUIREMENTSPLACEHOLDER
 
 vmidbLocation=$(su -c "rpm -ql libvmidb" | grep 'packages/vmi' | grep -v '.so')
 ln -s "$vmidbLocation" "/opt/snatch/venv/env/lib/python3/site-packages/"
-/bin/sh -c "ln -s /usr/lib64/libvmidb.so /opt/snatch/venv/env/lib64/"
 
 # Workaround for non-working celery (actually it's working but only via python)
 sed -i -E "s/nohup celery/nohup python3 -m celery/" "/usr/bin/snatch/snatch_start.sh"

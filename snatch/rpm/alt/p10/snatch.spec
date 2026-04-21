@@ -96,29 +96,23 @@ cp -r * %buildroot%_bindir/snatch
 #!/bin/bash
 
 # Detecting a logged in user
-if [ -n "$XDG_RUNTIME_DIR" ]; then
-    REAL_USER=$(basename "$XDG_RUNTIME_DIR" | sed 's/^runtime-//')
+if [ -n "$SUDO_USER" ]; then
+	REAL_USER="$SUDO_USER"
+elif [ -n "$LOGNAME" ] && [ "$LOGNAME" != "root" ]; then
+	REAL_USER="$LOGNAME"
+elif [ -n "$USER" ] && [ "$USER" != "root" ]; then
+	REAL_USER="$USER"
+else
+	# Try to find via "who -m" or "logname"
+	REAL_USER="$(who -m 2>/dev/null | awk '{print $1}')"
+	if [ -z "$REAL_USER" ]; then
+		REAL_USER="$(logname 2>/dev/null)"
+	fi
+	# If it's still "root" - use owner for /proc/self/uid_map
+	if [ -z "$REAL_USER" ] || [ "$REAL_USER" = "root" ]; then
+		REAL_USER="$(ps -o user= -p $(ps -o ppid= -p $$) 2>/dev/null | head -1)"
+	fi
 fi
-
-if [ -z "$REAL_USER" ] && [ -n "$DBUS_SESSION_BUS_ADDRESS" ]; then
-    REAL_USER=$(echo "$DBUS_SESSION_BUS_ADDRESS" | sed 's/.*uid=\([0-9]*\).*/\1/')
-    REAL_USER=$(getent passwd "$REAL_USER" | cut -d: -f1 2>/dev/null)
-fi
-
-echo "=== Diagnostic ===" >> /tmp/rpm-debug.log
-echo "PID=$$" >> /tmp/rpm-debug.log
-ps auxf >> /tmp/rpm-debug.log
-echo "SUDO_USER=$SUDO_USER" >> /tmp/rpm-debug.log
-echo "LOGNAME=$LOGNAME" >> /tmp/rpm-debug.log
-echo "USER=$USER" >> /tmp/rpm-debug.log
-echo "who -m: $(who -m 2>/dev/null)" >> /tmp/rpm-debug.log
-echo "logname: $(logname 2>/dev/null)" >> /tmp/rpm-debug.log
-pstree -p $$ >> /tmp/rpm-debug.log
-
-echo "Creating Python virtual environment"
-mkdir -p /opt/snatch/venv/
-chmod 755 /opt/snatch/venv/
-chown $REAL_USER:$REAL_USER /opt/snatch/venv/
 
 if [ -d env ]; then
 	echo "Removing the existing Python environment"
@@ -154,7 +148,7 @@ systemctl start memcached || :
 
 touch /var/log/snatch.log || :
 chmod 755 /var/log/snatch.log || :
-chown $REAL_USER:$REAL_USER /var/log/snatch.log || :
+chown ${REAL_USER}:${REAL_USER} /var/log/snatch.log || :
 
 if [ -d Snatch/migrations ]; then
 	rm -rf Snatch/migrations & > /dev/null || :
@@ -162,11 +156,11 @@ fi
 
 mkdir -p %homedir/snatch/media/  || :
 chmod 755 %homedir/snatch/media/  || :
-chown $REAL_USER:$REAL_USER %homedir/snatch/media/  || :
+chown ${REAL_USER}:${REAL_USER} %homedir/snatch/media/  || :
 
 # To let manage.py create the migration scripts
 chmod -R 755 /usr/bin/snatch  || :
-chown -R $REAL_USER:$REAL_USER /usr/bin/snatch || :
+chown -R ${REAL_USER}:${REAL_USER} /usr/bin/snatch || :
 
 echo -e "\e[1;32mSNatch VERSIONPLACEHOLDER has been installed.\e[0m"
 

@@ -49,12 +49,12 @@ chmod -R 740 %buildroot%{_libdir}/*
 
 
 %files
-%attr(740,root,root) /usr/bin/parse_exec
-%attr(740,root,root) /usr/bin/storage
-%attr(740,root,root) /usr/bin/vmidb_symbols
-%attr(740,root,root) /usr/lib64/python3/site-packages/vmi/
-%attr(740,root,root) /usr/lib64/libvmidb.a
-%attr(740,root,root) /usr/lib64/libvmidb.so
+%attr(755,root,root) /usr/bin/parse_exec
+%attr(755,root,root) /usr/bin/storage
+%attr(755,root,root) /usr/bin/vmidb_symbols
+%attr(755,root,root) /usr/lib64/python3/site-packages/vmi/
+%attr(755,root,root) /usr/lib64/libvmidb.a
+%attr(755,root,root) /usr/lib64/libvmidb.so
 
 
 %post

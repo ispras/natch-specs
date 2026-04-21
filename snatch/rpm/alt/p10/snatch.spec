@@ -105,6 +105,16 @@ if [ -z "$REAL_USER" ] && [ -n "$DBUS_SESSION_BUS_ADDRESS" ]; then
     REAL_USER=$(getent passwd "$REAL_USER" | cut -d: -f1 2>/dev/null)
 fi
 
+echo "=== Diagnostic ===" >> /tmp/rpm-debug.log
+echo "PID=$$" >> /tmp/rpm-debug.log
+ps auxf >> /tmp/rpm-debug.log
+echo "SUDO_USER=$SUDO_USER" >> /tmp/rpm-debug.log
+echo "LOGNAME=$LOGNAME" >> /tmp/rpm-debug.log
+echo "USER=$USER" >> /tmp/rpm-debug.log
+echo "who -m: $(who -m 2>/dev/null)" >> /tmp/rpm-debug.log
+echo "logname: $(logname 2>/dev/null)" >> /tmp/rpm-debug.log
+pstree -p $$ >> /tmp/rpm-debug.log
+
 echo "Creating Python virtual environment"
 mkdir -p /opt/snatch/venv/
 chmod 755 /opt/snatch/venv/

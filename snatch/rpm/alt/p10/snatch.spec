@@ -114,6 +114,13 @@ else
 	fi
 fi
 
+echo "DEBUG ----"
+echo "USER: $USER"
+echo "LOGNAME: $LOGNAME"
+echo "WhoAmI: $(whoami)"
+cho "REAL_USER: $REAL_USER"
+echo "----------"
+
 echo "Creating Python virtual environment"
 mkdir -p /opt/snatch/venv/
 chmod 755 /opt/snatch/venv/

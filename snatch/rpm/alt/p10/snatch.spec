@@ -1,4 +1,6 @@
 %define _unpackaged_files_terminate_build 1
+%global __requires_exclude ^/opt/snatch/venv/env/bin/pip3$
+
 Name:           snatch
 Version:        VERSIONPLACEHOLDER
 Release:        alt1%{?dist}
@@ -114,6 +116,11 @@ else
 	fi
 fi
 
+echo "Creating Python virtual environment"
+mkdir -p /opt/snatch/venv/
+chmod 755 /opt/snatch/venv/
+chown $REAL_USER:$REAL_USER /opt/snatch/venv/
+
 if [ -d env ]; then
 	echo "Removing the existing Python environment"
 	rm -rf env
@@ -135,7 +142,6 @@ REQUIREMENTSPLACEHOLDER
 vmidbLocation=$(su -c "rpm -ql libvmidb" | grep 'packages/vmi' | grep -v '.so')
 ln -s "$vmidbLocation" "/opt/snatch/venv/env/lib/python3/site-packages/"
 mkdir -p /opt/snatch/venv/env/lib64/python3/site-packages/vmi/
-chmod 755 /opt/snatch/venv/env/lib64/python3/site-packages/vmi/
 cp -r /usr/lib64/python3/site-packages/vmi/* /opt/snatch/venv/env/lib64/python3/site-packages/vmi/
 #/bin/sh -c "ln -s /usr/lib64/libvmidb.so /opt/snatch/venv/env/lib64/"
 
@@ -148,7 +154,7 @@ systemctl start memcached || :
 
 touch /var/log/snatch.log || :
 chmod 755 /var/log/snatch.log || :
-chown ${REAL_USER}:${REAL_USER} /var/log/snatch.log || :
+chown $REAL_USER:$REAL_USER /var/log/snatch.log || :
 
 if [ -d Snatch/migrations ]; then
 	rm -rf Snatch/migrations & > /dev/null || :
@@ -156,11 +162,11 @@ fi
 
 mkdir -p %homedir/snatch/media/  || :
 chmod 755 %homedir/snatch/media/  || :
-chown ${REAL_USER}:${REAL_USER} %homedir/snatch/media/  || :
+chown $REAL_USER:$REAL_USER %homedir/snatch/media/  || :
 
 # To let manage.py create the migration scripts
 chmod -R 755 /usr/bin/snatch  || :
-chown -R ${REAL_USER}:${REAL_USER} /usr/bin/snatch || :
+chown -R $REAL_USER:$REAL_USER /usr/bin/snatch || :
 
 echo -e "\e[1;32mSNatch VERSIONPLACEHOLDER has been installed.\e[0m"
 

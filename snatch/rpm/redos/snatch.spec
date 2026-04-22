@@ -60,8 +60,8 @@ python3 -m venv env
 /bin/sh -c '. env/bin/activate'
 
 # Not all packages are presented in the apt repo and they are incompatible with the rest packages installed via pip3
-sudo -u $USER pip3 install wheel
-sudo -u $USER pip3 install -r /usr/bin/snatch/requirements.txt
+pip3 install wheel
+pip3 install -r /usr/bin/snatch/requirements.txt
 
 vmidbLocation=$(su -c "rpm -ql libvmidb" | grep 'packages/vmi' | grep -v '.so' | head -n1)
 ln -s "$vmidbLocation" /opt/snatch/venv/env/lib/python3*/site-packages/

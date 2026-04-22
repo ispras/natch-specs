@@ -55,7 +55,7 @@ done
 running=""
 attempt=1
 
-echo "sudo -u $USER $SNATCH_PATH/snatch_start.sh" >> /tmp/post_run.sh
+echo "sudo $SNATCH_PATH/snatch_start.sh" >> /tmp/post_run.sh
 
 chmod +x /tmp/post_run.sh
 sudo /tmp/post_run.sh

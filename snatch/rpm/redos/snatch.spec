@@ -154,16 +154,13 @@ if [ $1 -eq 0 ]; then
 fi
 
 %postun
+rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
 echo "SNatch удален."
 
 
 %files
 %dir /usr/bin/snatch/
 /usr/bin/snatch/*
-
-# Hiding the warnings during the package removal
-#%config(missingok) /usr/bin/snatch/vmi
-#%config(missingok) /usr/bin/snatch/vmi/*
 
 
 %changelog

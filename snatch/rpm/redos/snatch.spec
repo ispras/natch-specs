@@ -14,15 +14,6 @@ BuildArch:      x86_64
 
 # AutoReq can't find these libs due to:
 # readelf: Error: no .dynamic section in the dynamic segment
-#BuildRequires: python3-devel
-#BuildRequires: python3-pip
-#BuildRequires: cups-devel
-#BuildRequires: libgirepository1.0-devel
-#BuildRequires: libsystemd-devel
-#BuildRequires: libdbus
-#BuildRequires: libdbus-devel
-#BuildRequires: cairo-devel
-
 Requires: memcached
 Requires: memcached-devel
 Requires: postgresql
@@ -30,6 +21,7 @@ Requires: postgresql-server
 Requires: postgresql-contrib
 Requires: python3-pip
 Requires: rabbitmq-server
+Requires: libvmidb
 
 %description
 ISP RAS SNatch visualizes representation for Natch results.
@@ -52,28 +44,9 @@ else
 fi
 #echo "Logged in user: $USER"
 
-# Because of compatibility issues we won't use "Requires:" to install even the available pip packages:
-#Requires: python3-celery
-#Requires: python3-cxxfilt
-#Requires: python3-django
-#Requires: python3-importlib-metadata
-#Requires: python3-ipython
-#Requires: python3-networkx
-#Requires: python3-psycopg2
-#Requires: python3-pygments
-#Requires: python3-pylibmc
-#Requires: python3-requests
-#Requires: python3-scapy
-#Requires: python3-wheel
 # Not all packages are presented in the apt repo and they are incompatible with the rest packages installed via pip3
 sudo -u $USER pip3 install wheel
 sudo -u $USER pip3 install -r /usr/bin/snatch/requirements.txt
-
-# Separate vmi (v4.0)
-#sudo chmod -R 755 /usr/bin/snatch/vmi
-#sudo chown -R $USER:$USER /usr/bin/snatch/vmi
-#pip3 install /usr/bin/snatch/vmi
-#rm -rf /usr/bin/snatch/vmi
 
 echo "Starting rabbitmq and memcached..."
 sudo /usr/sbin/rabbitmq-server -detached

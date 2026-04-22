@@ -32,9 +32,7 @@ psql -U postgres -c "SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_s
 currentPassword=$(cat $SNATCH_PATH/snatch/settings.py | grep PASSWORD | grep -o -P "(?<=\: \').*(?=\'\,)")
 sudo sed -i "s/$currentPassword/$DB_PASSWORD/g" $SNATCH_PATH/snatch/settings.py
 
-$SNATCH_PATH/manage.py makemigrations Snatch
-#$SNATCH_PATH/manage.py sqlmigrate Snatch 0001
-$SNATCH_PATH/manage.py migrate
+su -c "$SNATCH_PATH/django.sh"
 
 echo -e "\n\e[0;33mRemember the PostgreSQL credentials:\e[0m"
 echo "==========================================="

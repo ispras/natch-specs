@@ -151,7 +151,7 @@ cp -r /opt/snatch/venv/env/lib/python3/site-packages/django/db/backends/sqlite3 
 vmidbLocation=$(su -c "rpm -ql libvmidb" | grep 'packages/vmi' | grep -v '.so')
 ln -s "$vmidbLocation" "/opt/snatch/venv/env/lib/python3/site-packages/"
 mkdir -p /opt/snatch/venv/env/lib64/python3/site-packages/vmi/
-cp -r /usr/lib64/python3/site-packages/vmi/* /opt/snatch/venv/env/lib64/python3/site-packages/vmi/
+#cp -r /usr/lib64/python3/site-packages/vmi/* /opt/snatch/venv/env/lib64/python3/site-packages/vmi/
 
 echo "Starting rabbitmq and memcached..."
 /usr/sbin/rabbitmq-server -detached || :

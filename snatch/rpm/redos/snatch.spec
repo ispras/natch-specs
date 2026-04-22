@@ -1,13 +1,12 @@
 Name:           snatch
 Version:        VERSIONPLACEHOLDER
 Release:        1%{?dist}
-
 Summary:        ISP RAS SNatch
 License:        GPLv3 and Proprietary
 
 URL:            https://www.ispras.ru/technologies/natch/
 
-#Group:          Development/Other
+Group:          Development/Other
 
 BuildArch:      x86_64
 
@@ -36,6 +35,7 @@ mkdir -p %{buildroot}/usr/bin/snatch
 cp -r %{_builddir}/* %{buildroot}/usr/bin/snatch/
 
 %post
+#!/bin/bash
 # Detecting a logged in user
 if [ -n "$SUDO_USER" ]; then
     USER="$SUDO_USER"
@@ -44,9 +44,30 @@ else
 fi
 #echo "Logged in user: $USER"
 
+echo "Creating Python virtual environment"
+mkdir -p /opt/snatch/venv/
+chmod 755 /opt/snatch/venv/
+chown $USER:$USER /opt/snatch/venv/
+
+if [ -d env ]; then
+	echo "Removing the existing Python environment"
+	rm -rf env
+fi
+
+echo "Activating Python virtual environment"
+cd /opt/snatch/venv/
+python3 -m venv env
+/bin/sh -c '. env/bin/activate'
+
 # Not all packages are presented in the apt repo and they are incompatible with the rest packages installed via pip3
 sudo -u $USER pip3 install wheel
 sudo -u $USER pip3 install -r /usr/bin/snatch/requirements.txt
+
+vmidbLocation=$(su -c "rpm -ql libvmidb" | grep 'packages/vmi' | grep -v '.so' | head -n1)
+ln -s "$vmidbLocation" "/opt/snatch/venv/env/lib/python3*/site-packages/"
+mkdir -p /opt/snatch/venv/env/lib64/python3*/site-packages/vmi/
+cp -r /usr/lib64/python3*/site-packages/vmi/* /opt/snatch/venv/env/lib64/python3*/site-packages/vmi/
+
 
 echo "Starting rabbitmq and memcached..."
 sudo /usr/sbin/rabbitmq-server -detached

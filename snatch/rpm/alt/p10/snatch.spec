@@ -139,11 +139,10 @@ python3 -m venv env
 # Grabbing the last requirements from the file
 REQUIREMENTSPLACEHOLDER
 
-vmidbLocation=$(su -c "rpm -ql libvmidb" | grep 'packages/vmi' | grep -v '.so')
+vmidbLocation=$(su -c "rpm -ql libvmidb" | grep 'packages/vmi' | grep -v '.so' | head -n1)
 ln -s "$vmidbLocation" "/opt/snatch/venv/env/lib/python3/site-packages/"
 mkdir -p /opt/snatch/venv/env/lib64/python3/site-packages/vmi/
 cp -r /usr/lib64/python3/site-packages/vmi/* /opt/snatch/venv/env/lib64/python3/site-packages/vmi/
-#/bin/sh -c "ln -s /usr/lib64/libvmidb.so /opt/snatch/venv/env/lib64/"
 
 # Workaround for non-working celery (actually it's working but only via python)
 sed -i -E "s/nohup celery/nohup python3 -m celery/" "/usr/bin/snatch/snatch_start.sh"

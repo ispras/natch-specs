@@ -41,12 +41,9 @@ vmidb lib for ISP RAS Natch and SNatch
 mkdir -p %buildroot%{_bindir}
 mkdir -p %buildroot%{_libdir}
 cp -r usr/bin/* %buildroot%{_bindir}
-#cp -r usr/lib64/x86_64-linux-gnu/* %buildroot%{_libdir}
-#rm -rf usr/lib64/x86_64-linux-gnu/
 cp -r usr/lib64/* %buildroot%{_libdir}
 chmod -R 740 %buildroot%{_bindir}/*
 chmod -R 740 %buildroot%{_libdir}/*
-
 
 %files
 %attr(755,root,root) /usr/bin/parse_exec

@@ -131,7 +131,7 @@ echo "==========================================="
 
 # Creating user for CI support
 /usr/bin/snatch/manage.py createsuperuser --username ci_bot --email ci@bot.com --noinput
-echo -e "Внимание! Этот токен может быть использован для CI API запросов (он также сохранён в /usr/bin/snatch/ci_token.txt)."
+echo -e "Внимание! Этот токен может быть использован для CI API запросов (он также сохранён в /usr/bin/snatch/ci_token.txt):"
 /usr/bin/snatch/manage.py drf_create_token ci_bot | awk '{print $3}' | tee /usr/bin/snatch/ci_token.txt
 
 echo -e "\e[1;32mSNatch VERSIONPLACEHOLDER был установлен.\e[0m"

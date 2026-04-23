@@ -49,7 +49,7 @@ echo "$SNATCH_PATH/snatch_start.sh" >> /tmp/post_run.sh
 chmod +x /tmp/post_run.sh
 su -c "/tmp/post_run.sh"
 
-echo "Waiting for SNatch to be started..."
+echo "Ожидаем запуск SNatch..."
 
 while [[ -z $running ]]
 do
@@ -57,11 +57,10 @@ do
 	sleep 1
 	echo "... "$attempt"s."
   if [[ $attempt -eq 20 ]]; then
-    echo "Warning! Celery is not ready."
+    echo "Внимание! celery все еще не готов. Пожалуйста, отправьте /var/log/snatch.log с описанием вашей конфигурации команде Natch."
     running="error"
   elif [[ ! -z $running ]]; then
-    echo "SNatch is up and running."
-    echo "If it did not open in browser, refresh the page after a few seconds."
+    echo "SNatch запущен. Откройте http://localhost:8000 в вашем браузере."
   fi
 	attempt=$((attempt+1))
 done

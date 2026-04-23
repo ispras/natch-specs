@@ -8,7 +8,7 @@ if [ -n "$SUDO_USER" ]; then
 else
     USER="$(whoami)"
 fi
-echo "Stopping Snatch..."
+echo "Останавливаем SNatch..."
 
 sudo -u $USER /usr/bin/snatch/snatch_stop.sh
 

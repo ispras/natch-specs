@@ -2,7 +2,7 @@
 Name:           libvmidb
 Version:        VERSIONPLACEHOLDER
 Release:        alt1%{?dist}
-Summary:        vmidb lib for ISP RAS Natch and SNatch
+Summary:        vmidb lib for ИСП РАН Natch and SNatch
 
 License:        GPLv3 and Proprietary
 Group:          Development/Other
@@ -27,7 +27,7 @@ BuildRequires: python3-dev
 
 
 %description
-vmidb lib for ISP RAS Natch and SNatch
+vmidb lib for ИСП РАН Natch and SNatch
 
 
 %prep
@@ -61,5 +61,5 @@ chmod -R 740 %buildroot%{_libdir}/*
 %postun
 
 %changelog
-* DATEPLACEHOLDER ISP RAS <natch@ispras.ru> VERSIONPLACEHOLDER
+* DATEPLACEHOLDER ИСП РАН <natch@ispras.ru> VERSIONPLACEHOLDER
 - CHANGESPLACEHOLDER

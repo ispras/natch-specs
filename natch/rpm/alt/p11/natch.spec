@@ -2,7 +2,7 @@
 Name:           natch
 Version:        VERSIONPLACEHOLDER
 Release:        alt1%{?dist}
-Summary:        ISP RAS Natch
+Summary:        ИСП РАН Natch
 
 License:        GPLv3 and Proprietary
 Group:          Development/Other
@@ -88,7 +88,7 @@ Requires: python3-modules-sqlite3
 %filter_from_requires /python3(idautils)/d
 
 %description
-ISP RAS Natch allows to identify attack surfaces for binary code.
+ИСП РАН Natch позволяет определить поверхность атаки.
 
 %prep
 %setup
@@ -128,13 +128,13 @@ rm -rf %_bindir/natch
 ln -sf %_bindir/natch-bin/bin/natch_scripts/natch %_bindir/natch
 rm -f ~/.bash_completion ~/.zshenv && %_bindir/activate-global-python-argcomplete --user && eval "$(/usr/bin/register-python-argcomplete natch)"
 
-echo -e "\e[1;32mNatch VERSIONPLACEHOLDER has been installed.\e[0m"
-echo -e "\033[32mTo use ISP RAS Natch run \e[0m\e[1;32mnatch\e[0m\033[32m in command line.\e[0m"
-echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/natch/tree/release.\e[0m"
+echo -e "\e[1;32mNatch VERSIONPLACEHOLDER был установлен.\e[0m"
+echo -e "\033[32mЧтобы начать использование ИСП РАН Natch введите \e[0m\e[1;32mnatch\e[0m\033[32m в вашей командной строке.\e[0m"
+echo -e "\033[32mДокументация доступна по ссылке: https://github.com/ispras/natch/tree/release.\e[0m"
 
 %postun
-echo "Natch has been uninstalled."
+echo "Natch удален."
 
 %changelog
-* DATEPLACEHOLDER ISP RAS <natch@ispras.ru> VERSIONPLACEHOLDER
+* DATEPLACEHOLDER ИСП РАН <natch@ispras.ru> VERSIONPLACEHOLDER
 - CHANGESPLACEHOLDER

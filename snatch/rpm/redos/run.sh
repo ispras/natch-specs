@@ -61,7 +61,7 @@ chmod +x /tmp/post_run.sh
 sudo /tmp/post_run.sh
 
 
-echo "Waiting for SNatch to be started..."
+echo "Ожидаем запуск SNatch..."
 
 running=0
 
@@ -69,11 +69,11 @@ while [[ $running -ne 200 ]] && [[ $running -ne 302 ]]; do
   running=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:8000")
 	sleep 1
 	echo "... "$attempt"s."
-  if [[ $attempt -eq 10 ]]; then
-    echo "It looks like Snatch still does not work. Please share /var/log/snatch.log with Natch team."
-    running="error"
+  if [[ $attempt -eq 20 ]]; then
+    echo "Похоже SNatch всё еще не работает. Пожалуйста, отправьте /var/log/snatch.log с описанием вашей конфигурации команде Natch."
+    running=302
   elif [[ $running -eq 200 ]] || [[ $running -eq 302 ]]; then
-    echo "SNatch is up and running."
+    echo "SNatch запущен. Откройте http://localhost:8000 в вашем браузере."
   fi
 	attempt=$((attempt+1))
 done

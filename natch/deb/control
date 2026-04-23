@@ -1,9 +1,9 @@
 Package: natch
 Version: VERSIONPLACEHOLDER
 Provides: natch
-Maintainer: ISP RAS <natch@ispras.ru>
+Maintainer: ИСП РАН <natch@ispras.ru>
 Architecture: amd64
 Section: devel
 Depends: DEPENDENCIESPLACEHOLDER
-Description: ISP RAS Natch.
- ISP RAS Natch allows to identify attack surfaces for binary code.
+Description: ИСП РАН Natch.
+ ИСП РАН Natch позволяет определить поверхность атаки.

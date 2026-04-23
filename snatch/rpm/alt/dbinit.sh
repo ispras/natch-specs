@@ -14,17 +14,17 @@ read -s -p "Пароль суперпользователя postgres: " postgres
     
 # If the Postgres data dir does not exist
 if [ -d "$DATADIR" ] && [ -f "$DATADIR/PG_VERSION" ]; then
-  echo "Database cluster already exists in $DATADIR"
+  echo "Кластер БД уже существует в $DATADIR"
 
   # Check if PostgreSQL is running
   if systemctl is-active --quiet postgresql; then
-    echo "PostgreSQL is already running"
+    echo "PostgreSQL уже запущен"
 
     # Check the DB existance
     if PGPASSWORD=$postgresPwd psql -U postgres -lqt | cut -d \| -f 1 | grep -qw "$DB_NAME"; then
-        echo "Database $DB_NAME already exists, so skipping initialization"
+        echo "БД $DB_NAME уже существует, инициализация пропущена"
     else
-        echo "Database $DB_NAME does not exist, initializing it..."
+        echo "БД $DB_NAME не существует, инициализация..."
 
         # Doing all the Postgres stuff
         PGPASSWORD=$postgresPwd psql -U postgres -h localhost \
@@ -38,18 +38,18 @@ if [ -d "$DATADIR" ] && [ -f "$DATADIR/PG_VERSION" ]; then
     fi
   
   else
-    echo "PostgreSQL is not running. Starting..."
+    echo "PostgreSQL не запущен. Идёт запуск..."
     systemctl enable postgresql
     systemctl start postgresql
   fi
 
 else
-  echo "Database cluster does not exist. Initializing it..."
+  echo "Кластер БД не существует. Идёт инициализация..."
 
   # As per https://www.altlinux.org/PostgreSQL we must create system DBs
   PGSETUP_INITDB_OPTIONS='--pgdata=/var/lib/pgsql/data --auth=trust --pwfile=/tmp/dbpas --no-instructions' /etc/init.d/postgresql initdb
 
-  echo "Starting PostgreSQL..."
+  echo "Запуск PostgreSQL..."
   systemctl enable postgresql
   systemctl start postgresql
 

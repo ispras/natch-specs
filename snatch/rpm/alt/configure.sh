@@ -24,13 +24,13 @@ rm -f /tmp/dbpas
 echo -e "\n\e[0;33mВнимание!\e[0m Далее postgres пароли больше не требуются. Сейчас снова потребуется su пароль для настройки веб-сервисов."
 su -c "$SNATCH_PATH/django.sh"
 
-echo -e "\n\e[0;33mRemember the PostgreSQL credentials:\e[0m"
+echo -e "\n\e[0;33mУчётные данные для прямого доступа к БД PostgreSQL:\e[0m"
 echo "==========================================="
-echo -e "\e[0;33m DB name: $DB_NAME\e[0m"
-echo -e "\e[0;33m Username: $DB_USER\e[0m"
-echo -e "\e[0;33m Password: $DB_PASSWORD\e[0m"
+echo -e "\e[0;33m Имя БД: $DB_NAME\e[0m"
+echo -e "\e[0;33m Пользователь: $DB_USER\e[0m"
+echo -e "\e[0;33m Пароль: $DB_PASSWORD\e[0m"
 echo "==========================================="
 
-echo -e "\033[32mTo use ISP RAS SNatch start \e[0m\e[1;32m$SNATCH_PATH/run.sh\e[0m\033[32m.\e[0m"
+echo -e "\033[32mДля запуска ИСП РАН SNatch используйте \e[0m\e[1;32m$SNATCH_PATH/run.sh\e[0m\033[32m.\e[0m"
 
-echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"
+echo -e "\033[32mДокументация доступна по ссылке: https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"

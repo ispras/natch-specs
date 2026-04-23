@@ -4,7 +4,7 @@
 Name:           snatch
 Version:        VERSIONPLACEHOLDER
 Release:        alt1%{?dist}
-Summary:        ISP RAS SNatch
+Summary:        ИСП РАН SNatch
 
 License:        GPLv3 and Proprietary
 Group:          Development/Other
@@ -70,7 +70,7 @@ Requires: libvmidb
 
 
 %description
-ISP RAS SNatch visualizes representation for Natch results.
+ИСП РАН SNatch предлагает визуальное представление результатов работы Natch..
 
 
 %prep
@@ -87,12 +87,6 @@ cp -r * %buildroot%_bindir/snatch
 
 %files
 %attr(755,root,root) %_bindir/*
-
-
-# Hiding the warnings during the package removal
-#%config(missingok) %_bindir/snatch/vmi
-#%config(missingok) %_bindir/snatch/vmi/*
-
 
 %post
 #!/bin/bash
@@ -116,17 +110,17 @@ else
 	fi
 fi
 
-echo "Creating Python virtual environment"
+echo "Создание виртуальной среды Python"
 mkdir -p /opt/snatch/venv/
 chmod 755 /opt/snatch/venv/
 chown $REAL_USER:$REAL_USER /opt/snatch/venv/
 
 if [ -d env ]; then
-	echo "Removing the existing Python environment"
+	echo "Удаление существующей виртуальной среды Python"
 	rm -rf env
 fi
 
-echo "Activating Python virtual environment"
+echo "Активация виртуальной среды Python"
 cd /opt/snatch/venv/
 python3 -m venv env
 /bin/sh -c '. env/bin/activate'
@@ -147,7 +141,7 @@ mkdir -p /opt/snatch/venv/env/lib64/python3/site-packages/vmi/
 # Workaround for non-working celery (actually it's working but only via python)
 sed -i -E "s/nohup celery/nohup python3 -m celery/" "/usr/bin/snatch/snatch_start.sh"
 
-echo "Starting rabbitmq and memcached..."
+echo "Запуск rabbitmq и memcached..."
 /usr/sbin/rabbitmq-server -detached || :
 systemctl start memcached || :
 
@@ -167,22 +161,22 @@ chown $REAL_USER:$REAL_USER %homedir/snatch/media/  || :
 chmod -R 755 /usr/bin/snatch  || :
 chown -R $REAL_USER:$REAL_USER /usr/bin/snatch || :
 
-echo -e "\e[1;32mSNatch VERSIONPLACEHOLDER has been installed.\e[0m"
+echo -e "\e[1;32mSNatch VERSIONPLACEHOLDER был установлен.\e[0m"
 
 availSpace4calc=$(df -m %homedir/snatch/media/ --output=avail | tail -n1 | xargs)
 availSpace=$(bc <<< "scale=1; $availSpace4calc/1024")
 
 if [[ $availSpace4calc -lt 40960 ]]; then
-	echo "Only "$availSpace"G available in %homedir/snatch/media/ where SNatch stores an unpacked data for analysis. It can be okay for very short scenarios, but for the longer scenarios the hundreds of GB could be required."
+	echo "Только "$availSpace"Гб места доступно в /home/$USER/snatch/media/, где SNatch хранит распакованные данные проектов для анализа. Этого достаточно только для очень коротких сценариев, однако для объемных сценариев могут потребоваться сотни гигабайт свободного места. Вы можете изменить заданный по умолчанию каталог с помощью скрипта /usr/bin/snatch/changedatadir.sh"
 elif [[ $availSpace4calc -lt 102400 ]]; then
-	echo $availSpace"G available in %homedir/snatch/media/ where SNatch stores an unpacked data for analysis. It can be okay for normal scenarios, but for the longer scenarios the hundreds of GB could be required."
+	echo $availSpace"Гб доступно в /home/$USER/snatch/media/, где SNatch хранит распакованные данные проектов для анализа. Этого достаточно для обычных сценариев, однако для объемных сценариев могут потребоваться сотни гигабайт свободного места. Вы можете изменить заданный по умолчанию каталог с помощью скрипта /usr/bin/snatch/changedatadir.sh"
 else
-	echo "Free space: OK"
+	echo "Свободное место: в порядке"
 fi
 
-echo -e "\033[32mTo finish SNatch setup run \e[0m\e[1;32m/usr/bin/snatch/configure.sh\e[0m\033[32m.\e[0m"
+echo -e "\033[32mДля завершения настройки SNatch запустите \e[0m\e[1;32m/usr/bin/snatch/configure.sh\e[0m\033[32m.\e[0m"
 
-echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"
+echo -e "\033[32mДокументация доступна по ссылке: https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"
 
 %preun
 # Only for full removal
@@ -229,5 +223,5 @@ rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
 echo "SNatch удален."
 
 %changelog
-* DATEPLACEHOLDER ISP RAS <natch@ispras.ru> VERSIONPLACEHOLDER
+* DATEPLACEHOLDER ИСП РАН <natch@ispras.ru> VERSIONPLACEHOLDER
 - CHANGESPLACEHOLDER

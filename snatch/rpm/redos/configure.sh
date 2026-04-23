@@ -12,7 +12,7 @@ DATADIR="/var/lib/pgsql/data"
 
 # As per "journalctl -xeu postgresql.service" we must create system DBs
 if sudo [ ! -d "$DATADIR" ] && sudo [ -f "$DATADIR/PG_VERSION" ]; then
-  echo "DB was already initialized"
+  echo "БД уже была инициализирована"
 else
   PGSETUP_INITDB_OPTIONS='-D /var/lib/pgsql/data --auth=trust' sudo -E /usr/bin/postgresql-setup --initdb
 fi
@@ -21,7 +21,7 @@ sudo systemctl enable postgresql
 
 # Check if PostgreSQL is running
 if ! systemctl is-active --quiet postgresql; then
-  echo "PostgreSQL is not running. Starting..."
+  echo "PostgreSQL еще на запущен. Запускаем..."
   sudo systemctl start postgresql
 fi
 
@@ -34,13 +34,13 @@ sudo sed -i "s/$currentPassword/$DB_PASSWORD/g" $SNATCH_PATH/snatch/settings.py
 
 sudo $SNATCH_PATH/django.sh
 
-echo -e "\n\e[0;33mRemember the PostgreSQL credentials:\e[0m"
+echo -e "\n\e[0;33mУчётные данные для прямого доступа к БД PostgreSQL:\e[0m"
 echo "==========================================="
-echo -e "\e[0;33m DB name: $DB_NAME\e[0m"
-echo -e "\e[0;33m Username: $DB_USER\e[0m"
-echo -e "\e[0;33m Password: $DB_PASSWORD\e[0m"
+echo -e "\e[0;33m Имя БД: $DB_NAME\e[0m"
+echo -e "\e[0;33m Пользователь: $DB_USER\e[0m"
+echo -e "\e[0;33m Пароль: $DB_PASSWORD\e[0m"
 echo "==========================================="
 
-echo -e "\033[32mTo use ISP RAS SNatch start \e[0m\e[1;32m$SNATCH_PATH/run.sh\e[0m\033[32m.\e[0m"
+echo -e "\033[32mДля запуска ИСП РАН SNatch используйте \e[0m\e[1;32m$SNATCH_PATH/run.sh\e[0m\033[32m.\e[0m"
 
-echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"
+echo -e "\033[32mДокументация доступна по ссылке: https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"

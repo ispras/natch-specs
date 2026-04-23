@@ -10,20 +10,20 @@ echo "Logged in user: $USER"
 
 vEnvPath="/opt/snatch/venv/"
 
-echo "Starting rabbitmq and memcached..."
+echo "Запуск rabbitmq и memcached..."
 rabbitmq-server -detached
 systemctl start memcached
 
-echo "Creating Python virtual environment"
+echo "Создание виртуальной среды Python"
 mkdir -p $vEnvPath
 chmod 755 $vEnvPath
 
 if [ -d env ]; then
 	rm -rf env
-	echo "Removing the existing Python environment"
+	echo "Удаление существующей виртуальной среды Python"
 fi
 
-echo "Activating Python virtual environment"
+echo "Активация виртуальной среды Python"
 cd $vEnvPath
 python3 -m venv env
 . env/bin/activate
@@ -110,7 +110,7 @@ running=""
 attempt=1
 
 sudo -u $USER /usr/bin/snatch/snatch_start.sh
-# echo "Waiting for SNatch to be started..."
+# echo "Ожидаем запуск SNatch..."
 
 # while [[ -z $running ]]
 # do
@@ -119,34 +119,34 @@ sudo -u $USER /usr/bin/snatch/snatch_start.sh
 # 	echo "... "$attempt"s."
 # 	attempt=$((attempt+1))
 # done
-# echo "SNatch is up and running."
+# echo "SNatch запущен."
 
 
-echo -e "\n\e[0;33mRemember the PostgreSQL credentials:\e[0m"
+echo -e "\n\e[0;33mУчётные данные для прямого доступа к БД PostgreSQL:\e[0m"
 echo "==========================================="
-echo -e "\e[0;33m DB name: $DB_NAME\e[0m"
-echo -e "\e[0;33m Username: $DB_USER\e[0m"
-echo -e "\e[0;33m Password: $DB_PASSWORD\e[0m"
+echo -e "\e[0;33m Имя БД: $DB_NAME\e[0m"
+echo -e "\e[0;33m Пользователь: $DB_USER\e[0m"
+echo -e "\e[0;33m Пароль: $DB_PASSWORD\e[0m"
 echo "==========================================="
 
 # Creating user for CI support
 /usr/bin/snatch/manage.py createsuperuser --username ci_bot --email ci@bot.com --noinput
-echo -e "Please, note that the this token is used to perform CI API requests (it is also saved to /usr/bin/snatch/ci_token.txt)."
+echo -e "Внимание! Этот токен может быть использован для CI API запросов (он также сохранён в /usr/bin/snatch/ci_token.txt)."
 /usr/bin/snatch/manage.py drf_create_token ci_bot | awk '{print $3}' | tee /usr/bin/snatch/ci_token.txt
 
-echo -e "\e[1;32mSNatch VERSIONPLACEHOLDER has been installed.\e[0m"
+echo -e "\e[1;32mSNatch VERSIONPLACEHOLDER был установлен.\e[0m"
 
 availSpace4calc=$(df -m /home/$USER/snatch/media/ --output=avail | tail -n1 | xargs)
 availSpace=$(bc <<< "scale=1; $availSpace4calc/1024")
 
 if [[ $availSpace4calc -lt 40960 ]]; then
-	echo "Only "$availSpace"G available in /home/$USER/snatch/media/ where SNatch will store unpacked data for analysis. It can be okay for very short scenarios, but for the longer scenarios the hundreds of GB could be required."
+	echo "Только "$availSpace"Гб места доступно в /home/$USER/snatch/media/, где SNatch хранит распакованные данные проектов для анализа. Этого достаточно только для очень коротких сценариев, однако для объемных сценариев могут потребоваться сотни гигабайт свободного места. Вы можете изменить заданный по умолчанию каталог с помощью скрипта /usr/bin/snatch/changedatadir.sh"
 elif [[ $availSpace4calc -lt 102400 ]]; then
-	echo $availSpace"G available in /home/$USER/snatch/media/ where SNatch will store unpacked data for analysis. It can be okay for normal scenarios, but for the longer scenarios the hundreds of GB could be required."
+	echo $availSpace"Гб доступно в /home/$USER/snatch/media/, где SNatch хранит распакованные данные проектов для анализа. Этого достаточно для обычных сценариев, однако для объемных сценариев могут потребоваться сотни гигабайт свободного места. Вы можете изменить заданный по умолчанию каталог с помощью скрипта /usr/bin/snatch/changedatadir.sh"
 else
-	echo "Free space: OK"
+	echo "Свободное место: в порядке"
 fi
 
-echo -e "\033[32mTo use ISP RAS SNatch open \e[0m\e[1;32mhttp://localhost:8000\e[0m\033[32m in your browser.\e[0m"
+echo -e "\033[32mTo use ИСП РАН SNatch open \e[0m\e[1;32mhttp://localhost:8000\e[0m\033[32m in your browser.\e[0m"
 
-echo -e "\033[32mCheck the detailed documentation at https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"
+echo -e "\033[32mДокументация доступна по ссылке: https://github.com/ispras/natch/blob/release/docs/9_snatch.md.\e[0m"

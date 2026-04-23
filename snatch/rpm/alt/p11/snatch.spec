@@ -148,7 +148,7 @@ REQUIREMENTSPLACEHOLDER
 # Workaround for the case when sqlite3 cannot be found by IPython module 
 cp -r /opt/snatch/venv/env/lib/python3/site-packages/django/db/backends/sqlite3 /opt/snatch/venv/env/lib/python3/site-packages/ 2>/dev/null
 
-vmidbLocation=$(su -c "rpm -ql libvmidb" | grep 'packages/vmi' | grep -v '.so')
+vmidbLocation=$(su -c "rpm -ql libvmidb" | grep 'packages/vmi' | grep -v '.so' | head -n1)
 ln -s "$vmidbLocation" "/opt/snatch/venv/env/lib64/python3/site-packages/"
 mkdir -p /opt/snatch/venv/env/lib64/python3/site-packages/vmi/
 #cp -r /usr/lib64/python3/site-packages/vmi/* /opt/snatch/venv/env/lib64/python3/site-packages/vmi/

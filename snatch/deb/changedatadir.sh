@@ -28,7 +28,7 @@ updatePath() {
     sudo sed -i "s|^MEDIA_ROOT = .*|MEDIA_ROOT = '$newPath'|" "$settingsFile"
 
     echo "Путь для данных проектов изменен на $newPath"
-    echo "Конфиг обновлен: $settingsFile"
+    echo "Файл настроек обновлен: $settingsFile"
     echo "Архивная копия настроек: $settingsFile.bak"
 
     read -p "Хотите удалить каталог старый каталог с проектами? (y/n): " answer

@@ -6,7 +6,7 @@ settingsFile="/usr/bin/snatch/snatch/settings.py"
 # Update path function
 updatePath() {
     local newPath="$1"
-    
+
     # Check if the path is valid
     if [ ! -d "$newPath" ]; then
         echo "Создание директории: $newPath"
@@ -16,28 +16,32 @@ updatePath() {
             return 1
         fi
     fi
-    
+
     # Set permissions
     chown "$USER":"$USER" "$newPath"
     chmod 750 "$newPath"
-    
+
     # Create backup for the settings file
     su -c "cp $settingsFile $settingsFile.bak"
-    
+
     # Update path
     su -c "sed -i \"s|^MEDIA_ROOT = .*|MEDIA_ROOT = '$newPath'|\" $settingsFile"
-    
+
     echo "Путь для данных проектов изменен на $newPath"
     echo "Конфиг обновлен: $settingsFile"
     echo "Архивная копия настроек: $settingsFile.bak"
 
-    # Removing the old path
-    rm -rf $currentPath
+    read -p "Хотите удалить каталог старый каталог с проектами? (y/n): " answer
+
+    if [[ $answer == "y" || $answer == "Y" ]]; then
+        su -c "rm -rf $currentPath"
+        echo "Каталог $currentPath удален"
+    fi
 
     echo "Перезапуск Snatch ..."
     /usr/bin/snatch/snatch_stop.sh
     /usr/bin/snatch/snatch_start.sh
-    
+
     return 0
 }
 

@@ -39,8 +39,8 @@ updatePath() {
     fi
 
     echo "Перезапуск Snatch ..."
-    /usr/bin/snatch/snatch_stop.sh
-    /usr/bin/snatch/snatch_start.sh
+    su -c "/usr/bin/snatch/snatch_stop.sh"
+    su -c "/usr/bin/snatch/snatch_start.sh"
 
     return 0
 }

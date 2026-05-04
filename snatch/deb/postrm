@@ -2,6 +2,6 @@
 
 rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
 
-echo "SNatch удален."
+#echo "SNatch удален."
 
 exit 0

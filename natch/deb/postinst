@@ -3,16 +3,16 @@
 cp -n /tmp/natch-libs/*  /usr/lib/x86_64-linux-gnu/
 
 # Get OS name and version
-osName=$(grep "^NAME" /etc/os-release | grep -o ".*" | sed "s/\"//g")
+osName=$(. /etc/os-release && echo "$NAME")
 
 if [[ $osName == "ALT"* ]]; then
-  osVer=$(grep "^VERSION" /etc/os-release | grep -o ".*" | sed "s/\"//g")
+	osVer=$(. /etc/os-release && echo "$VERSION")
 elif [[ $osName == "Astra Linux" ]]; then
-  osVer=$(grep "^VERSION_ID" /etc/os-release | grep -o -P "(?<=\=).*(?=\_)")
+	osVer=`grep '^VERSION_ID' /etc/os-release | grep -o -P '(?<=\=).*(?=\_)'`
 else
-  osVer=$(grep "^VERSION_ID" /etc/os-release | grep -o ".*" | sed "s/\"//g")
+	osVer=`grep '^VERSION_ID' /etc/os-release | grep -o '".*"' | sed 's/"//g'`
 fi
-echo $osName 
+echo $osName
 echo $osVer
 
 # The cleanup is used when upgrading from old versions (3.0 and below)

@@ -1,4 +1,8 @@
 %define _unpackaged_files_terminate_build 1
+
+Disable the debug packages generation
+%define debug_package %{nil}
+
 Name:           natch
 Version:        VERSIONPLACEHOLDER
 Release:        alt1%{?dist}

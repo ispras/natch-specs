@@ -1,7 +1,7 @@
 %define _unpackaged_files_terminate_build 1
 
 # Disable the debug packages generation
-%define debug_package %{nil}
+%global __find_debuginfo_files %nil
 
 Name:           natch
 Version:        VERSIONPLACEHOLDER
@@ -131,7 +131,9 @@ mkdir -p %buildroot%_bindir/natch
 # This is a workaround to remove a dir for the old Natch what is required to have the further symlink registration working
 rm -rf %_bindir/natch
 ln -sf %_bindir/natch-bin/bin/natch_scripts/natch %_bindir/natch
-rm -f ~/.bash_completion ~/.zshenv && %_bindir/activate-global-python-argcomplete --user && eval "$(/usr/bin/register-python-argcomplete natch)"
+rm -f ~/.bash_completion ~/.zshenv && \
+%{_bindir}/activate-global-python-argcomplete --user 2>/dev/null || true
+#rm -f ~/.bash_completion ~/.zshenv && %_bindir/activate-global-python-argcomplete --user && eval "$(/usr/bin/register-python-argcomplete natch)"
 
 echo -e "\e[1;32mNatch VERSIONPLACEHOLDER был установлен.\e[0m"
 echo -e "\033[32mЧтобы начать использование ИСП РАН Natch введите \e[0m\e[1;32mnatch\e[0m\033[32m в вашей командной строке.\e[0m"

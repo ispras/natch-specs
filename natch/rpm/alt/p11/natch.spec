@@ -122,6 +122,7 @@ mkdir -p %buildroot%_bindir/natch
 
 
 %post
+#!/bin/bash
 
 # This is a workaround to remove a dir for the old Natch what is required to have the further symlink registration working
 rm -rf %_bindir/natch

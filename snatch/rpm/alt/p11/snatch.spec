@@ -139,7 +139,7 @@ REQUIREMENTSPLACEHOLDER
 # Install the rest requirements (to avoid errors during the DB configuration part)
 /bin/sh -c '/opt/snatch/venv/env/bin/pip3 install --upgrade chardet==5.2.0'
 
-# Workaround for the case when sqlite3 cannot be found by IPython module 
+# Workaround for the case when sqlite3 cannot be found by IPython module
 cp -r /opt/snatch/venv/env/lib/python3/site-packages/django/db/backends/sqlite3 /opt/snatch/venv/env/lib/python3/site-packages/ 2>/dev/null
 
 vmidbLocation=$(su -c "rpm -ql libvmidb" | grep 'packages/vmi' | grep -v '.so' | head -n1)

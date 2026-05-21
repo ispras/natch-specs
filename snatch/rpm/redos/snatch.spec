@@ -114,46 +114,9 @@ if [ $1 -eq 0 ]; then
 	pkill -9 -u rabbitmq || :
 	fuser -k 11211/tcp &> /dev/null || :				# memcached
 	fuser -k 25672/tcp&> /dev/null || :					# rabbitmq-server
-
-	logFile="/var/log/snatch.log"
-	settingsFile="/usr/bin/snatch/snatch/settings.py"
-
-	mediaDir=$(grep "^MEDIA_ROOT = " "$settingsFile" | cut -d'=' -f2)
-	if [[ $mediaDir == *"os.path"* ]]; then
-		mediaDir=$(/usr/bin/python3 -c "import os; print($mediaDir)")
-		rm -rf "$mediaDir/snatch"
-	else
-		mediaDir=$(echo $mediaDir | sed "s/'//g")
-		rm -rf "$mediaDir"
-	fi
-	echo "Проекты удалены"
-
-	if [ -f "$logFile" ]; then
-		# Interactive mode
-		if [ -t 0 ] && [ -t 1 ]; then
-			echo "Удалить файл лога ($logFile)? [y/N]"
-			read -r response
-			case "$response" in
-				[yY][eE][sS]|[yY])
-					rm -f "$logFile"
-					echo "Файл лога удален."
-					;;
-				*)
-					echo "Файл лога сохранён."
-					;;
-			esac
-
-		# Non-interactive mode: removing
-		else
-			rm -f "$logFile"
-			echo "Файл лога удален"
-		fi
-	fi
 fi
 
 %postun
-rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
-echo "SNatch удален."
 
 
 %files

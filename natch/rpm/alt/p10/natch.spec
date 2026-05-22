@@ -1,4 +1,3 @@
-%define debug_package %{nil}
 %define _unpackaged_files_terminate_build 1
 
 Name:           natch
@@ -15,6 +14,7 @@ BuildRequires(pre): rpm-build-python3
 
 # natch is not a python3 library
 AutoProv: nopython3
+AutoReq: 0
 
 # Where to check: https://packages.altlinux.org/en/sisyphus/packages/Development/Python3/
 

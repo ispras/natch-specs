@@ -128,7 +128,7 @@ mkdir -p %buildroot%_bindir/natch
 # This is a workaround to remove a dir for the old Natch what is required to have the further symlink registration working
 rm -rf %_bindir/natch
 ln -sf %_bindir/natch-bin/bin/natch_scripts/natch %_bindir/natch
-rm -f ~/.bash_completion ~/.zshenv && \
+
 %{_bindir}/activate-global-python-argcomplete --user 2>/dev/null || true
 #rm -f ~/.bash_completion ~/.zshenv && %_bindir/activate-global-python-argcomplete --user && eval "$(/usr/bin/register-python-argcomplete natch)"
 

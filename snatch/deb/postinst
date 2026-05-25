@@ -49,6 +49,11 @@ if [ -d Snatch/migrations ]; then
 	rm -rf Snatch/migrations
 fi
 
+# We have to store the data dir somewhere to let uninstaller remove it during the purge operation
+mkdir -p /var/opt/snatch/
+chmod 755 /var/opt/snatch/
+chown $USER:$USER /var/opt/snatch/
+
 mkdir -p /home/$USER/snatch/media/
 chmod 755 /home/$USER/snatch/media/
 chown $USER:$USER /home/$USER/snatch/media/

@@ -31,6 +31,9 @@ else
     pipPostfix="--break-system-packages --upgrade --ignore-installed"
 fi
 
+# Workaround for fs 2.4.16 requires platformdirs~=4.3.6 but you have platformdirs 4.9.6 which is incompatible
+pip3 install platformdirs~=4.3.6 $pipPostfix
+
 # Install the pip packages that are absent in the apt repo
 # PIPDEPENDENCIESPLACEHOLDER value comes from the script. It varies depending on OS.
 pip3 install PIPDEPENDENCIESPLACEHOLDER $pipPostfix

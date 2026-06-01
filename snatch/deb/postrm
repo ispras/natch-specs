@@ -6,11 +6,12 @@ case "$1" in
         logFile="/var/log/snatch.log"
         settingsFile="/usr/bin/snatch/snatch/settings.py"
 
-        mediaDir=$(grep "^MEDIA_ROOT = " "$settingsFile" | cut -d'=' -f2)
-        if [[ $mediaDir == *"os.path"* ]]; then
-            mediaDir=$(/usr/bin/python3 -c "import os; print($mediaDir)")
+        # If the data dir was changed it's stored in a file
+        if [ -s "/var/opt/snatch/datadir" ]; then
+            mediaDir=$(cat "/var/opt/snatch/datadir")
+        # Else this should be a default dir
         else
-            mediaDir=$(echo $mediaDir | sed "s/'//g")
+            mediaDir=$(find /home/*/snatch -mindepth 1 -mindepth 1 -type d -not -empty 2>/dev/null)
         fi
 
         if [ -f "$logFile" ]; then

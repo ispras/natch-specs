@@ -7,13 +7,15 @@ case "$1" in
         settingsFile="/usr/bin/snatch/snatch/settings.py"
 
         # If the data dir was changed it's stored in a file
-        if [ -s "/var/opt/snatch/datadir" ]; then
+        if [ -f "/var/opt/snatch/datadir" ]; then
             mediaDir=$(cat "/var/opt/snatch/datadir")
-            echo "DEBUG: "$mediaDir
+            echo "DEBUG 1st: "$mediaDir
         # Else this should be a default dir
         else
             mediaDir=$(find /home/*/snatch -mindepth 1 -maxdepth 1 -type d -not -empty 2>/dev/null)
+            echo "DEBUG 2nd: "$mediaDir
         fi
+        echo "DEBUG cat: ${cat '/var/opt/snatch/datadir'}"
 
         if [ -f "$logFile" ]; then
             # Interactive mode

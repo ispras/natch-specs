@@ -42,22 +42,22 @@ case "$1" in
 
             # Interactive mode
             if [ -t 0 ] && [ -t 1 ]; then
-                echo "Удалить существующие проекты? [y/N]"
+                echo "Удалить каталог с проектами ($mediaDir)? [y/N]"
                 read -r response
                 case "$response" in
                     [yY][eE][sS]|[yY])
                         rm -rf "$mediaDir"
-                        echo "Существующие проекты удалены."
+                        echo "Каталог с проектами удалён."
                         ;;
                     *)
-                        echo "Существующие проекты сохранены."
+                        echo "Каталог с проектами сохранён."
                         ;;
                 esac
 
             # Non-interactive mode: removing
             else
                 rm -rf "$mediaDir"
-                echo "Существующие проекты удалены."
+                echo "Каталог с проектами удалён."
             fi
         fi
 
@@ -67,7 +67,7 @@ case "$1" in
         ;;
 esac
 
-rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
+rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/" "/var/opt/snatch/"
 
 echo "SNatch удален."
 

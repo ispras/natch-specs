@@ -11,7 +11,7 @@ case "$1" in
             mediaDir=$(cat "/var/opt/snatch/datadir")
         # Else this should be a default dir
         else
-            mediaDir=$(find /home/*/snatch -mindepth 1 -mindepth 1 -type d -not -empty 2>/dev/null)
+            mediaDir=$(find /home/*/snatch -mindepth 1 -maxdepth 1 -type d -not -empty 2>/dev/null)
         fi
 
         if [ -f "$logFile" ]; then

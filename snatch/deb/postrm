@@ -15,7 +15,6 @@ case "$1" in
             mediaDir=$(find /home/*/snatch -mindepth 1 -maxdepth 1 -type d -not -empty 2>/dev/null)
             echo "DEBUG 2nd: "$mediaDir
         fi
-        echo "DEBUG cat: ${cat '/var/opt/snatch/datadir'}"
 
         if [ -f "$logFile" ]; then
             # Interactive mode
@@ -62,6 +61,7 @@ case "$1" in
                 rm -rf "$mediaDir"
                 echo "Каталог с проектами удалён."
             fi
+            rm -rf /var/opt/snatch/
         fi
 
         ;;
@@ -70,7 +70,7 @@ case "$1" in
         ;;
 esac
 
-rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/" "/var/opt/snatch/"
+rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
 
 echo "SNatch удален."
 

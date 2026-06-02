@@ -68,7 +68,7 @@ else
 fi
 echo "Текущий путь для хранения данных проектов: $currentPath"
 
-read -p "Введите новый путь (или оставьте пустым для отмены): " newPath
+read -e -p "Введите новый путь (или оставьте пустым для отмены): " newPath
 
 if [ -n "$newPath" ]; then
     updatePath "$newPath"

@@ -6,28 +6,25 @@ case "$1" in
         logFile="/var/log/snatch.log"
         settingsFile="/usr/bin/snatch/snatch/settings.py"
 
-        # If the data dir was changed it's stored in a file
-        if [ -f "/var/opt/snatch/datadir" ]; then
-            mediaDir=$(cat "/var/opt/snatch/datadir")
-            echo "DEBUG 1st: "$mediaDir
-        # Else this should be a default dir
+        mediaDir=$(grep "^MEDIA_ROOT = " "$settingsFile" | cut -d'=' -f2)
+        if [[ $mediaDir == *"os.path"* ]]; then
+            mediaDir=$(/usr/bin/python3 -c "import os; print($mediaDir)")
         else
-            mediaDir=$(find /home/*/snatch -mindepth 1 -maxdepth 1 -type d -not -empty 2>/dev/null)
-            echo "DEBUG 2nd: "$mediaDir
+            mediaDir=$(echo $mediaDir | sed "s/'//g")
         fi
 
         if [ -f "$logFile" ]; then
             # Interactive mode
             if [ -t 0 ] && [ -t 1 ]; then
-                echo "Удалить файл лога ($logFile)? [y/N]"
+                echo "Удалить файл лога ($logFile)? [Y/n]"
                 read -r response
                 case "$response" in
-                    [yY][eE][sS]|[yY])
-                        rm -f "$logFile"
-                        echo "Файл лога удален."
+                    [nN][oO]|[nN])
+                        echo "Файл лога сохранён."
                         ;;
                     *)
-                        echo "Файл лога сохранён."
+                        rm -f "$logFile"
+                        echo "Файл лога удален."
                         ;;
                 esac
 
@@ -39,20 +36,17 @@ case "$1" in
         fi
 
         if [ ! -z "$(ls -A $mediaDir)" ]; then
-#            mediaDir=$(dirname "$mediaDir")
-            # echo "DEBUG: Removing the $mediaDir"
-
             # Interactive mode
             if [ -t 0 ] && [ -t 1 ]; then
-                echo "Удалить каталог с проектами ($mediaDir)? [y/N]"
+                echo "Удалить каталог с проектами ($mediaDir)? [Y/n]"
                 read -r response
                 case "$response" in
-                    [yY][eE][sS]|[yY])
-                        rm -rf "$mediaDir"
-                        echo "Каталог с проектами удалён."
+                    [nN][oO]|[nN])
+                        echo "Каталог с проектами сохранён."
                         ;;
                     *)
-                        echo "Каталог с проектами сохранён."
+                        rm -rf "$mediaDir"
+                        echo "Каталог с проектами удалён."
                         ;;
                 esac
 
@@ -61,16 +55,15 @@ case "$1" in
                 rm -rf "$mediaDir"
                 echo "Каталог с проектами удалён."
             fi
-            rm -rf /var/opt/snatch/
+            rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
         fi
 
         ;;
     remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
         # Other cases
+        rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
         ;;
 esac
-
-rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
 
 echo "SNatch удален."
 

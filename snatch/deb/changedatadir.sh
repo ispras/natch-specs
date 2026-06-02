@@ -31,9 +31,6 @@ updatePath() {
     echo "Файл настроек обновлен: $settingsFile"
     echo "Архивная копия настроек: $settingsFile.bak"
 
-    # We have to store it somewhere to let uninstaller remove it during the purge operation
-    echo "$newPath" > /var/opt/snatch/datadir
-
     read -p "Хотите удалить старый каталог с проектами? (Y/n): " answer
     answer=${answer:-Y}             # Default option
 

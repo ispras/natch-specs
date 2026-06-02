@@ -42,8 +42,6 @@ updatePath() {
         echo "Каталог $currentPath удален"
     fi
 
-    rm -rf $currentPath
-
     echo "Перезапуск Snatch ..."
     /usr/bin/snatch/snatch_stop.sh
     /usr/bin/snatch/snatch_start.sh

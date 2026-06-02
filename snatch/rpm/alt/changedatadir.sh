@@ -31,7 +31,8 @@ updatePath() {
     echo "Файл настроек обновлен: $settingsFile"
     echo "Архивная копия настроек: $settingsFile.bak"
 
-    read -p "Хотите удалить старый каталог с проектами? (y/n): " answer
+    read -p "Хотите удалить старый каталог с проектами? (Y/n): " answer
+    answer=${answer:-Y}             # Default option
 
     if [[ $answer == "y" || $answer == "Y" ]]; then
         su -c "rm -rf $currentPath"
@@ -62,7 +63,7 @@ else
 fi
 echo "Текущий путь для хранения данных проектов: $currentPath"
 
-read -p "Введите новый путь (или оставьте пустым для отмены): " newPath
+read -e -p "Введите новый путь (или оставьте пустым для отмены): " newPath
 
 if [ -n "$newPath" ]; then
     updatePath "$newPath"

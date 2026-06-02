@@ -35,7 +35,7 @@ case "$1" in
             fi
         fi
 
-        if [ ! -z "$(ls -A $mediaDir)" ]; then
+        if [ ! -z $mediaDir ] && [ ! -z "$(ls -A $mediaDir)" ]; then
             # Interactive mode
             if [ -t 0 ] && [ -t 1 ]; then
                 read -p "Удалить каталог с проектами ($mediaDir)? [Y/n] " response

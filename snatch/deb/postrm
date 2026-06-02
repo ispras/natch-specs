@@ -6,11 +6,12 @@ case "$1" in
         logFile="/var/log/snatch.log"
         settingsFile="/usr/bin/snatch/snatch/settings.py"
 
-        mediaDir=$(grep "^MEDIA_ROOT = " "$settingsFile" | cut -d'=' -f2)
-        if [[ $mediaDir == *"os.path"* ]]; then
-            mediaDir=$(/usr/bin/python3 -c "import os; print($mediaDir)")
+        # If the data dir was changed it's stored in a file
+        if [ -f "/var/opt/snatch/datadir" ]; then
+            mediaDir=$(cat "/var/opt/snatch/datadir")
+        # Else this should be a default dir
         else
-            mediaDir=$(echo $mediaDir | sed "s/'//g")
+            mediaDir=$(find /home/*/snatch -mindepth 1 -maxdepth 1 -type d -not -empty 2>/dev/null)
         fi
 
         if [ -f "$logFile" ]; then
@@ -55,16 +56,16 @@ case "$1" in
                 rm -rf "$mediaDir"
                 echo "Каталог с проектами удалён."
             fi
-            rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
+            rm -rf "/var/opt/snatch/"
         fi
 
         ;;
     remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
         # Other cases
-        rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
         ;;
 esac
 
+rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
 echo "SNatch удален."
 
 exit 0

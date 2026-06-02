@@ -17,30 +17,28 @@ case "$1" in
         if [ -f "$logFile" ]; then
             # Interactive mode
             if [ -t 0 ] && [ -t 1 ]; then
-                echo "Удалить файл лога ($logFile)? [Y/n]"
-                read -r response
+                read -p "Удалить файл лога ($logFile)? [Y/n] " response
                 case "$response" in
                     [nN][oO]|[nN])
                         echo "Файл лога сохранён."
                         ;;
                     *)
                         rm -f "$logFile"
-                        echo "Файл лога удален."
+                        echo "Файл лога удалён."
                         ;;
                 esac
 
             # Non-interactive mode: removing
             else
                 rm -f "$logFile"
-                echo "Файл лога удален"
+                echo "Файл лога удалён"
             fi
         fi
 
         if [ ! -z "$(ls -A $mediaDir)" ]; then
             # Interactive mode
             if [ -t 0 ] && [ -t 1 ]; then
-                echo "Удалить каталог с проектами ($mediaDir)? [Y/n]"
-                read -r response
+                read -p "Удалить каталог с проектами ($mediaDir)? [Y/n] " response
                 case "$response" in
                     [nN][oO]|[nN])
                         echo "Каталог с проектами сохранён."
@@ -66,6 +64,6 @@ case "$1" in
 esac
 
 rm -rf "/opt/snatch/venv/" "/usr/bin/snatch/"
-echo "SNatch удален."
+echo "SNatch удалён."
 
 exit 0

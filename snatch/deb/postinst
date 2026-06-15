@@ -6,7 +6,7 @@ if [ -n "$SUDO_USER" ]; then
 else
     USER="$(whoami)"
 fi
-echo "Logged in user: $USER"
+#echo "Logged in user: $USER"
 
 vEnvPath="/opt/snatch/venv/"
 
@@ -38,7 +38,7 @@ ln -s "/usr/lib/python3/dist-packages/vmi/" "/opt/snatch/venv/env/lib/python$pyt
 #pip3 install /usr/bin/snatch/vmi --upgrade
 #rm -rf /usr/bin/snatch/vmi
 
-deactivate 
+deactivate
 cd - > /dev/null
 
 touch /var/log/snatch.log
@@ -64,15 +64,27 @@ DB_PASSWORD=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 16)
 
 systemctl enable postgresql
 
-# Check if PostgreSQL is running
-if ! systemctl is-active --quiet postgresql; then
-  echo "PostgreSQL is not running. Starting..."
-  systemctl start postgresql
+# Check if PostgreSQL cluster exists
+CLUSTER_INFO=$(pg_lsclusters -h | head -n1)
+
+if [ -n "$CLUSTER_INFO" ]; then
+    PG_VERSION=$(echo "$CLUSTER_INFO" | awk '{print $1}')
+    PG_CLUSTER=$(echo "$CLUSTER_INFO" | awk '{print $2}')
+
+    echo "Найден кластер: ${PG_VERSION}/${PG_CLUSTER}"
+
+    # Check if the service is running
+    if ! systemctl is-active --quiet "postgresql@${PG_VERSION}-${PG_CLUSTER}"; then
+        systemctl start "postgresql@${PG_VERSION}-${PG_CLUSTER}"
+        sleep 2
+    fi
+else
+  echo "PostgreSQL кластер не найден"
 fi
 
 # Drop the existing database if it exists
 if sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -qw "$DB_NAME"; then
-  echo "Database $DB_NAME already exists. Dropping and recreating..."
+  echo "БД $DB_NAME уже существует. Удаляем и пересоздаём..."
 
   # Terminate all connections to the database
   sudo -u postgres psql -c "SELECT pg_terminate_backend(pg_stat_activity.pid) 
@@ -83,13 +95,13 @@ if sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -qw "$DB_NAME"; then
 fi
 
 # Create a new database
-echo "Creating database $DB_NAME..."
+echo "Создание БД $DB_NAME..."
 sudo -u postgres psql -c "CREATE DATABASE $DB_NAME;"
 
 # Create user if it does not exist
-echo "Creating user $DB_USER..."
+echo "Создание пользователя $DB_USER..."
 if sudo -u postgres psql -t -c "\du" | cut -d \| -f 1 | grep -qw $DB_USER; then
-  echo "User $DB_USER already exists, going to recreate it."
+  echo "Пользователь $DB_USER уже существует. Пересоздаю..."
   sudo -u postgres psql -c "DROP USER $DB_USER;"
 fi
 

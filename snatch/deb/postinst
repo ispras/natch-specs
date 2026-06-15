@@ -1,5 +1,39 @@
 #!/bin/bash
 
+# Operations with Postgres cluster
+postgresql_cluster_ops()
+{
+
+    # Detecting Postgres clusters
+    pg_lsclusters -h | while read -r ver cluster port status owner datadir; do
+        if [ "$status" = "down" ]; then
+            echo "Проверяем PostgreSQL кластер ${ver}/${cluster}..."
+
+            # Try to start it
+            if ! pg_ctlcluster "$ver" "$cluster" start; then
+                echo "Кластер ${ver}/${cluster} повреждён, пересоздаем..."
+
+                # Stop and remove it
+                pg_dropcluster --stop "$ver" "$cluster" 2>/dev/null || true
+
+                # Re-create and start
+                pg_createcluster "$ver" "$cluster" --start
+
+                if [ $? -eq 0 ]; then
+                    echo "Успешно создан PostgreSQL кластер ${ver}/${cluster}"
+                else
+                    echo "Ошибка пересоздания кластера ${ver}/${cluster}"
+                    return 1
+                fi
+            fi
+        fi
+    done
+
+    sleep 2
+}
+
+
+
 # Detecting a logged in user
 if [ -n "$SUDO_USER" ]; then
     USER="$SUDO_USER"
@@ -64,31 +98,15 @@ DB_PASSWORD=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 16)
 
 systemctl enable postgresql
 
-# Check if PostgreSQL cluster exists
-CLUSTER_INFO=$(pg_lsclusters -h | head -n1)
-
-if [ -n "$CLUSTER_INFO" ]; then
-    PG_VERSION=$(echo "$CLUSTER_INFO" | awk '{print $1}')
-    PG_CLUSTER=$(echo "$CLUSTER_INFO" | awk '{print $2}')
-
-    echo "Найден кластер: ${PG_VERSION}/${PG_CLUSTER}"
-
-    # Check if the service is running
-    if ! systemctl is-active --quiet "postgresql@${PG_VERSION}-${PG_CLUSTER}"; then
-        systemctl start "postgresql@${PG_VERSION}-${PG_CLUSTER}"
-        sleep 2
-    fi
-else
-  echo "PostgreSQL кластер не найден"
-fi
+postgresql_cluster_ops
 
 # Drop the existing database if it exists
 if sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -qw "$DB_NAME"; then
   echo "БД $DB_NAME уже существует. Удаляем и пересоздаём..."
 
   # Terminate all connections to the database
-  sudo -u postgres psql -c "SELECT pg_terminate_backend(pg_stat_activity.pid) 
-    FROM pg_stat_activity 
+  sudo -u postgres psql -c "SELECT pg_terminate_backend(pg_stat_activity.pid)
+    FROM pg_stat_activity
     WHERE pg_stat_activity.datname = '$DB_NAME' AND pid <> pg_backend_pid();"
 
   sudo -u postgres psql -c "DROP DATABASE $DB_NAME;"

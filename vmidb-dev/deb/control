@@ -1,0 +1,8 @@
+Package: libvmidb-dev
+Version: VERSIONPLACEHOLDER
+Provides: natch
+Maintainer: ИСП РАН <natch@ispras.ru>
+Architecture: amd64
+Section: devel
+Depends: libc6, libglib2.0-0, libzstd1, zlib1g, libvmidb
+Description: Дополнительный пакет для сборки ИСП РАН Natch и SNatch.

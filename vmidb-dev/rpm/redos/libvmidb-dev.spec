@@ -37,6 +37,7 @@ libvmidb-dev для сборки ИСП РАН Natch и SNatch
 #mkdir -p %buildroot%{_bindir}
 #mkdir -p %buildroot%{_libdir}
 cp -r usr/* %buildroot
+ls -l %buildroot
 #chmod -R 644 %buildroot%{_includedir}/vmidb/*
 
 %files

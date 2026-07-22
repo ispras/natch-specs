@@ -44,7 +44,6 @@ chmod -R 740 %buildroot%{_libdir}/*
 %attr(755,root,root) /usr/bin/storage
 %attr(755,root,root) /usr/bin/vmidb_symbols
 %attr(755,root,root) /usr/lib64/python3*/site-packages/vmi/
-%attr(755,root,root) /usr/lib64/libvmidb.a
 %attr(755,root,root) /usr/lib64/libvmidb.so
 
 

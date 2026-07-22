@@ -1,8 +1,8 @@
 %define _unpackaged_files_terminate_build 1
-Name:           libvmidb
+Name:           libvmidb-dev
 Version:        VERSIONPLACEHOLDER
 Release:        1%{?dist}
-Summary:        libvmidb для ИСП РАН Natch and SNatch
+Summary:        libvmidb-dev для сборки ИСП РАН Natch и SNatch
 
 License:        GPLv3 and Proprietary
 URL:            https://www.ispras.ru/technologies/natch/
@@ -20,8 +20,10 @@ AutoProv: 0
 BuildRequires: python3-pip
 BuildRequires: python3-devel
 
+Requires: libvmidb
+
 %description
-libvmidb для ИСП РАН Natch and SNatch
+libvmidb-dev для сборки ИСП РАН Natch и SNatch
 
 
 %prep
@@ -32,20 +34,14 @@ libvmidb для ИСП РАН Natch and SNatch
 #blank
 
 %install
-mkdir -p %buildroot%{_bindir}
-mkdir -p %buildroot%{_libdir}
-cp -r usr/bin/* %buildroot%{_bindir}
-cp -r usr/lib64/* %buildroot%{_libdir}
-chmod -R 740 %buildroot%{_bindir}/*
-chmod -R 740 %buildroot%{_libdir}/*
+#mkdir -p %buildroot%{_bindir}
+#mkdir -p %buildroot%{_libdir}
+cp -r usr/* %buildroot%{_exec_prefix}
+#chmod -R 644 %buildroot%{_includedir}/vmidb/*
 
 %files
-%attr(755,root,root) /usr/bin/parse_exec
-%attr(755,root,root) /usr/bin/storage
-%attr(755,root,root) /usr/bin/vmidb_symbols
-%attr(755,root,root) /usr/lib64/python3*/site-packages/vmi/
-%attr(755,root,root) /usr/lib64/libvmidb.a
-%attr(755,root,root) /usr/lib64/libvmidb.so
+%attr(644,root,root) /usr/include/vmidb/
+%attr(644,root,root) /usr/lib/x86_64-linux-gnu/libvmidb.a
 
 
 %post

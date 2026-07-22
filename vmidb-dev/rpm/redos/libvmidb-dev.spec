@@ -38,7 +38,7 @@ mkdir -p %buildroot%{_includedir}/vmidb/
 mkdir -p %buildroot%{_libdir}/x86_64-linux-gnu/
 cp -r usr/include/* %buildroot%{_includedir}
 cp -r usr/lib/* %buildroot%{_libdir}
-ls -l %buildroot%
+ls -l %buildroot
 ls -l %buildroot%{_includedir}
 ls -l %buildroot%{_includedir}/vmidb/*
 ls -l %buildroot%{_libdir}

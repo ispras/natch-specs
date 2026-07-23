@@ -48,7 +48,7 @@ cp -r usr/lib/x86_64-linux-gnu/libvmidb.a %buildroot%{_libdir}/x86_64-linux-gnu/
 
 %files
 %attr(644,root,root) /usr/include/vmidb/
-%attr(644,root,root) /usr/lib/x86_64-linux-gnu/libvmidb.a
+%attr(644,root,root) /usr/lib64/x86_64-linux-gnu/libvmidb.a
 
 
 %post

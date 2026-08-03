@@ -12,7 +12,7 @@ BuildArch:      x86_64
 
 Source:         %name-%version.tar
 
-Provides:       libvmidb
+Provides:       libvmidb.so()(64bit)
 
 AutoReq: 0
 AutoProv: 0

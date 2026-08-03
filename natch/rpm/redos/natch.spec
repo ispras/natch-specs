@@ -10,7 +10,7 @@ URL:            https://www.ispras.ru/technologies/natch/
 
 BuildArch:      x86_64
 
-Requires: libvmidb
+Requires: libvmidb.so()(64bit)
 Requires: glib2
 Requires: guestfs-tools
 Requires: lcov

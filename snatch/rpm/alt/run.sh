@@ -47,7 +47,7 @@ attempt=1
 echo "$SNATCH_PATH/snatch_start.sh" >> /tmp/post_run.sh
 
 chmod +x /tmp/post_run.sh
-su -c "/tmp/post_run.sh"
+su -c "DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS /tmp/post_run.sh" -m
 
 echo "Ожидаем запуск SNatch..."
 

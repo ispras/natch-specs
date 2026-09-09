@@ -47,6 +47,7 @@ attempt=1
 echo "$SNATCH_PATH/snatch_start.sh" >> /tmp/post_run.sh
 
 chmod +x /tmp/post_run.sh
+# Without the root perms the Wireshark cannot be started from Snatch
 su - root -c "DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS /tmp/post_run.sh"
 
 echo "Ожидаем запуск SNatch..."

@@ -21,7 +21,9 @@ su -c "$SNATCH_PATH/dbinit.sh $DB_NAME $DB_USER $DB_PASSWORD"
 
 rm -f /tmp/dbpas
 
-# Workaround for a deprecated rabbitMQ feature
+# Workaround solving the error:
+# 	amqp.exceptions.InternalError: Queue.declare: (541) INTERNAL_ERROR - Feature `transient_nonexcl_queues` is deprecated.   
+# It's addressed to rabbitMQ version 5.7.0 (ETA: end of September 2026)
 su -c "echo \"deprecated_features.permit.transient_nonexcl_queues = true\" >> /etc/rabbitmq/rabbitmq.conf"
 
 echo -e "\n\e[0;33mВнимание!\e[0m Далее postgres пароли больше не требуются. Сейчас снова потребуется su пароль для настройки веб-сервисов."

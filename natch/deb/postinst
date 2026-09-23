@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cp -n /tmp/natch-libs/*  /usr/lib/x86_64-linux-gnu/
+#cp -n /tmp/natch-libs/*  /usr/lib/x86_64-linux-gnu/
 
 # Get OS name and version
 osName=$(. /etc/os-release && echo "$NAME")

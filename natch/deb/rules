@@ -1,2 +1,0 @@
-override_dh_makeshlibs:
-	dh_makeshlibs -n -X/usr/lib/natch

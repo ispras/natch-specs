@@ -157,9 +157,9 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 	fi
 fi
 
-# # This is a fallback way to resolve paths to libraries
-# echo "/usr/lib/natch" > /etc/ld.so.conf.d/natch.conf
-# ldconfig
+# This is a fallback way to resolve paths to libraries
+echo "/usr/lib/natch" > /etc/ld.so.conf.d/natch.conf
+ldconfig
 
 echo -e "\e[1;32mNatch VERSIONPLACEHOLDER был установлен.\e[0m"
 

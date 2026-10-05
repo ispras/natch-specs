@@ -137,7 +137,7 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 		# 	# Activation with path and without --user key
 		# 	activationResults=$(./$activateScriptName)									#  2>/dev/null
 		# 	echo "Activation results: $activationResults"
-			
+
 		# 	# debug output
 		# 	echo "argcomplete activation finished."
 
@@ -156,6 +156,10 @@ if [[ $osName == *"Debian"* ]] || [[ $osName == *"Ubuntu"* ]] ; then
 		cd - > /dev/null
 	fi
 fi
+
+# This is a fallback way to resolve paths to libraries
+echo "/usr/lib/natch" > /etc/ld.so.conf.d/natch.conf
+ldconfig
 
 echo -e "\e[1;32mNatch VERSIONPLACEHOLDER был установлен.\e[0m"
 

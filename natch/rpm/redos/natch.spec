@@ -75,7 +75,7 @@ mkdir -p %{buildroot}/usr/bin/natch-bin
 cp -r %{_builddir}/* %{buildroot}/usr/bin/natch-bin/
 
 %post
-pip3 install alive-progress rpmfile simple_term_menu textual textual_autocomplete & > /dev/null || :
+pip3 install --upgrade alive-progress rpmfile simple_term_menu textual textual-autocomplete~=4.0.6 & > /dev/null || :
 
 ln -sf %{_bindir}/natch-bin/bin/natch_scripts/natch %{_bindir}/natch & > /dev/null || :
 rm -f ~/.bash_completion ~/.zshenv && %%{_bindir}/activate-global-python-argcomplete --user && eval "$(%{_bindir}/register-python-argcomplete natch)" & > /dev/null || :

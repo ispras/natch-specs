@@ -131,7 +131,7 @@ ln -sf %_bindir/natch-bin/bin/natch_scripts/natch %_bindir/natch
 %{_bindir}/activate-global-python-argcomplete --user 2>/dev/null || true
 #rm -f ~/.bash_completion ~/.zshenv && %_bindir/activate-global-python-argcomplete --user && eval "$(/usr/bin/register-python-argcomplete natch)"
 
-pip3 install --upgrade textual-autocomplete~=4.0.6
+pip3 install textual-autocomplete~=4.0.6
 
 echo -e "\e[1;32mNatch VERSIONPLACEHOLDER был установлен.\e[0m"
 echo -e "\033[32mЧтобы начать использование ИСП РАН Natch введите \e[0m\e[1;32mnatch\e[0m\033[32m в вашей командной строке.\e[0m"

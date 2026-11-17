@@ -100,6 +100,8 @@ Requires: python3-modules-sqlite3
 install -p -d -m 0755 %buildroot%_bindir/natch-bin
 cp -r * %buildroot%_bindir/natch-bin
 
+pip3 install --upgrade textual-autocomplete~=4.0.6
+
 # This is to have an ability to delete the dir of the old Natch
 mkdir -p %buildroot%_bindir/natch
 
